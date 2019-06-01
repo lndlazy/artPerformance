@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="MyToolbarTheme" parent="Base.V7.Widget.AppCompat.Toolbar">
+        <item name="titleMargin">0dp</item>
+    </style>
+</resources>

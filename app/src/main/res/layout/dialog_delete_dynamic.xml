@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/x70"
+        android:layout_marginLeft="@dimen/x70"
+        android:paddingTop="@dimen/y112"
+        android:background="@drawable/dialog_delete_dynamic_bg">
+
+        <TextView
+            android:id="@+id/dialog_delete_title_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dynamic_delete_title"
+            android:textSize="17sp"
+            android:textColor="@color/color_33353a"
+            android:paddingBottom="@dimen/y86"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <View
+            android:id="@+id/dialog_delete_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y2"
+            android:background="@color/color_e8e8e8"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_delete_title_textview"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y88"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_delete_view">
+
+            <TextView
+                android:id="@+id/dialog_delete_clean_textview"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="@string/clean"
+                android:textSize="16sp"
+                android:textColor="@color/color_9aa0a2"
+                android:gravity="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/dialog_delete_determine_textview"/>
+
+            <TextView
+                android:id="@+id/dialog_delete_determine_textview"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="@string/determine"
+                android:textSize="16sp"
+                android:textColor="@color/color_fd7b25"
+                android:gravity="center"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/dialog_delete_clean_textview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:layout_width="@dimen/x2"
+            android:layout_height="@dimen/y88"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/dialog_delete_view"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/item_appeal_evidence_list_add_image"
+        android:layout_width="@dimen/x146"
+        android:layout_height="@dimen/y146"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/icon_my_add"/>
+
+</FrameLayout>

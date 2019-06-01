@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/dynamic_release_imageview"
+        android:layout_width="@dimen/x202"
+        android:layout_height="@dimen/y202"
+        android:src="@mipmap/img_add"
+        android:scaleType="centerCrop"/>
+
+</android.support.constraint.ConstraintLayout>

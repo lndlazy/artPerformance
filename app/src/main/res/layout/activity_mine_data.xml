@@ -1,0 +1,782 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".ui.mine.activity.MineDataActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/y28"
+        android:paddingTop="@dimen/y68">
+
+        <ImageView
+            android:id="@+id/mine_return_imageview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x34"
+            android:padding="@dimen/x8"
+            android:src="@mipmap/nav_arrow"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mine_data"
+            android:textColor="@color/color_33353a"
+            android:textSize="18sp"
+            app:layout_constraintLeft_toRightOf="@+id/mine_return_imageview"
+            app:layout_constraintRight_toLeftOf="@+id/mine_preservation_textview" />
+
+        <TextView
+            android:id="@+id/mine_preservation_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/x30"
+            android:padding="@dimen/x8"
+            android:text="@string/mine_preservation"
+            android:textColor="@color/color_fd7b25"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y14"
+                android:background="@color/color_f0f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y194"
+                android:paddingBottom="@dimen/y20">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x46"
+                    android:layout_marginTop="@dimen/y28"
+                    android:text="@string/mine_basic_data"
+                    android:textColor="@color/color_33353a"
+                    android:textSize="17sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/y20"
+                    android:layout_marginLeft="@dimen/x44"
+                    android:text="@string/mine_head"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/mine_data_head_imageview"
+                    android:layout_width="@dimen/x64"
+                    android:layout_height="@dimen/x64"
+                    android:src="@mipmap/ic_head_error"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toLeftOf="@+id/mine_arrow_imageview"
+                    fresco:failureImage="@mipmap/ic_head_error"
+                    fresco:roundAsCircle="true" />
+
+                <ImageView
+                    android:id="@+id/mine_arrow_imageview"
+                    android:layout_width="@dimen/x72"
+                    android:layout_height="@dimen/y60"
+                    android:padding="@dimen/x12"
+                    android:src="@mipmap/icon_release_arrow"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y40"
+                android:paddingLeft="@dimen/x30"
+                android:paddingTop="@dimen/y38">
+
+                <TextView
+                    android:id="@+id/mine_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textColor="@color/color_f84045"
+                    app:layout_constraintRight_toLeftOf="@+id/mine_name_textview" />
+
+                <TextView
+                    android:id="@+id/mine_name_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_name"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_name" />
+
+                <EditText
+                    android:id="@+id/mine_name_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x106"
+                    android:background="@null"
+                    android:hint="@string/mine_name_hint"
+                    android:minHeight="@dimen/x10"
+                    android:minWidth="@dimen/x400"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_name_textview" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y32"
+                android:paddingLeft="@dimen/x30"
+                android:paddingTop="@dimen/y32">
+
+                <TextView
+                    android:id="@+id/mine_gender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textColor="@color/color_f84045"
+                    app:layout_constraintRight_toLeftOf="@+id/mine_gender_textview" />
+
+                <TextView
+                    android:id="@+id/mine_gender_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_gender"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_gender"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <RadioGroup
+                    android:id="@+id/mine_data_redioGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x102"
+                    android:orientation="horizontal"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_gender_textview">
+
+                    <RadioButton
+                        android:id="@+id/mine_man_redioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/y42"
+                        android:button="@drawable/selector_mine_gender_check_bg"
+                        android:text="@string/group_man"
+                        android:textColor="@color/color_33353a" />
+
+                    <RadioButton
+                        android:id="@+id/mine_woman_redioButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/y42"
+                        android:layout_marginLeft="@dimen/x48"
+                        android:button="@drawable/selector_mine_gender_check_bg"
+                        android:text="@string/group_woman"
+                        android:textColor="@color/color_33353a" />
+
+                </RadioGroup>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y40"
+                android:paddingLeft="@dimen/x44"
+                android:paddingTop="@dimen/y38">
+
+                <TextView
+                    android:id="@+id/mine_age_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_age"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/mine_age_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x106"
+                    android:background="@null"
+                    android:hint="@string/mine_age_hint"
+                    android:inputType="number"
+                    android:minHeight="@dimen/x15"
+                    android:minWidth="@dimen/x400"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_age_textview" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y28"
+                android:paddingLeft="@dimen/x30"
+                android:paddingTop="@dimen/y26">
+
+                <TextView
+                    android:id="@+id/mine_telePhone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="*"
+                    android:textColor="@color/color_f84045"
+                    app:layout_constraintRight_toLeftOf="@+id/mine_telePhone_textview"
+                    app:layout_constraintTop_toTopOf="@+id/mine_telePhone_textview" />
+
+                <TextView
+                    android:id="@+id/mine_telePhone_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_telePhone"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_telePhone"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/mine_telePhone_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x106"
+                    android:background="@null"
+                    android:hint="@string/login_phone_hint"
+                    android:inputType="phone"
+                    android:minHeight="@dimen/x10"
+                    android:minWidth="@dimen/x350"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_telePhone_textview"
+                    app:layout_constraintRight_toLeftOf="@id/mine_data_telePhone_switchButton"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.art.recruitment.artperformance.view.SwitchButton
+                    android:id="@+id/mine_data_telePhone_switchButton"
+                    android:layout_width="@dimen/x100"
+                    android:layout_height="@dimen/y52"
+                    android:layout_marginRight="@dimen/x30"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:sb_checked="true"
+                    app:sb_show_indicator="false" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y28"
+                android:paddingLeft="@dimen/x44"
+                android:paddingTop="@dimen/y26">
+
+                <TextView
+                    android:id="@+id/mine_weChat_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_weChat"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/mine_weChat_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x106"
+                    android:background="@null"
+                    android:hint="@string/mine_weChat_hint"
+                    android:inputType="text"
+                    android:minHeight="@dimen/x10"
+                    android:minWidth="@dimen/x350"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_weChat_textview"
+                    app:layout_constraintRight_toLeftOf="@id/mine_data_wxChat_switchButton"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.art.recruitment.artperformance.view.SwitchButton
+                    android:id="@+id/mine_data_wxChat_switchButton"
+                    android:layout_width="@dimen/x100"
+                    android:layout_height="@dimen/y52"
+                    android:layout_marginRight="@dimen/x30"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:sb_checked="true"
+                    app:sb_show_indicator="false" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y28"
+                android:paddingLeft="@dimen/x44"
+                android:paddingTop="@dimen/y26">
+
+                <TextView
+                    android:id="@+id/mine_height_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_height"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/mine_height_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x46"
+                    android:background="@null"
+                    android:hint="@string/mine_height_hint"
+                    android:inputType="number"
+                    android:minHeight="@dimen/x10"
+                    android:minWidth="@dimen/x350"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_height_textview"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y28"
+                android:paddingLeft="@dimen/x44"
+                android:paddingTop="@dimen/y26">
+
+                <TextView
+                    android:id="@+id/mine_weight_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_weight"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/mine_weight_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x46"
+                    android:background="@null"
+                    android:hint="@string/mine_weight_hint"
+                    android:inputType="number"
+                    android:minHeight="@dimen/x10"
+                    android:minWidth="@dimen/x350"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_weight_textview"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y24"
+                android:paddingLeft="@dimen/x44"
+                android:paddingTop="@dimen/y24">
+
+                <TextView
+                    android:id="@+id/mine_three_circles_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_three_circles"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/mine_bust_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/y56"
+                    android:layout_marginLeft="@dimen/x46"
+                    android:background="@drawable/dialog_release_recruitment_face_unenable"
+                    android:gravity="center"
+                    android:hint="@string/mine_bust_hint"
+                    android:inputType="number"
+                    android:minWidth="@dimen/x30"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_three_circles_textview" />
+
+                <EditText
+                    android:id="@+id/mine_waist_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/y56"
+                    android:background="@drawable/dialog_release_recruitment_face_unenable"
+                    android:gravity="center"
+                    android:hint="@string/mine_waist_hint"
+                    android:inputType="number"
+                    android:minWidth="@dimen/x30"
+
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_bust_edittext"
+                    app:layout_constraintRight_toLeftOf="@+id/mine_hipline_edittext" />
+
+                <EditText
+                    android:id="@+id/mine_hipline_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/y56"
+                    android:background="@drawable/dialog_release_recruitment_face_unenable"
+                    android:gravity="center"
+                    android:hint="@string/mine_hipline_hint"
+                    android:inputType="number"
+                    android:minWidth="@dimen/x30"
+
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_waist_edittext"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/y10"
+                android:paddingLeft="@dimen/x44"
+                android:paddingTop="@dimen/y8">
+
+                <TextView
+                    android:id="@+id/mine_citiy_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_citiy"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/mine_citiy_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x106"
+                    android:text="@string/mine_citiy_hint"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toRightOf="@+id/mine_citiy_textview"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/mine_citiy_imageview"
+                    android:layout_width="@dimen/x72"
+                    android:layout_height="@dimen/y80"
+                    android:padding="@dimen/x18"
+                    android:src="@mipmap/icon_release_arrow"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y14"
+                android:background="@color/color_f0f2f4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x48"
+                android:layout_marginTop="@dimen/y28"
+                android:text="@string/mine_photo_video"
+                android:textColor="@color/color_33353a"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_marginTop="@dimen/y30"
+                android:background="@color/color_f1f2f4" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x46"
+                android:layout_marginTop="@dimen/y36"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_master_graph"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x14"
+                    android:text="@string/mine_master_graph_hint"
+                    android:textColor="@color/color_b7bcbe"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mine_master_graph_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/y32"
+                android:layout_marginLeft="@dimen/x46"
+                android:layout_marginRight="@dimen/x60"
+                android:layout_marginTop="@dimen/y30">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x46"
+                android:layout_marginTop="@dimen/y36"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_photo"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x14"
+                    android:text="@string/mine_photo_hint"
+                    android:textColor="@color/color_b7bcbe"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mine_photo_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/y32"
+                android:layout_marginLeft="@dimen/x46"
+                android:layout_marginRight="@dimen/x60"
+                android:layout_marginTop="@dimen/y30">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x46"
+                android:layout_marginTop="@dimen/y36"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mine_video"
+                    android:textColor="@color/color_545859"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x14"
+                    android:text="@string/mine_video_hint"
+                    android:textColor="@color/color_b7bcbe"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/mine_video_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/y32"
+                android:layout_marginLeft="@dimen/x46"
+                android:layout_marginRight="@dimen/x60"
+                android:layout_marginTop="@dimen/y30">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y14"
+                android:background="@color/color_f0f2f4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x46"
+                android:layout_marginTop="@dimen/y30"
+                android:text="@string/mine_other"
+                android:textColor="@color/color_33353a"
+                android:textSize="17sp" />
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y2"
+                android:layout_marginBottom="@dimen/y30"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_marginTop="@dimen/y28"
+                android:background="@color/color_f1f2f4" />
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y204"
+                android:paddingBottom="@dimen/y28">
+
+                <EditText
+                    android:id="@+id/mine_other_edittext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x46"
+                    android:layout_marginRight="@dimen/x46"
+                    android:background="@null"
+                    android:hint="@string/mine_other_hint"
+                    android:maxLength="300"
+                    android:minHeight="@dimen/x50"
+                    android:minWidth="@dimen/x300"
+                    android:textColor="@color/color_33353a"
+                    android:textColorHint="@color/color_b7bcbe"
+                    android:textSize="14sp"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+                <TextView
+                    android:id="@+id/mine_other_number_textviewv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/x30"
+                    android:background="@color/color_ffffff"
+                    android:gravity="right"
+                    android:text="0/300"
+                    android:textColor="@color/color_b7bcbe"
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintRight_toRightOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y34"
+                android:background="@color/color_f0f2f4" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>

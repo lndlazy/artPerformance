@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#55000000"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/y90"
+        android:paddingTop="@dimen/y90"
+        android:background="@drawable/shape_mine_share_bg"
+        app:layout_constraintBottom_toTopOf="@+id/mine_share_clean_textview">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/share_wechat_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/share_circle_of_friends_constraintLayout">
+
+            <ImageView
+                android:id="@+id/share_wechat_imageview"
+                android:layout_width="@dimen/x88"
+                android:layout_height="@dimen/y88"
+                android:src="@mipmap/img_my_weixin"/>
+
+            <TextView
+                android:id="@+id/share_wechat_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/share_wechat"
+                android:textSize="13sp"
+                android:textColor="@color/color_33353a"
+                android:layout_marginTop="@dimen/y30"
+                app:layout_constraintTop_toBottomOf="@+id/share_wechat_imageview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/share_circle_of_friends_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/share_wechat_constraintLayout"
+            app:layout_constraintRight_toLeftOf="@+id/share_qq_zone_constraintLayout">
+
+            <ImageView
+                android:id="@+id/share_circle_of_friends_imageview"
+                android:layout_width="@dimen/x88"
+                android:layout_height="@dimen/y88"
+                android:src="@mipmap/img_my_penyouquan"/>
+
+            <TextView
+                android:id="@+id/share_circle_of_friends_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/share_circle_of_friends"
+                android:textSize="13sp"
+                android:textColor="@color/color_33353a"
+                android:layout_marginTop="@dimen/y30"
+                app:layout_constraintTop_toBottomOf="@+id/share_circle_of_friends_imageview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/share_qq_zone_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/share_circle_of_friends_constraintLayout"
+            app:layout_constraintRight_toLeftOf="@+id/share_qq_constraintLayout">
+
+            <ImageView
+                android:id="@+id/share_qq_zone_imageview"
+                android:layout_width="@dimen/x88"
+                android:layout_height="@dimen/y88"
+                android:src="@mipmap/img_my_kongjian"/>
+
+            <TextView
+                android:id="@+id/share_qq_zone_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/share_qq_zone"
+                android:textSize="13sp"
+                android:textColor="@color/color_33353a"
+                android:layout_marginTop="@dimen/y30"
+                app:layout_constraintTop_toBottomOf="@+id/share_qq_zone_imageview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/share_qq_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/share_qq_zone_constraintLayout"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <ImageView
+                android:id="@+id/share_qq_imageview"
+                android:layout_width="@dimen/x88"
+                android:layout_height="@dimen/y88"
+                android:src="@mipmap/img_my_qq"/>
+
+            <TextView
+                android:id="@+id/share_qq_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/share_qq"
+                android:textSize="13sp"
+                android:textColor="@color/color_33353a"
+                android:layout_marginTop="@dimen/y30"
+                app:layout_constraintTop_toBottomOf="@+id/share_qq_imageview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/mine_share_clean_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/clean"
+        android:textSize="16sp"
+        android:textColor="@color/color_33353a"
+        android:gravity="center"
+        android:background="@color/color_ffffff"
+        android:paddingTop="@dimen/y32"
+        android:paddingBottom="@dimen/y34"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+</android.support.constraint.ConstraintLayout>

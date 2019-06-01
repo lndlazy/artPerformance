@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.activity.RecruitmentInformationActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/home_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/y24">
+
+        <ImageView
+            android:id="@+id/details_return_imageview"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/y40"
+            android:src="@mipmap/nav_arrow"
+            android:layout_marginTop="@dimen/y64"
+            android:layout_marginLeft="@dimen/x30"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_recruitment_information"
+            android:textSize="18sp"
+            android:textColor="@color/color_353841"
+            app:layout_constraintTop_toTopOf="@+id/details_return_imageview"
+            app:layout_constraintBottom_toBottomOf="@+id/details_return_imageview"
+            app:layout_constraintLeft_toRightOf="@+id/details_return_imageview"
+            app:layout_constraintRight_toLeftOf="@+id/details_share_imageview"/>
+
+        <ImageView
+            android:id="@+id/details_share_imageview"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/y40"
+            android:src="@mipmap/nav_share"
+            android:layout_marginTop="@dimen/y64"
+            android:layout_marginRight="@dimen/x30"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        android:layout_marginTop="@dimen/y36"
+        android:paddingBottom="@dimen/y120"
+        app:layout_constraintTop_toBottomOf="@+id/home_title">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/details_title_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="21sp"
+                    android:textColor="@color/color_33353a"
+                    android:layout_marginLeft="@dimen/x32"
+                    app:layout_constraintLeft_toLeftOf="parent"/>
+
+                <TextView
+                    android:id="@+id/details_price_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textColor="@color/color_fd7b25"
+                    android:layout_marginRight="@dimen/x30"
+                    app:layout_constraintBottom_toBottomOf="@+id/details_title_textview"
+                    app:layout_constraintRight_toRightOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <com.art.recruitment.artperformance.view.TagCloudView
+                android:id="@+id/details_flowlayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x30"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y2"
+                android:background="@color/color_f0f2f4"
+                android:layout_marginTop="@dimen/y10"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x30">
+
+                <TextView
+                    android:id="@+id/details_release_people_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"/>
+
+                <TextView
+                    android:id="@+id/details_release_time_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"
+                    android:layout_marginTop="@dimen/y20"
+                    app:layout_constraintTop_toBottomOf="@+id/details_release_people_textview"/>
+
+                <TextView
+                    android:id="@+id/details_deadline_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"
+                    android:layout_marginTop="@dimen/y20"
+                    app:layout_constraintTop_toBottomOf="@+id/details_release_time_textview"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y2"
+                android:background="@color/color_f0f2f4"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x30">
+
+                <TextView
+                    android:id="@+id/details_required_people_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"/>
+
+                <TextView
+                    android:id="@+id/details_work_time_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"
+                    android:layout_marginTop="@dimen/y20"
+                    app:layout_constraintTop_toBottomOf="@+id/details_required_people_textview"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y2"
+                android:background="@color/color_f0f2f4"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x30">
+
+                <TextView
+                    android:id="@+id/details_collection_place_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"/>
+
+                <TextView
+                    android:id="@+id/details_set_time_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"
+                    android:layout_marginTop="@dimen/y20"
+                    app:layout_constraintTop_toBottomOf="@+id/details_collection_place_textview"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y2"
+                android:background="@color/color_f0f2f4"/>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/details_other_constraintLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/x30">
+
+                <TextView
+                    android:id="@+id/details_other_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/home_other_requirements"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"/>
+
+                <TextView
+                    android:id="@+id/details_other_requirements_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_545859"
+                    android:lineSpacingExtra="@dimen/y20"
+                    android:layout_marginTop="@dimen/y20"
+                    app:layout_constraintTop_toBottomOf="@+id/details_other_textview"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y2"
+                android:background="@color/color_f0f2f4"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_enrolment"
+                android:textSize="13sp"
+                android:textColor="@color/color_545859"
+                android:layout_margin="@dimen/x30"/>
+
+            <GridView
+                android:id="@+id/recruitment_information_gridview"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/y500"
+                android:numColumns="auto_fit"
+                android:columnWidth="@dimen/x72"
+                android:stretchMode="columnWidth"
+                android:scrollbars="none"
+                android:gravity="center"
+                android:verticalSpacing="@dimen/y20"
+                android:horizontalSpacing="@dimen/x20"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_marginRight="@dimen/x30"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/home_bottom_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y94"
+        android:background="@color/color_ffffff"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/home_communicate_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingRight="@dimen/x54">
+
+            <ImageView
+                android:id="@+id/home_communicate_imageview"
+                android:layout_width="@dimen/x36"
+                android:layout_height="@dimen/y36"
+                android:src="@mipmap/ico_message"
+                android:layout_marginLeft="@dimen/x54"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+            <TextView
+                android:id="@+id/home_communicate_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/home_communicate"
+                android:textSize="13sp"
+                android:textColor="@color/color_33353a"
+                android:layout_marginLeft="@dimen/x10"
+                app:layout_constraintLeft_toRightOf="@+id/home_communicate_imageview"
+                app:layout_constraintTop_toTopOf="@+id/home_communicate_imageview"
+                app:layout_constraintBottom_toBottomOf="@+id/home_communicate_imageview"/>
+
+
+        </android.support.constraint.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/details_sign_up_immediately"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/home_sign_up_immediately"
+            android:textSize="16sp"
+            android:textColor="@color/color_ffffff"
+            android:background="@color/color_fd7b25"
+            android:gravity="center"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/home_communicate_constraintLayout"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>
+

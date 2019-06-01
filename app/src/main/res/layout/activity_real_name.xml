@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.group.activity.RealNameActivity">
+
+    <ImageView
+        android:id="@+id/group_return_imageview"
+        android:layout_width="@dimen/x40"
+        android:layout_height="@dimen/y40"
+        android:src="@mipmap/nav_arrow"
+        android:layout_marginTop="@dimen/y64"
+        android:layout_marginLeft="@dimen/x30"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/register_logo_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/group_real_name_authentication"
+        android:textSize="22sp"
+        android:textColor="@color/color_33353a"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/y96"
+        android:layout_marginLeft="@dimen/x80"
+        app:layout_constraintTop_toBottomOf="@+id/group_return_imageview"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/group_real_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/group_real_name"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_33353a"
+        android:layout_marginTop="@dimen/y88"
+        android:layout_marginLeft="@dimen/x80"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_logo_textview"/>
+
+    <EditText
+        android:id="@+id/group_real_name_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/group_your_real_name_hint"
+        android:textColorHint="@color/color_9aa0a2"
+        android:textSize="14sp"
+        android:textColor="@color/color_33353a"
+        android:background="@null"
+        android:singleLine="true"
+        android:layout_marginTop="@dimen/y40"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x80"
+        android:theme="@style/TextInputLayoutLineColor"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_real_name"/>
+
+    <View
+        android:id="@+id/register_phone_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x2"
+        android:background="@color/color_e1e4e6"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x80"
+        android:layout_marginTop="@dimen/y40"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_real_name_edittext"/>
+
+    <TextView
+        android:id="@+id/group_ID_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/group_ID_number"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/color_33353a"
+        android:layout_marginTop="@dimen/y60"
+        android:layout_marginLeft="@dimen/x80"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_phone_view"/>
+
+    <EditText
+        android:id="@+id/group_ID_number_editext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/group_your_ID_number_hint"
+        android:textColorHint="@color/color_9aa0a2"
+        android:textSize="14sp"
+        android:textColor="@color/color_33353a"
+        android:background="@null"
+        android:layout_marginTop="@dimen/y40"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x80"
+        android:theme="@style/TextInputLayoutLineColor"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_ID_number"/>
+
+    <View
+        android:id="@+id/register_code_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x2"
+        android:background="@color/color_e1e4e6"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x80"
+        android:layout_marginTop="@dimen/y40"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_ID_number_editext"/>
+
+    <TextView
+        android:id="@+id/group_submission_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/group_submission"
+        android:textSize="16sp"
+        android:textColor="@color/color_ffffff"
+        android:gravity="center"
+        android:paddingTop="@dimen/y30"
+        android:paddingBottom="@dimen/y30"
+        android:layout_marginTop="@dimen/y76"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x80"
+        android:enabled="false"
+        android:background="@drawable/login_selector_home_button_nomal_fd7b25_unenable_febd92"
+        app:layout_constraintTop_toBottomOf="@+id/register_code_view" />
+
+</android.support.constraint.ConstraintLayout>

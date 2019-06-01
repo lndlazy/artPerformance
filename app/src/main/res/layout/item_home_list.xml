@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/home_title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/color_33353a"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/y40"
+        android:layout_marginLeft="@dimen/x25"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/home_price_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/color_fd7b25"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/y42"
+        android:layout_marginRight="@dimen/x25"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <com.art.recruitment.artperformance.view.TagCloudView
+        android:id="@+id/home_flowlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y24"
+        android:layout_marginLeft="@dimen/x12"
+        app:layout_constraintLeft_toLeftOf="@+id/home_title_textview"
+        app:layout_constraintTop_toBottomOf="@+id/home_title_textview"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"
+        android:background="@color/color_f0f2f4"
+        android:layout_marginLeft="@dimen/x25"
+        android:layout_marginRight="@dimen/x25"
+        android:layout_marginBottom="@dimen/y26"
+        app:layout_constraintBottom_toTopOf="@+id/home_time_imageview"/>
+
+    <ImageView
+        android:id="@+id/home_time_imageview"
+        android:layout_width="@dimen/x25"
+        android:layout_height="@dimen/y25"
+        android:src="@mipmap/icon_a_time"
+        android:layout_marginLeft="@dimen/x25"
+        android:layout_marginTop="@dimen/y52"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/home_flowlayout"/>
+
+    <TextView
+        android:id="@+id/home_time_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/color_9aa0a2"
+        android:layout_marginLeft="@dimen/x14"
+        android:layout_marginBottom="@dimen/y2"
+        app:layout_constraintBottom_toBottomOf="@+id/home_time_imageview"
+        app:layout_constraintTop_toTopOf="@+id/home_time_imageview"
+        app:layout_constraintLeft_toRightOf="@+id/home_time_imageview"/>
+
+    <ImageView
+        android:id="@+id/home_address_imageview"
+        android:layout_width="@dimen/x25"
+        android:layout_height="@dimen/y25"
+        android:src="@mipmap/icon_a_adress"
+        android:layout_marginTop="@dimen/y24"
+        app:layout_constraintLeft_toLeftOf="@+id/home_time_imageview"
+        app:layout_constraintTop_toBottomOf="@+id/home_time_imageview"/>
+
+    <TextView
+        android:id="@+id/home_address_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/color_9aa0a2"
+        android:layout_marginLeft="@dimen/x14"
+        android:layout_marginBottom="@dimen/y2"
+        app:layout_constraintBottom_toBottomOf="@+id/home_address_imageview"
+        app:layout_constraintTop_toTopOf="@+id/home_address_imageview"
+        app:layout_constraintLeft_toRightOf="@+id/home_address_imageview"/>
+
+    <ImageView
+        android:id="@+id/home_people_imageview"
+        android:layout_width="@dimen/x25"
+        android:layout_height="@dimen/y25"
+        android:src="@mipmap/icon_a_people"
+        android:layout_marginTop="@dimen/y24"
+        app:layout_constraintLeft_toLeftOf="@+id/home_address_imageview"
+        app:layout_constraintTop_toBottomOf="@+id/home_address_imageview"/>
+
+    <TextView
+        android:id="@+id/home_people_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:textColor="@color/color_9aa0a2"
+        android:layout_marginLeft="@dimen/x14"
+        android:layout_marginBottom="@dimen/y2"
+        app:layout_constraintBottom_toBottomOf="@+id/home_people_imageview"
+        app:layout_constraintTop_toTopOf="@+id/home_people_imageview"
+        app:layout_constraintLeft_toRightOf="@+id/home_people_imageview"/>
+
+    <ImageView
+        android:id="@+id/home_arrow_imageview"
+        android:layout_width="@dimen/x67"
+        android:layout_height="@dimen/y67"
+        android:src="@mipmap/icon_a_arrow"
+        android:paddingLeft="@dimen/x40"
+        android:paddingBottom="@dimen/y20"
+        android:layout_marginRight="@dimen/x36"
+        app:layout_constraintTop_toTopOf="@+id/home_address_imageview"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y14"
+        android:layout_marginTop="@dimen/y38"
+        android:background="@color/color_f4f4f4"
+        app:layout_constraintTop_toBottomOf="@+id/home_people_imageview"/>
+
+</android.support.constraint.ConstraintLayout>

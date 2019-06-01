@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:state_enabled="false"
+        android:drawable="@drawable/login_shape_home_button_unenable_febd92" />
+
+    <item
+        android:state_pressed="false"
+        android:drawable="@drawable/login_shape_home_button_nomal_fd7b25" />
+
+
+</selector>

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.login.activity.LoginActivity">
+
+    <ImageView
+        android:id="@+id/login_return_imageview"
+        android:layout_width="@dimen/x40"
+        android:layout_height="@dimen/y40"
+        android:src="@mipmap/nav_arrow"
+        android:layout_marginTop="@dimen/y64"
+        android:layout_marginLeft="@dimen/x30"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/login_logo_imageview"
+        android:layout_width="@dimen/x168"
+        android:layout_height="@dimen/y168"
+        android:src="@mipmap/login_logo"
+        android:layout_marginTop="@dimen/y46"
+        app:layout_constraintTop_toBottomOf="@+id/login_return_imageview"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <EditText
+        android:id="@+id/login_phone_edittext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginTop="@dimen/y112"
+        android:background="@null"
+        android:digits="1234567890"
+        android:hint="@string/login_phone_hint"
+        android:inputType="number"
+        android:singleLine="true"
+        android:textColor="@color/color_33353a"
+        android:textColorHint="@color/color_9aa0a2"
+        android:textSize="14sp"
+        android:theme="@style/TextInputLayoutLineColor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_logo_imageview" />
+
+    <View
+        android:id="@+id/login_phone_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x2"
+        android:background="@color/color_e1e4e6"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x80"
+        android:layout_marginTop="@dimen/y40"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_phone_edittext"/>
+
+    <EditText
+        android:id="@+id/login_password_edittext"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintHorizontal_weight="1"
+        android:hint="@string/login_password_hint"
+        android:textColorHint="@color/color_9aa0a2"
+        android:textSize="14sp"
+        android:textColor="@color/color_33353a"
+        android:background="@null"
+        android:layout_marginTop="@dimen/y54"
+        android:layout_marginLeft="@dimen/x80"
+        android:theme="@style/TextInputLayoutLineColor"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/login_forget_password_textview"
+        app:layout_constraintTop_toBottomOf="@+id/login_phone_view"/>
+
+    <TextView
+        android:id="@+id/login_forget_password_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_forget_password"
+        android:textColor="@color/color_fd7b25"
+        android:textSize="14sp"
+        android:layout_marginRight="@dimen/x80"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/login_password_edittext"/>
+
+    <View
+        android:id="@+id/login_password_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x2"
+        android:background="@color/color_e1e4e6"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x80"
+        android:layout_marginTop="@dimen/y40"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_password_edittext"/>
+
+    <CheckBox
+        android:id="@+id/login_checkbox"
+        android:layout_width="@dimen/x26"
+        android:layout_height="@dimen/y26"
+        android:button="@drawable/selector_user_agreement"
+        android:layout_marginTop="@dimen/y30"
+        app:layout_constraintLeft_toLeftOf="@+id/login_password_view"
+        app:layout_constraintTop_toBottomOf="@+id/login_password_view"/>
+
+    <TextView
+        android:id="@+id/login_agreement_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_agreement_textview"
+        android:textColor="@color/color_9aa0a2"
+        android:textSize="11sp"
+        android:layout_marginLeft="@dimen/x8"
+        app:layout_constraintLeft_toRightOf="@+id/login_checkbox"
+        app:layout_constraintTop_toTopOf="@+id/login_checkbox"
+        app:layout_constraintBottom_toBottomOf="@+id/login_checkbox"/>
+
+    <TextView
+        android:id="@+id/login_user_agreement_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_agreement"
+        android:textColor="@color/color_33353a"
+        android:textSize="11sp"
+        android:layout_marginLeft="@dimen/x8"
+        app:layout_constraintLeft_toRightOf="@+id/login_agreement_textview"
+        app:layout_constraintTop_toTopOf="@+id/login_checkbox"
+        app:layout_constraintBottom_toBottomOf="@+id/login_checkbox"/>
+
+    <TextView
+        android:id="@+id/login_sign_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/login_sign_in"
+        android:textSize="16sp"
+        android:textColor="@color/color_ffffff"
+        android:gravity="center"
+        android:paddingTop="@dimen/y30"
+        android:paddingBottom="@dimen/y30"
+        android:layout_marginTop="@dimen/y48"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginRight="@dimen/x80"
+        android:enabled="false"
+        android:background="@drawable/login_selector_home_button_nomal_fd7b25_unenable_febd92"
+        app:layout_constraintTop_toBottomOf="@+id/login_agreement_textview" />
+
+    <TextView
+        android:id="@+id/login_register_account_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_register_account"
+        android:textSize="14sp"
+        android:textColor="@color/color_fd7b25"
+        android:layout_marginTop="@dimen/y40"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_sign_textview"/>
+
+    <TextView
+        android:id="@+id/login_quick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login_quick_login"
+        android:textSize="13sp"
+        android:textColor="@color/color_bbc0c1"
+        android:layout_marginTop="@dimen/y188"
+        app:layout_constraintTop_toBottomOf="@+id/login_register_account_textview"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/y56"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/login_quick">
+
+        <ImageView
+            android:id="@+id/login_qq_imageview"
+            android:layout_width="@dimen/x88"
+            android:layout_height="@dimen/y88"
+            android:src="@mipmap/login_qq"/>
+
+        <ImageView
+            android:id="@+id/login_wx_imageview"
+            android:layout_width="@dimen/x88"
+            android:layout_height="@dimen/y88"
+            android:src="@mipmap/login_weixin"
+            android:layout_marginLeft="@dimen/x60"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y14"
+        android:background="@color/color_f0f2f4"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mine_sign_up_time_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/color_545859"
+            android:layout_marginTop="@dimen/y32"
+            android:layout_marginLeft="@dimen/x30"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/mine_sign_up_state_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="@color/color_fd7b25"
+            android:layout_marginRight="@dimen/x30"
+            app:layout_constraintTop_toTopOf="@+id/mine_sign_up_time_textview"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"
+        android:background="@color/color_f0f2f4"
+        android:layout_marginTop="@dimen/y28"
+        android:layout_marginBottom="@dimen/y30"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mine_sign_title_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/color_33353a"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/x28"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/mine_sign_price_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/color_33353a"
+            android:textStyle="bold"
+            android:layout_marginRight="@dimen/x30"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/mine_sign_title_textview"/>
+
+        <com.art.recruitment.artperformance.view.TagCloudView
+            android:id="@+id/details_flowlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y12"
+            android:layout_marginRight="@dimen/x30"
+            android:layout_marginLeft="@dimen/x30"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mine_sign_title_textview"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginRight="@dimen/x30"
+        android:layout_marginTop="@dimen/y24"
+        android:background="@color/color_f0f2f4"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y24">
+
+        <ImageView
+            android:id="@+id/mine_sign_time_imageview"
+            android:layout_width="@dimen/x20"
+            android:layout_height="@dimen/y20"
+            android:src="@mipmap/icon_a_time"
+            android:layout_marginLeft="@dimen/x30"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/mine_sign_time_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/color_9aa0a2"
+            android:layout_marginLeft="@dimen/x14"
+            app:layout_constraintLeft_toRightOf="@+id/mine_sign_time_imageview"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/y22"
+        android:paddingBottom="@dimen/y22">
+
+        <ImageView
+            android:id="@+id/mine_sign_adress_imageview"
+            android:layout_width="@dimen/x20"
+            android:layout_height="@dimen/y20"
+            android:src="@mipmap/icon_a_adress"
+            android:layout_marginLeft="@dimen/x30"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/mine_sign_adress_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/color_9aa0a2"
+            android:layout_marginLeft="@dimen/x14"
+            app:layout_constraintLeft_toRightOf="@+id/mine_sign_adress_imageview"/>
+
+        <ImageView
+            android:id="@+id/mine_sign_arrow_imageview"
+            android:layout_width="@dimen/x54"
+            android:layout_height="@dimen/y22"
+            android:src="@mipmap/icon_a_arrow"
+            android:paddingLeft="@dimen/x20"
+            android:paddingRight="@dimen/x20"
+            android:layout_marginRight="@dimen/x20"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/mine_sign_people_imageview"
+            android:layout_width="@dimen/x20"
+            android:layout_height="@dimen/y20"
+            android:src="@mipmap/icon_a_people"
+            android:layout_marginLeft="@dimen/x30"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/mine_sign_people_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@color/color_9aa0a2"
+            android:layout_marginLeft="@dimen/x14"
+            app:layout_constraintLeft_toRightOf="@+id/mine_sign_people_imageview"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginTop="@dimen/y30"
+        android:paddingBottom="@dimen/y30">
+
+        <ImageView
+            android:id="@+id/mine_sign_chat_imageview"
+            android:layout_width="@dimen/y96"
+            android:layout_height="@dimen/y58"
+            android:src="@mipmap/ico_my_message"
+            android:paddingLeft="@dimen/x30"
+            android:paddingRight="@dimen/x30"
+            android:paddingTop="@dimen/y12"
+            android:paddingBottom="@dimen/y14"
+            android:background="@drawable/shape_mine_sign_up_message_background"/>
+
+        <TextView
+            android:id="@+id/mine_sign_clean_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/mine_sign_up_clean"
+            android:textSize="13sp"
+            android:textColor="@color/color_ffffff"
+            android:paddingTop="@dimen/y16"
+            android:paddingBottom="@dimen/y18"
+            android:paddingRight="@dimen/x50"
+            android:paddingLeft="@dimen/x50"
+            android:background="@drawable/shape_mine_sign_up_clean_background"
+            android:layout_marginRight="@dimen/x40"
+            android:visibility="gone"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</LinearLayout>

@@ -1,0 +1,157 @@
+package com.art.recruitment.artperformance.ui.group.fragment;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
+
+import com.art.recruitment.artperformance.R;
+import com.art.recruitment.artperformance.bean.group.ApplyListBean;
+import com.art.recruitment.artperformance.bean.group.CencelHiringBean;
+import com.art.recruitment.artperformance.bean.group.HiringBean;
+import com.art.recruitment.artperformance.ui.group.activity.MineRecruitActivity;
+import com.art.recruitment.artperformance.ui.group.adapter.EmploymentAdapter;
+import com.art.recruitment.artperformance.ui.group.contract.EmploymentContract;
+import com.art.recruitment.artperformance.ui.group.presenter.EmploymentPresenter;
+import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
+import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
+import com.art.recruitment.common.base.config.BaseConfig;
+import com.art.recruitment.common.base.ui.BaseFragment;
+import com.art.recruitment.common.http.error.ErrorType;
+import com.blankj.utilcode.util.ToastUtils;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.easeui.EaseConstant;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+
+import java.util.List;
+
+import butterknife.BindView;
+
+public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyListBean.ContentBean> implements EmploymentContract {
+    @BindView(R.id.release_employment_recyclerView)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.release_employment_smartRefreshLayout)
+    SmartRefreshLayout mSmartRefreshLayout;
+    private MineRecruitActivity mTransferCallback;
+    private int mTitleType;
+    private EmploymentAdapter adapter;
+
+    public static EmploymentFragment newInstance(Bundle bundle) {
+        EmploymentFragment mFragment = new EmploymentFragment();
+        mFragment.setArguments(bundle);
+        return mFragment;
+    }
+
+    public void setTransferCallback(MineRecruitActivity mTransferCallback) {
+        this.mTransferCallback = mTransferCallback;
+    }
+
+    @Override
+    protected int getLayoutId() {
+        return R.layout.fragment_employment;
+    }
+
+    @Override
+    protected SmartRefreshLayout getSmartRefreshLayout() {
+        return mSmartRefreshLayout;
+    }
+
+    @Override
+    protected RecyclerView getRecyclerView() {
+        return mRecyclerView;
+    }
+
+    @Override
+    protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
+        adapter = new EmploymentAdapter(mContext, mDataList, mTitleType);
+        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        return adapter;
+    }
+
+    @Override
+    protected boolean enableAdapterLoadMore() {
+        return true;
+    }
+
+    @Override
+    protected void initPresenter() {
+
+    }
+
+    @Override
+    protected void initView() {
+        setEmptyErrorViewData(R.mipmap.img_show_empty, "暂时没有数据");
+
+        mTitleType = getArguments().getInt(BaseConfig.FRAGMENT_TAG_NAME_ADS_TYPE);
+        int recruitment_id = getArguments().getInt("recruitment_id");
+        if (mTitleType == 1){
+
+        }else if (mTitleType == 2){
+
+        }
+
+        mPresenter.applyList(recruitment_id, mTitleType);
+    }
+
+    @Override
+    protected void lazyLoad() {
+
+    }
+
+    @Override
+    public void returnApplyListBean(final ApplyListBean.DataBean bean) {
+
+        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.mine_recruit_clean_employment_textview:
+                        mPresenter.cencelHiring(bean.getContent().get(position).getRecruitmentId(), bean.getContent().get(position).getId());
+                        break;
+                    case R.id.mine_recruit_chat_imageview:
+                        Intent chat = new Intent(getContext(), ChatActivity.class);
+                        chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getContent().get(position).getApplyUserName());  //对方账号
+                        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
+                        startActivity(chat);
+                        break;
+                    case R.id.mine_recruit_refuse_textview:
+                        mPresenter.cencelHiring(bean.getContent().get(position).getRecruitmentId(), bean.getContent().get(position).getId());
+                        break;
+                    case R.id.mine_recruit_employment_textview:
+                        mPresenter.hiring(bean.getContent().get(position).getRecruitmentId(), bean.getContent().get(position).getId(), true);
+                        break;
+                    case R.id.mine_recruit_employment_chat_imageview:
+                        Intent chat2 = new Intent(getContext(), ChatActivity.class);
+                        chat2.putExtra(EaseConstant.EXTRA_USER_ID, bean.getContent().get(position).getApplyUserName());  //对方账号
+                        chat2.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
+                        startActivity(chat2);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
+        resetStateWhenLoadDataSuccess(bean.getContent());
+
+    }
+
+    @Override
+    public void returnHiringBean(HiringBean.DataBean bean) {
+
+    }
+
+    @Override
+    public void returnCencelHiringBean(CencelHiringBean.DataBean bean) {
+
+    }
+
+    @Override
+    public void showErrorTip(ErrorType errorType, int errorCode, String message) {
+        if (message != null){
+            resetStateWhenLoadDataFailed(errorCode, message);
+        }
+    }
+}

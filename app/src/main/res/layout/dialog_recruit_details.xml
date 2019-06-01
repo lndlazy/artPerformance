@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginRight="@dimen/x66"
+        android:layout_marginLeft="@dimen/x64"
+        android:paddingBottom="@dimen/y50"
+        android:background="@drawable/shape_home_search_background">
+
+        <TextView
+            android:id="@+id/recruit_details_title_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_is_sign_up_immediately"
+            android:textSize="17sp"
+            android:textColor="@color/color_333333"
+            android:layout_marginTop="@dimen/y98"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <TextView
+            android:id="@+id/recruit_details_clean_textview"
+            android:layout_width="@dimen/x240"
+            android:layout_height="@dimen/y88"
+            android:text="@string/clean"
+            android:textSize="16sp"
+            android:textColor="@color/color_9aa0a2"
+            android:layout_marginTop="@dimen/y92"
+            android:gravity="center"
+            android:background="@drawable/dialog_recruit_details_clean_bg"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/recruit_details_determine_textview"
+            app:layout_constraintTop_toBottomOf="@+id/recruit_details_title_textview"/>
+
+        <TextView
+            android:id="@+id/recruit_details_determine_textview"
+            android:layout_width="@dimen/x240"
+            android:layout_height="@dimen/y88"
+            android:text="@string/determine"
+            android:textSize="16sp"
+            android:textColor="@color/color_ffffff"
+            android:background="@drawable/login_shape_home_button_nomal_fd7b25"
+            android:layout_marginLeft="@dimen/x30"
+            android:gravity="center"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/recruit_details_clean_textview"
+            app:layout_constraintTop_toTopOf="@+id/recruit_details_clean_textview"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</RelativeLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/y40"
+    android:paddingBottom="@dimen/y20"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/dynamic_detail_head_imageview"
+        android:layout_width="@dimen/x58"
+        android:layout_height="@dimen/y58"/>
+
+    <TextView
+        android:id="@+id/dynamic_detail_name_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/color_33353a"
+        android:layout_marginLeft="@dimen/x20"
+        app:layout_constraintLeft_toRightOf="@+id/dynamic_detail_head_imageview"/>
+
+    <TextView
+        android:id="@+id/dynamic_detail_coutent_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="13sp"
+        android:textColor="@color/color_33353a"
+        android:layout_marginTop="@dimen/y22"
+        app:layout_constraintLeft_toLeftOf="@+id/dynamic_detail_name_textview"
+        app:layout_constraintTop_toBottomOf="@+id/dynamic_detail_name_textview"/>
+
+    <TextView
+        android:id="@+id/dynamic_detail_time_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/color_999fa2"
+        app:layout_constraintTop_toTopOf="@+id/dynamic_detail_name_textview"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+</android.support.constraint.ConstraintLayout>

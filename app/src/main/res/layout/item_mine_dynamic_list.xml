@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/y40"
+    android:paddingLeft="@dimen/x30">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/mine_dynamic_date_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textColor="@color/color_abb2b4"/>
+
+        <TextView
+            android:id="@+id/mine_dynamic_time_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/color_abb2b4"
+            android:layout_marginLeft="@dimen/x16"
+            app:layout_constraintBottom_toBottomOf="@+id/mine_dynamic_date_textview"
+            app:layout_constraintLeft_toRightOf="@+id/mine_dynamic_date_textview"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <com.art.recruitment.artperformance.view.ExpandableTextView
+        android:id="@+id/mine_dynamic_expandableTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/x40"/>
+
+    <com.art.recruitment.artperformance.view.NineGridTestLayout
+        android:id="@+id/mine_dynamic_nineGridTestLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/x30"
+        android:layout_marginBottom="@dimen/x30"
+        android:layout_marginTop="@dimen/x30"
+        app:sapcing="4dp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"
+        android:layout_marginRight="@dimen/x30"
+        android:layout_marginTop="@dimen/y30"
+        android:background="@color/color_f0f2f4"/>
+
+</LinearLayout>

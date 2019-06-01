@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.dynamic.activity.ReleaseDynamicActivity">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/y56"
+        android:paddingBottom="@dimen/y16">
+
+        <TextView
+            android:id="@+id/dynamic_release_clean_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clean"
+            android:textSize="16sp"
+            android:textColor="@color/color_33353a"
+            android:layout_marginBottom="@dimen/y12"
+            android:layout_marginLeft="@dimen/x30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <TextView
+            android:id="@+id/dynamic_release"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dynamic_release"
+            android:textSize="18sp"
+            android:textColor="@color/color_33353a"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/y12"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/dynamic_release_textview"
+            app:layout_constraintLeft_toRightOf="@+id/dynamic_release_clean_textview"/>
+
+        <TextView
+            android:id="@+id/dynamic_release_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/main_rb_release"
+            android:textSize="13sp"
+            android:textColor="@color/color_ffffff"
+            android:layout_marginRight="@dimen/x30"
+            android:paddingBottom="@dimen/y16"
+            android:paddingTop="@dimen/y16"
+            android:paddingLeft="@dimen/x34"
+            android:paddingRight="@dimen/x32"
+            android:background="@drawable/shape_dynamic_release_background"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y2"
+        android:background="@color/color_f0f2f4"/>
+
+    <EditText
+        android:id="@+id/dynamic_content_edittext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="@string/dynamic_release_content"
+        android:textSize="16sp"
+        android:textColorHint="@color/color_b7bcbe"
+        android:textColor="@color/color_33353a"
+        android:background="@null"
+        android:theme="@style/TextInputLayoutLineColor"
+        android:layout_marginTop="@dimen/y40"
+        android:layout_marginLeft="@dimen/x60"
+        android:layout_marginRight="@dimen/x60"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/y202"
+        android:layout_marginLeft="@dimen/x60"
+        android:layout_marginRight="@dimen/x60"
+        android:orientation="vertical">
+
+        <GridView
+            android:id="@+id/dynamic_release_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnWidth="@dimen/x202"
+            android:stretchMode="columnWidth"
+            android:scrollbars="none"
+            android:gravity="center"
+            android:verticalSpacing="@dimen/y10"
+            android:horizontalSpacing="@dimen/x10"
+            android:numColumns="auto_fit"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/home_smartRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.youth.banner.Banner
+            android:id="@+id/home_banner"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y380"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/home_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/home_tolbar_constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/y24">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/y64"
+            android:layout_marginTop="@dimen/y52"
+            android:layout_marginLeft="@dimen/x30"
+            android:layout_marginRight="@dimen/x6"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:background="@drawable/shape_home_search_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/home_message_imageview"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/home_city_constrainLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/home_city_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="城市"
+                    android:textSize="13sp"
+                    android:textColor="@color/color_333435"
+                    android:singleLine="true"
+                    android:maxLength="3"
+                    android:ellipsize="end"
+                    android:layout_marginLeft="@dimen/x28"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+                <ImageView
+                    android:id="@+id/home_city_imageview"
+                    android:layout_width="@dimen/x12"
+                    android:layout_height="@dimen/y8"
+                    android:src="@mipmap/nav_arrow_down"
+                    android:layout_marginLeft="@dimen/x26"
+                    android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintLeft_toRightOf="@+id/home_city_textview"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"/>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <EditText
+                android:id="@+id/home_search_edittext"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:hint="@string/home_keyword_search"
+                android:background="@null"
+                android:textSize="12sp"
+                android:textColorHint="@color/color_9aa0a2"
+                android:textColor="@color/color_33353a"
+                android:imeOptions="actionSearch"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:layout_marginLeft="@dimen/x26"
+                android:layout_marginRight="@dimen/x10"
+                android:theme="@style/TextInputLayoutLineColor"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/home_city_constrainLayout"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/home_message_imageview"
+            android:layout_width="@dimen/x70"
+            android:layout_height="@dimen/y66"
+            android:src="@mipmap/nav_message"
+            android:layout_marginTop="@dimen/y42"
+            android:layout_marginRight="@dimen/x26"
+            android:paddingTop="@dimen/y20"
+            android:paddingLeft="@dimen/x20"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/home_sort_constraintLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/home_sort_bg"
+        android:paddingBottom="@dimen/y18"
+        android:paddingTop="@dimen/y18"
+        android:paddingLeft="@dimen/x40"
+        android:paddingRight="@dimen/x30"
+        android:layout_marginBottom="@dimen/y40"
+        android:layout_marginRight="@dimen/x30"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+        <TextView
+            android:id="@+id/home_sort_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home_sort"
+            android:textSize="14sp"
+            android:textColor="@color/color_ffffff"/>
+
+        <ImageView
+            android:layout_width="@dimen/x22"
+            android:layout_height="@dimen/y22"
+            android:src="@mipmap/icon_sort"
+            android:layout_marginLeft="@dimen/x14"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/home_sort_textview"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/home_sort_next_constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginRight="@dimen/x30"
+        android:background="@drawable/home_sort_select_bg"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/home_sort_constraintLayout"
+        app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/home_sort_next_imageview"
+            android:layout_width="@dimen/x22"
+            android:layout_height="@dimen/y22"
+            android:src="@mipmap/icon_arrow_down"
+            android:layout_marginTop="@dimen/y30"
+            android:layout_marginRight="@dimen/x30"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y14"
+            android:paddingBottom="@dimen/y40"
+            app:layout_constraintTop_toBottomOf="@+id/home_sort_next_imageview">
+
+            <RadioButton
+                android:id="@+id/home_desc_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="工资由高到低"
+                android:textSize="16sp"
+                android:layout_gravity="center"
+                android:textColor="@color/color_ffffff"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/home_desc_imageView"/>
+
+            <View
+                android:id="@+id/home_desc_view"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y2"
+                android:layout_marginTop="@dimen/y42"
+                android:layout_marginLeft="@dimen/x32"
+                android:layout_marginRight="@dimen/x30"
+                android:background="#22000000"
+                app:layout_constraintTop_toBottomOf="@+id/home_desc_radioButton"/>
+
+            <RadioButton
+                android:id="@+id/home_esc_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:text="工资由低到高"
+                android:textSize="16sp"
+                android:textColor="@color/color_ffffff"
+                android:layout_marginTop="@dimen/y40"
+                android:layout_marginBottom="@dimen/y40"
+                android:layout_gravity="center"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/home_esc_imiageView"
+                app:layout_constraintTop_toBottomOf="@+id/home_desc_view"/>
+
+            <ImageView
+                android:id="@+id/home_desc_imageView"
+                android:layout_width="@dimen/x34"
+                android:layout_height="@dimen/y34"
+                android:src="@mipmap/icon_tick_s"
+                android:layout_marginLeft="@dimen/x20"
+                android:visibility="invisible"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/home_desc_radioButton"
+                app:layout_constraintBottom_toBottomOf="@+id/home_desc_radioButton"
+                app:layout_constraintLeft_toRightOf="@+id/home_desc_radioButton"/>
+
+            <ImageView
+                android:id="@+id/home_esc_imiageView"
+                android:layout_width="@dimen/x34"
+                android:layout_height="@dimen/y34"
+                android:src="@mipmap/icon_tick_s"
+                android:layout_marginLeft="@dimen/x20"
+                android:visibility="invisible"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/home_esc_radioButton"
+                app:layout_constraintBottom_toBottomOf="@+id/home_esc_radioButton"
+                app:layout_constraintLeft_toRightOf="@+id/home_esc_radioButton"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

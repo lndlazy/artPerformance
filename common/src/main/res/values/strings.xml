@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">common</string>
+
+    <string name="app_exit">再按一次退出</string>
+    <string name="request_failed_press_to_retry">数据获取失败，请点击重试</string>
+
+</resources>

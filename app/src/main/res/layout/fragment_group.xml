@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/group_taolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/y24">
+
+        <ImageView
+            android:id="@+id/group_search_imageview"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/y40"
+            android:src="@mipmap/nav_icon_search"
+            android:layout_marginLeft="@dimen/x30"
+            android:layout_marginTop="@dimen/y64"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/group_city_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@+id/group_age_constraintLayout"
+            app:layout_constraintLeft_toRightOf="@+id/group_search_imageview"
+            app:layout_constraintTop_toTopOf="@+id/group_search_imageview"
+            app:layout_constraintBottom_toBottomOf="@+id/group_search_imageview">
+            
+            <TextView
+                android:id="@+id/group_city_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/group_city"
+                android:textSize="14sp"
+                android:textColor="@color/color_33353a"/>
+            
+            <ImageView
+                android:id="@+id/group_city_imageview"
+                android:layout_width="@dimen/x14"
+                android:layout_height="@dimen/y8"
+                android:src="@mipmap/icon_arrowdown_b"
+                android:layout_marginLeft="@dimen/x24"
+                app:layout_constraintTop_toTopOf="@+id/group_city_textview"
+                app:layout_constraintBottom_toBottomOf="@+id/group_city_textview"
+                app:layout_constraintLeft_toRightOf="@+id/group_city_textview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/group_age_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintRight_toLeftOf="@+id/group_gender_constraintLayout"
+            app:layout_constraintLeft_toRightOf="@+id/group_city_constraintLayout"
+            app:layout_constraintTop_toTopOf="@+id/group_city_constraintLayout"
+            app:layout_constraintBottom_toBottomOf="@+id/group_city_constraintLayout">
+
+            <TextView
+                android:id="@+id/group_age_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/group_age"
+                android:textSize="14sp"
+                android:textColor="@color/color_33353a"/>
+
+            <ImageView
+                android:id="@+id/group_age_imageview"
+                android:layout_width="@dimen/x14"
+                android:layout_height="@dimen/y8"
+                android:src="@mipmap/icon_arrowdown_b"
+                android:layout_marginLeft="@dimen/x24"
+                app:layout_constraintTop_toTopOf="@+id/group_age_textview"
+                app:layout_constraintBottom_toBottomOf="@+id/group_age_textview"
+                app:layout_constraintLeft_toRightOf="@+id/group_age_textview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/group_gender_constraintLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@+id/group_age_constraintLayout"
+            app:layout_constraintTop_toTopOf="@+id/group_age_constraintLayout"
+            app:layout_constraintBottom_toBottomOf="@+id/group_age_constraintLayout"
+            app:layout_constraintRight_toRightOf="parent">
+
+            <TextView
+                android:id="@+id/group_gender_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/group_gender"
+                android:textSize="14sp"
+                android:textColor="@color/color_33353a"/>
+
+            <ImageView
+                android:id="@+id/group_gender_imageview"
+                android:layout_width="@dimen/x14"
+                android:layout_height="@dimen/y8"
+                android:src="@mipmap/icon_arrowdown_b"
+                android:layout_marginLeft="@dimen/x24"
+                app:layout_constraintTop_toTopOf="@+id/group_gender_textview"
+                app:layout_constraintBottom_toBottomOf="@+id/group_gender_textview"
+                app:layout_constraintLeft_toRightOf="@+id/group_gender_textview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/group_smartRefreshLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/group_taolbar">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/group_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:numColumns="2"
+            android:scrollbars="none"
+            android:stretchMode="spacingWidthUniform"
+            android:horizontalSpacing="@dimen/x6"
+            android:verticalSpacing="@dimen/y30"/>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/group_age_choice_constranintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/y70"
+        android:paddingTop="@dimen/y70"
+        android:visibility="gone"
+        android:background="@color/color_ffffff"
+        app:layout_constraintTop_toBottomOf="@+id/group_taolbar">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/group_low_age_constraintLayout"
+            android:layout_width="@dimen/x206"
+            android:layout_height="@dimen/y78"
+            android:background="@color/color_f0f2f4"
+            android:layout_marginLeft="@dimen/x60"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <EditText
+                android:id="@+id/group_low_age_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/group_low_age"
+                android:textSize="14sp"
+                android:textColorHint="@color/color_9aa0a2"
+                android:background="@null"
+                android:inputType="number"
+                android:theme="@style/TextInputLayoutLineColor"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/group_age_view"
+            android:layout_width="@dimen/x16"
+            android:layout_height="@dimen/y4"
+            android:background="@color/color_33353a"
+            android:layout_marginLeft="@dimen/x20"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/group_low_age_constraintLayout"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/group_high_age_constraintLayout"
+            android:layout_width="@dimen/x206"
+            android:layout_height="@dimen/y78"
+            android:background="@color/color_f0f2f4"
+            android:layout_marginLeft="@dimen/x20"
+            app:layout_constraintLeft_toRightOf="@+id/group_age_view"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <EditText
+                android:id="@+id/group_high_age_edittext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="@string/group_high_age"
+                android:textSize="14sp"
+                android:textColorHint="@color/color_9aa0a2"
+                android:background="@null"
+                android:inputType="number"
+                android:theme="@style/TextInputLayoutLineColor"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/group_age_determine_textview"
+            android:layout_width="@dimen/x134"
+            android:layout_height="@dimen/y78"
+            android:text="@string/group_determine"
+            android:textSize="14sp"
+            android:textColor="@color/color_ffffff"
+            android:gravity="center"
+            android:background="@color/color_fd7b25"
+            android:layout_marginRight="@dimen/x60"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/group_age_choice_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/color_000000"
+        android:alpha="0.6"
+        android:visibility="gone"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintTop_toBottomOf="@+id/group_age_choice_constranintLayout"/>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/group_gender_selected_constraintLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@color/color_ffffff"
+        app:layout_constraintTop_toBottomOf="@+id/group_taolbar">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/group_man_selected_constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y32"
+            android:padding="@dimen/y30"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/group_man_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/group_man"
+                android:textSize="15sp"
+                android:textColor="@color/color_33353a"
+                android:layout_marginLeft="@dimen/x276"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <ImageView
+                android:id="@+id/group_man_selected_imageview"
+                android:layout_width="@dimen/x36"
+                android:layout_height="@dimen/y36"
+                android:src="@mipmap/icon_selected"
+                android:layout_marginLeft="@dimen/x80"
+                android:visibility="gone"
+                app:layout_constraintLeft_toRightOf="@+id/group_man_textview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+        <View
+            android:id="@+id/group_gender_selected_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y2"
+            android:background="@color/color_f0f2f4"
+            android:layout_marginLeft="@dimen/x30"
+            android:layout_marginRight="@dimen/x30"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/group_man_selected_constraintLayout"/>
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/group_woman_selected_constraintLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/y30"
+            app:layout_constraintTop_toBottomOf="@+id/group_gender_selected_view">
+
+            <TextView
+                android:id="@+id/group_woman_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/group_woman"
+                android:textSize="15sp"
+                android:textColor="@color/color_33353a"
+                android:layout_marginLeft="@dimen/x276"
+                app:layout_constraintLeft_toLeftOf="parent"/>
+
+            <ImageView
+                android:id="@+id/group_woman_selected_imageview"
+                android:layout_width="@dimen/x36"
+                android:layout_height="@dimen/y36"
+                android:src="@mipmap/icon_selected"
+                android:layout_marginLeft="@dimen/x80"
+                android:visibility="gone"
+                app:layout_constraintLeft_toRightOf="@+id/group_woman_textview"/>
+
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+        android:id="@+id/group_grnder_choice_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/color_000000"
+        android:alpha="0.6"
+        android:visibility="gone"
+        app:layout_constraintVertical_weight="1"
+        app:layout_constraintTop_toBottomOf="@+id/group_gender_selected_constraintLayout"/>
+
+    <me.yokeyword.indexablerv.IndexableLayout
+        android:id="@+id/group_indexableLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintVertical_weight="1"
+        android:background="@android:color/white"
+        app:indexBar_selectedTextColor="@color/color_222222"
+        app:indexBar_textColor="@color/color_cccccc"
+        app:indexBar_layout_width="40dp"
+        app:indexBar_textSize="14sp"
+        app:indexBar_textSpace="5dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/group_taolbar"/>
+
+</android.support.constraint.ConstraintLayout>
