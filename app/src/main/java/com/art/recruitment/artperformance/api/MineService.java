@@ -11,6 +11,7 @@ import com.art.recruitment.artperformance.bean.mine.OssBean;
 import com.art.recruitment.artperformance.bean.mine.PathUrlBean;
 import com.art.recruitment.artperformance.bean.mine.RecruitmentOptBean;
 import com.art.recruitment.artperformance.bean.mine.SignaTureBean;
+import com.art.recruitment.common.base.BaseBean;
 
 import io.reactivex.Observable;
 import okhttp3.RequestBody;
@@ -43,7 +44,7 @@ public interface MineService {
      */
     @FormUrlEncoded
     @POST(ApiUrls.PATH_URL)
-    Observable<PathUrlBean> pathUrl(@Field("path") String path);
+    Observable<BaseBean<String>> pathUrl(@Field("path") String path);
 
     /**
      * OSS签名

@@ -7,11 +7,13 @@ import com.art.recruitment.artperformance.bean.mine.OssBean;
 import com.art.recruitment.artperformance.bean.mine.PathUrlBean;
 import com.art.recruitment.artperformance.bean.mine.SignaTureBean;
 import com.art.recruitment.artperformance.ui.mine.contract.MineDataContract;
+import com.art.recruitment.common.base.BaseBean;
 import com.art.recruitment.common.base.BasePresenter;
 import com.art.recruitment.common.baserx.RxSubscriber;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.http.mode.RequestMode;
+import com.orhanobut.logger.Logger;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -112,19 +114,22 @@ public class MineDataPresenter extends BasePresenter<MineDataContract> {
     }
 
     /**
-     * OSS签名信息
+     * OSS转换文件地址
      */
-    /*public void pathUrl(String path) {
+    public void pathUrl(String path, final int type) {
 
         Api.
                 observable(Api.getService(MineService.class).pathUrl(path)).
                 presenter(this).
                 requestMode(RequestMode.SINGLE).
                 showLoading(true).
-                doRequest(new RxSubscriber<String, PathUrlBean>() {
+                doRequest(new RxSubscriber<String, BaseBean<String>>() {
                     @Override
-                    protected void _onSuccess(String bean, String successMessage) {
-                        mView.returnPathUrlBean(bean);
+                    protected void _onSuccess(String picUrl, String successMessage) {
+
+                        //头像url获取成功
+//                        Logger.d("bean ===> " + picUrl);
+                        mView.returnPathUrlBean(picUrl, type);
                     }
 
                     @Override
@@ -132,6 +137,6 @@ public class MineDataPresenter extends BasePresenter<MineDataContract> {
                         mView.showErrorTip(errorType, errorCode, message);
                     }
                 });
-    }*/
+    }
 
 }

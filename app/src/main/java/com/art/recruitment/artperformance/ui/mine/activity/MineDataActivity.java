@@ -1,14 +1,20 @@
 package com.art.recruitment.artperformance.ui.mine.activity;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,27 +33,25 @@ import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
 import com.alibaba.sdk.android.oss.common.auth.OSSCustomSignerCredentialProvider;
-import com.alibaba.sdk.android.oss.internal.OSSAsyncTask;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.art.recruitment.artperformance.R;
-import com.art.recruitment.artperformance.bean.dynamic.ReleaseDynamicRequest;
 import com.art.recruitment.artperformance.bean.mine.ConsummateInfoBean;
 import com.art.recruitment.artperformance.bean.mine.ConsummateInfoRequest;
 import com.art.recruitment.artperformance.bean.mine.MineBean;
 import com.art.recruitment.artperformance.bean.mine.OssBean;
 import com.art.recruitment.artperformance.bean.mine.SignaTureBean;
-import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActivity;
 import com.art.recruitment.artperformance.ui.home.activity.CityActivity;
+import com.art.recruitment.artperformance.ui.mine.FileType;
 import com.art.recruitment.artperformance.ui.mine.ImageModel;
-import com.art.recruitment.artperformance.ui.mine.adapter.MineMasterAdapter;
 import com.art.recruitment.artperformance.ui.mine.adapter.MinePhotoAdapter;
 import com.art.recruitment.artperformance.ui.mine.adapter.MineVideoAdapter;
 import com.art.recruitment.artperformance.ui.mine.contract.MineDataContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MineDataPresenter;
-import com.art.recruitment.artperformance.utils.FileMd5Util;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.MatisseGlideEngine;
 import com.art.recruitment.artperformance.utils.PermissionTipUtils;
+import com.art.recruitment.artperformance.utils.StringsUtils;
 import com.art.recruitment.artperformance.utils.UriUtil;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.PermissionRationalDialog;
@@ -56,13 +60,12 @@ import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
+import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.stetho.common.LogUtil;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.orhanobut.logger.Logger;
@@ -78,10 +81,6 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -89,10 +88,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -100,6 +98,8 @@ import io.reactivex.functions.Consumer;
  */
 public class MineDataActivity extends BaseActivity<MineDataPresenter> implements MineDataContract {
 
+    @BindView(R.id.coverDelete)
+    ImageView coverDelete;
     @BindView(R.id.mine_return_imageview)
     ImageView mReturnImageview;
     @BindView(R.id.mine_arrow_imageview)
@@ -132,8 +132,8 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     TextView mCitiyEdittext;
     @BindView(R.id.mine_citiy_imageview)
     ImageView mCitiyImageview;
-    @BindView(R.id.mine_master_graph_recyclerView)
-    RecyclerView mMasterGraphRecyclerView;
+    //    @BindView(R.id.mine_master_graph_recyclerView)
+//    RecyclerView mMasterGraphRecyclerView;
     @BindView(R.id.mine_photo_recyclerView)
     RecyclerView mPhotoRecyclerView;
     @BindView(R.id.mine_video_recyclerView)
@@ -152,19 +152,20 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     RadioGroup mRadioGroup;
     @BindView(R.id.mine_data_head_imageview)
     SimpleDraweeView mHeadImageview;
+    @BindView(R.id.coverPic)
+    SimpleDraweeView coverPic;
 
     private ImageModel mAddImageModel;
-    public static final String FILE_PROVIDER_PATH = "com.art.recruitment.artperformance.fileprovider";// 文件提供路径
     private static int PHOTO_MAX_LIMIT_COUNT = 4;  //限定最多选择4张图片
     private static int MASTER_MAX_LIMIT_COUNT = 1;  //限定最多选择4张图片
     private static int VIDEO_MAX_LIMIT_COUNT = 1;  //限定最多选择4张图片
     private SelectionCreator mMatisseBuilder;
     private int mClickedItemPosition;
     private MinePhotoAdapter mPhotoAdapter;
-    private MineMasterAdapter mMasterAdapter;
+    //    private MineMasterAdapter mMasterAdapter;
     private MineVideoAdapter mVideoAdapter;
     private List<ImageModel> mImageLists;
-    private List<ImageModel> mImageListt;
+    //    private List<ImageModel> mImageListt;
     private List<ImageModel> mImageList;
     private List<ImageModel> mImageLisa;
     private Dialog mPermissionSettingDialog;
@@ -172,7 +173,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private List<String> mPhoto = new ArrayList<>();
     private List<String> mPhotoList = new ArrayList<>();
     private List<String> mPrimaryPhoto = new ArrayList<>();
-    private List<String> mPrimaryPhotoList = new ArrayList<>();
+    //    private List<String> mPrimaryPhotoList = new ArrayList<>();
     private String personalIntroductionVideo;
     private String personalIntroductionVideoList;
     private String mAvaterList;
@@ -183,10 +184,12 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private boolean isAddItemClicked;
     private int returnImageview;
     private static final int CODE_GALLERY_REQUEST = 0xa0;
+    private static final int CODE_COVER_REQUEST = 0xa1;
     private static final int CODE_RESULT_REQUEST = 0xa2;
     private static int output_X = 128;
     private static int output_Y = 128;
-    private String beans;
+    //业务服务器返回的签名content
+    private String signatureContent;
     private OSSCustomSignerCredentialProvider provider;
     private OSSClient oss;
     private String mAge, mWeight, mBust, mHeight, mHips, mName, mOther, mTelePhone, mWaist, mWeChat;
@@ -195,6 +198,16 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private PutObjectRequest putPrimaryPhoto;
     private PutObjectRequest putHead;
     private MineBean.DataBean dataBean;
+    private int editorType;
+
+
+    private String headPicUrl;//用户头像
+    private File photoFile;
+    private File outFile;//裁剪输出文件夹
+    private String bucket;
+    private String endpoint;
+    private String picObjectKey;
+    private String coverPicUrl;//封面图片
 
     @Override
     protected IToolbar getIToolbar() {
@@ -219,7 +232,12 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
 
+        editorType = getIntent().getIntExtra(Constant.EDITOR_TYPE, -1);
+        cityCode = -1;
+
         mPresenter.getPersonalData();
+
+        initPic();
 
         initMatisse();
 
@@ -265,6 +283,27 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             }
         });
 
+        coverDelete.setVisibility(View.INVISIBLE);
+
+    }
+
+    private void initPic() {
+
+        //获取阿里云签名
+        if (TextUtils.isEmpty(signatureContent) || provider == null)
+            setProvider();
+
+        //oss签名信息
+        if (oss == null || TextUtils.isEmpty(bucket) || TextUtils.isEmpty(endpoint))
+            mPresenter.oss();
+
+        //图片缓存目录
+        photoFile = new File(Constant.CACHE_DIR);
+        //文件夹不存在就创建文件夹
+        if (!photoFile.exists())
+            photoFile.mkdirs();
+
+
     }
 
     private void initButtonClick() {
@@ -308,9 +347,54 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     }
                 });
 
+        RxView.
+                clicks(mHeadImageview).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        choseHeadImageFromGallery();
+                    }
+                });
+
+        RxView.
+                clicks(coverPic).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+//                        returnImageview = 2;
+//                        requestPermissionAndSelectImage();
+                        chooseCoverPic();
+                    }
+                });
+        coverDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //删除封面
+                coverPicUrl = "";
+                coverPic.setImageURI(Uri.parse("res://" + getPackageName() + "/" + R.mipmap.icon_my_add));
+            }
+        });
     }
 
+
+    private void chooseCoverPic() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //不具有权限，需要进行权限申请
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x21);
+        } else {
+            Intent mIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(mIntent, CODE_COVER_REQUEST);
+        }
+
+    }
+
+    //保存
     private void initComit() {
+
         mAge = mAgeEdittext.getText().toString().trim();
         mWeight = mWeightEdittext.getText().toString().trim();
         mBust = mBustEdittext.getText().toString().trim();
@@ -322,64 +406,168 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         mWaist = mWaistEdittext.getText().toString().trim();
         mWeChat = mWeChatEdittext.getText().toString().trim();
 
+        switch (editorType) {
+
+            case Constant.EDITOR_TYPE_APPLY://应聘
+
+                applyNextStep();
+
+                break;
+            case Constant.EDITOR_TYPE_RELEASE://发布招募
+
+                releaseNextStep();
+
+                break;
+
+            default:
+                releaseNextStep();
+                break;
+        }
+
+    }
+
+    private void applyNextStep() {
+
         if (!TextUtils.isEmpty(mAge) && !TextUtils.isEmpty(mWeight) && !TextUtils.isEmpty(mBust) &&
                 !TextUtils.isEmpty(mHeight) && !TextUtils.isEmpty(mHips) && !TextUtils.isEmpty(mName) &&
                 !TextUtils.isEmpty(mOther) && !TextUtils.isEmpty(mTelePhone) && !TextUtils.isEmpty(mWaist) &&
-                !TextUtils.isEmpty(mWeChat)) {
+                !TextUtils.isEmpty(mWeChat) && !TextUtils.isEmpty(avater) && !TextUtils.isEmpty(personalIntroductionVideo)) {
 
-            provider = new OSSCustomSignerCredentialProvider() {
-                @Override
-                public String signContent(final String content) {
-                    URL url = null;
-                    try {
-                        String mContent = URLEncoder.encode(content, "UTF-8");
-                        url = new URL("http://47.94.8.204:18080/oss/signature?content=" + mContent);
-                        HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                        httpURLConnection.setRequestMethod("POST");
-                        httpURLConnection.setDoInput(true);
-                        httpURLConnection.setDoOutput(true);
-                        httpURLConnection.setRequestProperty("Authorization", SPUtils.getInstance().getString(BaseConfig.BaseSPKey.TOKEN));
-                        httpURLConnection.setRequestProperty("Content-Type", "application/json");
-                        BufferedInputStream bis = new BufferedInputStream(httpURLConnection.getInputStream());
-                        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                        int len;
-                        byte[] arr = new byte[1024];
-                        while ((len = bis.read(arr)) != -1) {
-                            bos.write(arr, 0, len);
-                            bos.flush();
-                        }
-                        bos.close();
-                        String string = bos.toString("utf-8");
+            setProvider();
 
-                        Logger.d("返回的数据??==>" + string);
-                        Gson gson = new Gson();
-                        SignaTureBean signaTureBean = gson.fromJson(string, SignaTureBean.class);
-                        beans = signaTureBean.getData();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    return beans;
-                }
-            };
-
-            Logger.d("personalIntroductionVideo==>" +personalIntroductionVideo
+            Logger.d("personalIntroductionVideo==>" + personalIntroductionVideo
                     + "    ,avater:" + avater);
 
-
-//            if (mPhoto.size() > 0 && mPrimaryPhoto.size() > 0 && personalIntroductionVideo.length() > 0 && avater.length() > 0) {
-//                mPresenter.oss();
-//            } else {
-//                ToastUtils.showShort("请完善资料再保存");
-//            }
+            if (mPhoto.size() > 0 && mPrimaryPhoto.size() > 0 && personalIntroductionVideo.length() > 0 && avater.length() > 0) {
+                mPresenter.oss();
+            } else {
+                ToastUtils.showShort(getResources().getString(R.string.apply_input_all));
+            }
 
         } else {
-            ToastUtils.showShort("请完善资料再保存");
+            ToastUtils.showShort(getResources().getString(R.string.apply_input_all));
         }
+    }
+
+    //发布招募的保存信息
+    private void releaseNextStep() {
+
+        if (TextUtils.isEmpty(mNameEdittext.getText().toString())) {
+            ToastUtils.showShort(getResources().getString(R.string.input_name));
+            return;
+        }
+
+        if (!mManRedioButton.isChecked() && !mWomanRedioButton.isChecked()) {
+            ToastUtils.showShort(getResources().getString(R.string.input_sex));
+            return;
+        }
+
+        if (TextUtils.isEmpty(mTelePhoneEdittext.getText().toString())) {
+            ToastUtils.showShort(getResources().getString(R.string.input_tel));
+            return;
+        }
+
+        inputInfo();
+
+    }
+
+    private void inputInfo() {
+
+
+        ConsummateInfoRequest request = new ConsummateInfoRequest();
+
+        if (StringsUtils.is2Int(mAge))
+        request.setAge(Integer.parseInt(mAge));
+//        request.setAvatar(mAvaterList);
+
+        if (!TextUtils.isEmpty(headPicUrl))
+            request.setAvatar(headPicUrl);
+
+        if (StringsUtils.is2Int(mWeight))
+            request.setBodyWeight(Integer.parseInt(mWeight));
+
+        if (StringsUtils.is2Int(mBust))
+            request.setBust(Integer.parseInt(mBust));
+//        if (cityCode != -1)
+        request.setCityId(cityCode);
+        request.setGender(gender);
+
+        if (StringsUtils.is2Int(mHeight))
+            request.setHeight(Integer.parseInt(mHeight));
+
+        if (StringsUtils.is2Int(mHips))
+            request.setHips(Integer.parseInt(mHips));
+        request.setName(mName);
+        //其他经历
+        request.setPersonalExperience(mOther);
+        request.setPersonalIntroductionVideo(personalIntroductionVideoList);
+        request.setPhoto(mPhotoList);
+        //封面
+//        request.setPrimaryPhoto(mPrimaryPhotoList);
+        ArrayList<String> strings = new ArrayList<>();
+        strings.add(coverPicUrl);
+        request.setPrimaryPhoto(strings);
+        request.setTelephone(mTelePhone);
+        //是否隐藏电话
+        request.setTelephoneHiddenFlag(telePhoneSwitchButton);
+
+        if (StringsUtils.is2Int(mWaist))
+            request.setWaist(Integer.parseInt(mWaist));
+        request.setWechat(mWeChat);
+        //是否隐藏微信
+        request.setWechatHiddenFlag(wxChatSwitchButton);
+
+        Gson gson = new Gson();
+        String codeStr = gson.toJson(request);
+        mPresenter.consummateInfo(codeStr);
+    }
+
+    private void setProvider() {
+        provider = new OSSCustomSignerCredentialProvider() {
+            @Override
+            public String signContent(final String content) {
+
+//                Logger.d("content内容::" + content);
+
+                URL url = null;
+                try {
+                    String mContent = URLEncoder.encode(content, "UTF-8");
+                    url = new URL(Api.HTTP_URL + Api.OSS_SIGNATURE + mContent);
+                    HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                    httpURLConnection.setRequestMethod("POST");
+                    httpURLConnection.setDoInput(true);
+                    httpURLConnection.setDoOutput(true);
+                    httpURLConnection.setRequestProperty("Authorization", SPUtils.getInstance().getString(BaseConfig.BaseSPKey.TOKEN));
+                    httpURLConnection.setRequestProperty("Content-Type", "application/json");
+                    BufferedInputStream bis = new BufferedInputStream(httpURLConnection.getInputStream());
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    int len;
+                    byte[] arr = new byte[1024];
+                    while ((len = bis.read(arr)) != -1) {
+                        bos.write(arr, 0, len);
+                        bos.flush();
+                    }
+                    bos.close();
+                    String string = bos.toString("utf-8");
+
+//                    Logger.d("返回的数据??==>" + string);
+                    Gson gson = new Gson();
+                    SignaTureBean signaTureBean = gson.fromJson(string, SignaTureBean.class);
+                    signatureContent = signaTureBean.getData();
+
+//                    Logger.d("signatureContent???===>" + signatureContent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return signatureContent;
+            }
+        };
 
     }
 
     @Override
     public void returnMineDataBean(MineBean.DataBean bean) {
+
         mNameEdittext.setText(bean.getUsername());
         if (bean.getGender() == 1) {
             mManRedioButton.setChecked(true);
@@ -413,6 +601,12 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         if (!TextUtils.isEmpty(bean.getCityName()))
             mCitiyEdittext.setText(bean.getCityName());
 
+        //设置头像
+        if (!TextUtils.isEmpty(bean.getAvatar())) {
+            mHeadImageview.setImageURI(Uri.parse(bean.getAvatar()));
+            headPicUrl = bean.getAvatar();
+        }
+
         mOtherEdittext.setText(bean.getPersonalExperience());
         dataBean = bean;
 
@@ -438,56 +632,59 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             mPhotoAdapter.notifyDataSetChanged();
         }
 
-        if (bean.getPrimaryPhotoView() != null && bean.getPrimaryPhotoView().size() > 0) {
-            List<ImageModel> mTempImageList1 = new ArrayList<>();
-            for (int i = 0; i < dataBean.getPrimaryPhotoView().size(); i++) {
-                ImageModel model = new ImageModel();
-                model.setUris(dataBean.getPrimaryPhotoView().get(i));
-                mTempImageList1.add(model);
-            }
-            mImageListt.remove(mClickedItemPosition);
-            mImageListt.addAll(mTempImageList1);
-            if (mImageListt.size() < 1) {
-                mImageListt.add(mAddImageModel);
-            }
-            mMasterAdapter.setNewData(mImageListt);
-            mPrimaryPhoto.add(mImageListt.get(0).getUris());
-            String urisPrimaryPhoto = mImageList.get(0).getUris();
-            String subPrimaryPhoto = urisPrimaryPhoto.substring(urisPrimaryPhoto.indexOf("minedata/"), urisPrimaryPhoto.indexOf("?"));
-            mPrimaryPhotoList.add(subPrimaryPhoto);
-            mMasterAdapter.notifyDataSetChanged();
-        }
+
+//          封面??????
+//        if (bean.getPrimaryPhotoView() != null && bean.getPrimaryPhotoView().size() > 0) {
+//            List<ImageModel> mTempImageList1 = new ArrayList<>();
+//            for (int i = 0; i < dataBean.getPrimaryPhotoView().size(); i++) {
+//                ImageModel model = new ImageModel();
+//                model.setUris(dataBean.getPrimaryPhotoView().get(i));
+//                mTempImageList1.add(model);
+//            }
+//            mImageListt.remove(mClickedItemPosition);
+//            mImageListt.addAll(mTempImageList1);
+//            if (mImageListt.size() < 1) {
+//                mImageListt.add(mAddImageModel);
+//            }
+//            mMasterAdapter.setNewData(mImageListt);
+//            mPrimaryPhoto.add(mImageListt.get(0).getUris());
+//            String urisPrimaryPhoto = mImageList.get(0).getUris();
+//            String subPrimaryPhoto = urisPrimaryPhoto.substring(urisPrimaryPhoto.indexOf("minedata/"), urisPrimaryPhoto.indexOf("?"));
+//            mPrimaryPhotoList.add(subPrimaryPhoto);
+//            mMasterAdapter.notifyDataSetChanged();
+//        }
 
         if (!TextUtils.isEmpty(bean.getPersonalIntroductionVideo())) {
-            List<ImageModel> mTempImageList2 = new ArrayList<>();
-            ImageModel model2 = new ImageModel();
-            model2.setUris(dataBean.getPersonalIntroductionVideo());
-            mTempImageList2.add(model2);
-            mImageLists.remove(mClickedItemPosition);
-            mImageLists.addAll(mTempImageList2);
-            if (mImageLists.size() < 1) {
-                mImageLists.add(mAddImageModel);
-            }
-            personalIntroductionVideo = mImageLists.get(0).getUris();
-            String urisVideo = mImageList.get(0).getUris();
-
-            Log.e("TAG", "urisVideo======》》》》》》" + urisVideo);
-
-            try {
-
-                String subVideo = urisVideo.substring(urisVideo.indexOf("minedata/"), urisVideo.indexOf("?"));
-                personalIntroductionVideoList = subVideo;
-                mVideoAdapter.setNewData(mImageLists);
-                mVideoAdapter.notifyDataSetChanged();
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            //TODO videolist?
+//            List<ImageModel> mTempImageList2 = new ArrayList<>();
+//            ImageModel model2 = new ImageModel();
+//            model2.setUris(dataBean.getPersonalIntroductionVideo());
+//            mTempImageList2.add(model2);
+//            mImageLists.remove(mClickedItemPosition);
+//            mImageLists.addAll(mTempImageList2);
+//            if (mImageLists.size() < 1) {
+//                mImageLists.add(mAddImageModel);
+//            }
+//            personalIntroductionVideo = mImageLists.get(0).getUris();
+//            String urisVideo = mImageList.get(0).getUris();
+//
+//            Log.e("TAG", "urisVideo======》》》》》》" + urisVideo);
+//
+//            try {
+//
+//                String subVideo = urisVideo.substring(urisVideo.indexOf("minedata/"), urisVideo.indexOf("?"));
+//                personalIntroductionVideoList = subVideo;
+//                mVideoAdapter.setNewData(mImageLists);
+//                mVideoAdapter.notifyDataSetChanged();
+//
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
 
         }
 
 //        if (!TextUtils.isEmpty(bean.getAvatar()))
-        mHeadImageview.setImageURI(Uri.parse(bean.getAvatar()));
+
 //        Glide.with(this).load(bean.getAvatar()).into(mHeadImageview).onLoadFailed(new BitmapDrawable( getResources().getDrawable(R.mipmap.icon_my_e)));
 
         if (!TextUtils.isEmpty(dataBean.getAvatarView())) {
@@ -509,9 +706,10 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     public void returnEssentialInfoBean(ConsummateInfoBean.DataBean bean) {
         ToastUtils.showShort("资料已保存");
         mPhotoList.clear();
-        mPrimaryPhotoList.clear();
+//        mPrimaryPhotoList.clear();
         personalIntroductionVideoList = null;
-        mHeadImageview = null;
+        finish();
+//        mHeadImageview = null;
     }
 
     @Override
@@ -521,195 +719,237 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
     @Override
     public void returnOssBean(OssBean.DataBean bean) {
+
+        if (bean == null) {
+            ToastUtils.showShort("数据错误");
+            return;
+        }
+
+        Logger.d("Bucket:::" + bean.getBucket() + ",,,,Endpoint::" + bean.getEndpoint());
+
         oss = new OSSClient(getApplicationContext(), bean.getEndpoint(), provider);
+        bucket = bean.getBucket();
+        endpoint = bean.getEndpoint();
 
-        if (mHeadImageview != null) {
-            // 构造上传请求
-            if (avater.indexOf("minedata/") == -1) {
-                try {
-                    mAvaterList = null;
-                    File file = new File(avater);
-                    InputStream inputStream = new FileInputStream(file);
-                    String digest = FileMd5Util.digest(inputStream);
-                    putHead = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", avater);
-                    mAvaterList = "minedata/" + digest + ".jpg";
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
 
-            } else {
-                putHead = new PutObjectRequest(bean.getBucket(), mAvaterList, avater);
-            }
+//        if (mHeadImageview != null) {
+//            // 构造上传请求
+//            if (!avater.contains("minedata/")) {
+//                try {
+//                    mAvaterList = null;
+//                    File file = new File(avater);
+//                    InputStream inputStream = new FileInputStream(file);
+//                    String digest = FileMd5Util.digest(inputStream);
+//                    putHead = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", avater);
+//                    mAvaterList = "minedata/" + digest + ".jpg";
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//
+//            } else {
+//                putHead = new PutObjectRequest(bean.getBucket(), mAvaterList, avater);
+//            }
+//
+//        }
+//
+//        for (int i = 0; i < mPrimaryPhoto.size(); i++) {
+//            // 构造上传请求
+//            if (!mPrimaryPhoto.get(i).contains("minedata/")) {
+//                try {
+//                    mPrimaryPhotoList.remove(mPrimaryPhotoList.get(i));
+//                    File file = new File(mPrimaryPhoto.get(i));
+//                    InputStream inputStream = new FileInputStream(file);
+//                    String digest = FileMd5Util.digest(inputStream);
+//                    putPrimaryPhoto = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", mPrimaryPhoto.get(i));
+//                    mPrimaryPhotoList.add("minedata/" + digest + ".jpg");
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                putPrimaryPhoto = new PutObjectRequest(bean.getBucket(), mPrimaryPhotoList.get(i), mPrimaryPhoto.get(i));
+//            }
+//
+//        }
+//
+//        for (int i = 0; i < mPhoto.size(); i++) {
+//            // 构造上传请求
+//            if (!mPhoto.get(i).contains("minedata/")) {
+//                try {
+//                    mPhotoList.remove(mPhotoList.get(i));
+//                    File file = new File(mPhoto.get(i));
+//                    InputStream inputStream = new FileInputStream(file);
+//                    String digest = FileMd5Util.digest(inputStream);
+//                    putPhoto = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", mPhoto.get(i));
+//                    mPhotoList.add("minedata/" + digest + ".jpg");
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                putPhoto = new PutObjectRequest(bean.getBucket(), mPhotoList.get(i), mPhoto.get(i));
+//            }
+//
+//        }
+//
+//        if (personalIntroductionVideo.length() > 0) {
+//            // 构造上传请求
+//            if (!personalIntroductionVideo.contains("minedata/")) {
+//                try {
+//                    personalIntroductionVideoList = null;
+//                    File file = new File(personalIntroductionVideo);
+//                    InputStream inputStream = new FileInputStream(file);
+//                    String digest = FileMd5Util.digest(inputStream);
+//                    putVideo = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".mp4", personalIntroductionVideo);
+//                    personalIntroductionVideoList = "minedata/" + digest + ".mp4";
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
+//                putVideo = new PutObjectRequest(bean.getBucket(), personalIntroductionVideoList, personalIntroductionVideo);
+//            }
+//        }
+//
+//        // 异步上传时可以设置进度回调
+//        /*put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+//            @Override
+//            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+//                Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
+//            }
+//        });*/
+//
+//        oss.asyncPutObject(putHead, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+//            @Override
+//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+//                // 请求异常
+//                if (clientExcepion != null) {
+//                    // 本地异常如网络异常等
+//                    clientExcepion.printStackTrace();
+//                }
+//                if (serviceException != null) {
+//                    // 服务异常
+//                    Log.e("ErrorCode", serviceException.getErrorCode());
+//                }
+//            }
+//        });
+//
+//        oss.asyncPutObject(putPrimaryPhoto, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+//            @Override
+//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+//                // 请求异常
+//                if (clientExcepion != null) {
+//                    // 本地异常如网络异常等
+//                    clientExcepion.printStackTrace();
+//                }
+//                if (serviceException != null) {
+//                    // 服务异常
+//                    Log.e("ErrorCode", serviceException.getErrorCode());
+//                }
+//            }
+//        });
+//
+//        oss.asyncPutObject(putPhoto, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+//            @Override
+//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+//                // 请求异常
+//                if (clientExcepion != null) {
+//                    // 本地异常如网络异常等
+//                    clientExcepion.printStackTrace();
+//                }
+//                if (serviceException != null) {
+//                    // 服务异常
+//                    Log.e("ErrorCode", serviceException.getErrorCode());
+//                }
+//            }
+//        });
+//
+//        oss.asyncPutObject(putVideo, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+//            @Override
+//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+//                // 请求异常
+//                if (clientExcepion != null) {
+//                    // 本地异常如网络异常等
+//                    clientExcepion.printStackTrace();
+//                }
+//                if (serviceException != null) {
+//                    // 服务异常
+//                    Log.e("ErrorCode", serviceException.getErrorCode());
+//                }
+//            }
+//        });
+//
+//        ConsummateInfoRequest request = new ConsummateInfoRequest();
+//        request.setAge(Integer.parseInt(mAge));
+//        request.setAvatar(mAvaterList);
+//        request.setBodyWeight(Integer.parseInt(mWeight));
+//        request.setBust(Integer.parseInt(mBust));
+//        request.setCityId(cityCode);
+//        request.setGender(gender);
+//        request.setHeight(Integer.parseInt(mHeight));
+//        request.setHips(Integer.parseInt(mHips));
+//        request.setName(mName);
+//        request.setPersonalExperience(mOther);
+//        request.setPersonalIntroductionVideo(personalIntroductionVideoList);
+//        request.setPhoto(mPhotoList);
+//        request.setPrimaryPhoto(mPrimaryPhotoList);
+//        request.setTelephone(mTelePhone);
+//        request.setTelephoneHiddenFlag(telePhoneSwitchButton);
+//        request.setWaist(Integer.parseInt(mWaist));
+//        request.setWechat(mWeChat);
+//        request.setWechatHiddenFlag(wxChatSwitchButton);
+//
+//        Gson gson = new Gson();
+//        String codeStr = gson.toJson(request);
+//        mPresenter.consummateInfo(codeStr);
+    }
+
+    @Override
+    public void returnPathUrlBean(String picUrl, int type) {
+
+        Logger.d("服务器返回的图片地址::" + picUrl);
+        if (TextUtils.isEmpty(picUrl))
+            return;
+
+        switch (type) {
+
+            case FileType.PIC_TYPE_HEAD://头像
+                headPicUrl = picUrl;
+                break;
+
+            case FileType.PIC_TYPE_COVER://封面
+
+                coverPicUrl = picUrl;
+                coverDelete.setVisibility(View.VISIBLE);
+
+                break;
+
+            case FileType.PIC_TYPE_PHOTO://照片
+
+                break;
+
+            case FileType.PIC_TYPE_VIDEO://视频
+                break;
 
         }
 
-        for (int i = 0; i < mPrimaryPhoto.size(); i++) {
-            // 构造上传请求
-            if (mPrimaryPhoto.get(i).indexOf("minedata/") == -1) {
-                try {
-                    mPrimaryPhotoList.remove(mPrimaryPhotoList.get(i));
-                    File file = new File(mPrimaryPhoto.get(i));
-                    InputStream inputStream = new FileInputStream(file);
-                    String digest = FileMd5Util.digest(inputStream);
-                    putPrimaryPhoto = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", mPrimaryPhoto.get(i));
-                    mPrimaryPhotoList.add("minedata/" + digest + ".jpg");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                putPrimaryPhoto = new PutObjectRequest(bean.getBucket(), mPrimaryPhotoList.get(i), mPrimaryPhoto.get(i));
-            }
-
-        }
-
-        for (int i = 0; i < mPhoto.size(); i++) {
-            // 构造上传请求
-            if (mPhoto.get(i).indexOf("minedata/") == -1) {
-                try {
-                    mPhotoList.remove(mPhotoList.get(i));
-                    File file = new File(mPhoto.get(i));
-                    InputStream inputStream = new FileInputStream(file);
-                    String digest = FileMd5Util.digest(inputStream);
-                    putPhoto = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", mPhoto.get(i));
-                    mPhotoList.add("minedata/" + digest + ".jpg");
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                putPhoto = new PutObjectRequest(bean.getBucket(), mPhotoList.get(i), mPhoto.get(i));
-            }
-
-        }
-
-        if (personalIntroductionVideo.length() > 0) {
-            // 构造上传请求
-            if (personalIntroductionVideo.indexOf("minedata/") == -1) {
-                try {
-                    personalIntroductionVideoList = null;
-                    File file = new File(personalIntroductionVideo);
-                    InputStream inputStream = new FileInputStream(file);
-                    String digest = FileMd5Util.digest(inputStream);
-                    putVideo = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".mp4", personalIntroductionVideo);
-                    personalIntroductionVideoList = "minedata/" + digest + ".mp4";
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                putVideo = new PutObjectRequest(bean.getBucket(), personalIntroductionVideoList, personalIntroductionVideo);
-            }
-        }
-
-        // 异步上传时可以设置进度回调
-        /*put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
-            @Override
-            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-                Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
-            }
-        });*/
-
-        oss.asyncPutObject(putHead, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-
-            }
-
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                // 请求异常
-                if (clientExcepion != null) {
-                    // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                }
-                if (serviceException != null) {
-                    // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                }
-            }
-        });
-
-        oss.asyncPutObject(putPrimaryPhoto, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-
-            }
-
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                // 请求异常
-                if (clientExcepion != null) {
-                    // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                }
-                if (serviceException != null) {
-                    // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                }
-            }
-        });
-
-        oss.asyncPutObject(putPhoto, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-
-            }
-
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                // 请求异常
-                if (clientExcepion != null) {
-                    // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                }
-                if (serviceException != null) {
-                    // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                }
-            }
-        });
-
-        oss.asyncPutObject(putVideo, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-            @Override
-            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-
-            }
-
-            @Override
-            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                // 请求异常
-                if (clientExcepion != null) {
-                    // 本地异常如网络异常等
-                    clientExcepion.printStackTrace();
-                }
-                if (serviceException != null) {
-                    // 服务异常
-                    Log.e("ErrorCode", serviceException.getErrorCode());
-                }
-            }
-        });
-
-        ConsummateInfoRequest request = new ConsummateInfoRequest();
-        request.setAge(Integer.parseInt(mAge));
-        request.setAvatar(mAvaterList);
-        request.setBodyWeight(Integer.parseInt(mWeight));
-        request.setBust(Integer.parseInt(mBust));
-        request.setCityId(cityCode);
-        request.setGender(gender);
-        request.setHeight(Integer.parseInt(mHeight));
-        request.setHips(Integer.parseInt(mHips));
-        request.setName(mName);
-        request.setPersonalExperience(mOther);
-        request.setPersonalIntroductionVideo(personalIntroductionVideoList);
-        request.setPhoto(mPhotoList);
-        request.setPrimaryPhoto(mPrimaryPhotoList);
-        request.setTelephone(mTelePhone);
-        request.setTelephoneHiddenFlag(telePhoneSwitchButton);
-        request.setWaist(Integer.parseInt(mWaist));
-        request.setWechat(mWeChat);
-        request.setWechatHiddenFlag(wxChatSwitchButton);
-
-        Gson gson = new Gson();
-        String codeStr = gson.toJson(request);
-        mPresenter.consummateInfo(codeStr);
     }
 
     @Override
@@ -750,30 +990,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     mPhotoAdapter.notifyDataSetChanged();
                 }
             }
-        } else if (requestCode == 200 && resultCode == AppCompatActivity.RESULT_OK) {
-            mPrimaryPhoto.removeAll(mPrimaryPhoto);
-            List<Uri> mSelectedImages = Matisse.obtainResult(data);
-            if (mSelectedImages != null && mSelectedImages.size() > 0) {
-                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
-                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
-                    List<ImageModel> mTempImageList = new ArrayList<>();
-                    for (String path : mSelectedImagesPath) {
-                        ImageModel imageModel = new ImageModel();
-                        imageModel.setUris(path);
-                        mTempImageList.add(imageModel);
-                    }
-                    mImageListt.remove(mClickedItemPosition);
-                    mImageListt.addAll(mTempImageList);
-                    if (mImageListt.size() < 1) {
-                        mImageListt.add(mAddImageModel);
-                    }
-
-                    mPrimaryPhoto.add(mImageListt.get(0).getUris());
-
-                    mMasterAdapter.setNewData(mImageListt);
-                    mMasterAdapter.notifyDataSetChanged();
-                }
-            }
         } else if (requestCode == 300 && resultCode == AppCompatActivity.RESULT_OK) {
             personalIntroductionVideo = null;
             List<Uri> mSelectedImages = Matisse.obtainResult(data);
@@ -797,22 +1013,186 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                 }
             }
         } else if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK) {
-            String city = data.getExtras().getString("city");
-            cityCode = data.getExtras().getInt("code");
-            mCitiyEdittext.setText(city);
-        } else if (requestCode == CODE_GALLERY_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
-            cropRawPhoto(data.getData());
-            Uri data1 = data.getData();
-            String mSelectedImagesPath = UriUtil.getRealFilePath(this, data1);
-            ImageModel imageModel = new ImageModel();
-            imageModel.setUris(mSelectedImagesPath);
-            avater = imageModel.getUris();
 
+            if (data != null && data.getExtras() != null) {
+                String city = data.getExtras().getString("city");
+                cityCode = data.getExtras().getInt("code");
+                mCitiyEdittext.setText(city);
+            }
+
+        } else if (requestCode == CODE_GALLERY_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+
+            //相册选择后 开始裁剪
+            outFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
+//            Logger.d("outFile地址::" + outFile.getPath() + "====>" + outFile.getAbsolutePath());
+            cropRawPhoto(checkSelectPhoto(data));//裁剪
+
+//            cropRawPhoto(data.getData());
+//            Uri data1 = data.getData();
+//            String mSelectedImagesPath = UriUtil.getRealFilePath(this, data1);
+//            ImageModel imageModel = new ImageModel();
+//            imageModel.setUris(mSelectedImagesPath);
+//
+//            Logger.d("头像地址::" + imageModel.getUris());
+//            avater = imageModel.getUris();
+
+        } else if (requestCode == CODE_COVER_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+
+            //选择封面
+
+            if (data == null)
+                return;
+
+            Uri uri = data.getData();
+            if (uri != null) {
+                coverPic.setImageURI(uri.toString());
+                Logger.d("uri路径::" + uri.toString() + "   ::uri.getPath():" + uri.getPath());
+                startUploadPic(Constant.DIR_COVER, UriUtil.getRealFilePath(this, uri), uri, FileType.PIC_TYPE_COVER);
+            }
+
+//            mPrimaryPhoto.removeAll(mPrimaryPhoto);
+//            List<Uri> mSelectedImages = Matisse.obtainResult(data);
+//            if (mSelectedImages != null && mSelectedImages.size() > 0) {
+//                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
+//                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
+//                    List<ImageModel> mTempImageList = new ArrayList<>();
+//                    for (String path : mSelectedImagesPath) {
+//                        ImageModel imageModel = new ImageModel();
+//                        imageModel.setUris(path);
+//                        mTempImageList.add(imageModel);
+//                    }
+//                    mImageListt.remove(mClickedItemPosition);
+//                    mImageListt.addAll(mTempImageList);
+//                    if (mImageListt.size() < 1) {
+//                        mImageListt.add(mAddImageModel);
+//                    }
+//
+//                    mPrimaryPhoto.add(mImageListt.get(0).getUris());
+//
+//                    mMasterAdapter.setNewData(mImageListt);
+//                    mMasterAdapter.notifyDataSetChanged();
+//                }
+//            }
         } else if (requestCode == CODE_RESULT_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+            //裁剪后返回的数据
             if (data != null) {
+                //加载,上传 头像
                 setImageToHeadView(data);
             }
         }
+
+    }
+
+    //开始上传图片
+//    private void startUploadPic(String filePath, final int type) {
+    private void startUploadPic(String pic_type, String filePath, Uri uri, final int type) {
+
+        Logger.d("文件地址:::" + filePath);
+
+        //oss签名信息
+        if (oss != null && !TextUtils.isEmpty(bucket) && !TextUtils.isEmpty(endpoint)) {
+
+            if (TextUtils.isEmpty(StringsUtils.getMd5Name(uri, this))) {
+                ToastUtils.showShort("文件未找到");
+                return;
+            }
+
+            // 构造上传请求
+            picObjectKey = pic_type + StringsUtils.getMd5Name(uri, this);
+            putHead = new PutObjectRequest(bucket, picObjectKey, filePath);
+
+            putHead.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+                @Override
+                public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+//                    Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
+                }
+            });
+
+            oss.asyncPutObject(putHead, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                @Override
+                public void onSuccess(PutObjectRequest request, final PutObjectResult result) {
+//                    Log.d("PutObject", "UploadSuccess");
+//                    Log.d("ETag", result.getETag());
+//                    Log.d("RequestId", result.getRequestId());
+
+                    if (TextUtils.isEmpty(picObjectKey)) {
+                        ToastUtils.showShort("文件不存在");
+                        return;
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPresenter.pathUrl(picObjectKey, type);
+                        }
+                    });
+//                    Logger.d("body：：：" + result.getServerCallbackReturnBody());
+
+                }
+
+                @Override
+                public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                    // 请求异常。
+                    if (clientExcepion != null) {
+                        // 本地异常，如网络异常等。
+                        clientExcepion.printStackTrace();
+                    }
+                    if (serviceException != null) {
+                        // 服务异常。
+                        Log.e("ErrorCode", serviceException.getErrorCode());
+//                        Log.e("RequestId", serviceException.getRequestId());
+//                        Log.e("HostId", serviceException.getHostId());
+//                        Log.e("RawMessage", serviceException.getRawMessage());
+                    }
+                }
+            });
+
+
+        } else {
+            //TODO 为空时单独处理
+        }
+
+    }
+
+
+    /**
+     * 相册选择的图片
+     *
+     * @param data
+     */
+    public Uri checkSelectPhoto(Intent data) {
+
+        if (data == null) {
+            ToastUtils.showShort("图片读取失败");
+            return null;
+        }
+
+        Uri selectedImage = data.getData();
+        if (selectedImage == null) {
+            ToastUtils.showShort("图片读取失败");
+            return null;
+        }
+
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(selectedImage,
+                filePathColumn, null, null, null);
+        if (cursor == null) {
+            ToastUtils.showShort("图片读取失败");
+            return null;
+        }
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String picturePath = cursor.getString(columnIndex);
+        cursor.close();
+
+//        Logger.d("picturePath==>" + picturePath);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            return FileProvider.getUriForFile(this, Constant.FILE_PROVIDER_PATH, new File(picturePath));
+        else
+            return Uri.fromFile(new File(picturePath));
 
     }
 
@@ -829,7 +1209,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                 from(this).
                 choose(mMimeType).
                 capture(false).
-                captureStrategy(new CaptureStrategy(true, FILE_PROVIDER_PATH)).
+                captureStrategy(new CaptureStrategy(true, Constant.FILE_PROVIDER_PATH)).
                 countable(false).
                 spanCount(3).
                 imageEngine(new MatisseGlideEngine()).
@@ -871,13 +1251,13 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         mPhotoAdapter = new MinePhotoAdapter(this, mImageList);
         mPhotoRecyclerView.setAdapter(mPhotoAdapter);
 
-        mImageListt = new ArrayList<>();
-        mAddImageModel = new ImageModel();
-        mAddImageModel.setUris(ImageModel.ADD_IMAGE_URI);
-        mImageListt.add(mAddImageModel);
-        mMasterGraphRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mMasterAdapter = new MineMasterAdapter(this, mImageListt);
-        mMasterGraphRecyclerView.setAdapter(mMasterAdapter);
+//        mImageListt = new ArrayList<>();
+//        mAddImageModel = new ImageModel();
+//        mAddImageModel.setUris(ImageModel.ADD_IMAGE_URI);
+//        mImageListt.add(mAddImageModel);
+//        mMasterGraphRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        mMasterAdapter = new MineMasterAdapter(this, mImageListt);
+//        mMasterGraphRecyclerView.setAdapter(mMasterAdapter);
 
         mImageLists = new ArrayList<>();
         mAddImageModel = new ImageModel();
@@ -926,45 +1306,46 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             }
         });
 
-        mMasterAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                mClickedItemPosition = position;
-                returnImageview = 2;
-                switch (adapter.getItemViewType(position)) {
-                    case ImageModel.TYPE_IMAGE_ADD:
-                        isAddItemClicked = true;
-                        int imageCountsCanSelect = MASTER_MAX_LIMIT_COUNT - position;
-                        boolean isMultiMode = imageCountsCanSelect > 1;
-                        resetMasterImagePicker(imageCountsCanSelect);
-
-                        requestPermissionAndSelectImage();
-                        break;
-
-                    case ImageModel.TYPE_IMAGE_SELECTED:
-
-                        switch (view.getId()) {
-                            case R.id.item_appeal_evidence_list_evidence_image:
-//                                注释代码是点击替换图片的功能代码
-                                isAddItemClicked = false;
-                                resetMasterImagePicker(1);
-                                requestPermissionAndSelectImage();
-                                break;
-
-                            case R.id.item_appeal_evidence_list_delete_image:  //删除图片
-                                adapter.getData().remove(position);
-                                if (!adapter.getData().contains(mAddImageModel)) {
-                                    adapter.getData().add(mAddImageModel);
-                                }
-                                adapter.notifyDataSetChanged();
-                                break;
-                        }
-
-                        break;
-                }
-
-            }
-        });
+//        coverPic.
+//        mMasterAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+//            @Override
+//            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+//                mClickedItemPosition = position;
+//                returnImageview = 2;
+//                switch (adapter.getItemViewType(position)) {
+//                    case ImageModel.TYPE_IMAGE_ADD:
+//                        isAddItemClicked = true;
+//                        int imageCountsCanSelect = MASTER_MAX_LIMIT_COUNT - position;
+//                        boolean isMultiMode = imageCountsCanSelect > 1;
+//                        resetMasterImagePicker(imageCountsCanSelect);
+//
+//                        requestPermissionAndSelectImage();
+//                        break;
+//
+//                    case ImageModel.TYPE_IMAGE_SELECTED:
+//
+//                        switch (view.getId()) {
+//                            case R.id.item_appeal_evidence_list_evidence_image:
+////                                注释代码是点击替换图片的功能代码
+//                                isAddItemClicked = false;
+//                                resetMasterImagePicker(1);
+//                                requestPermissionAndSelectImage();
+//                                break;
+//
+//                            case R.id.item_appeal_evidence_list_delete_image:  //删除图片
+//                                adapter.getData().remove(position);
+//                                if (!adapter.getData().contains(mAddImageModel)) {
+//                                    adapter.getData().add(mAddImageModel);
+//                                }
+//                                adapter.notifyDataSetChanged();
+//                                break;
+//                        }
+//
+//                        break;
+//                }
+//
+//            }
+//        });
 
         mVideoAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
@@ -1083,11 +1464,22 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
     // 从本地相册选取图片作为头像
     private void choseHeadImageFromGallery() {
-        Intent intentFromGallery = new Intent();
-        // 设置文件类型
-        intentFromGallery.setType("image/*");
-        intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //不具有权限，需要进行权限申请
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0x21);
+        } else {
+            Intent mIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(mIntent, CODE_GALLERY_REQUEST);
+        }
+
+//        Intent intentFromGallery = new Intent();
+//        // 设置文件类型
+//        intentFromGallery.setType("image/*");
+//        intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
+//        startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
     }
 
     /**
@@ -1095,17 +1487,39 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
      */
     public void cropRawPhoto(Uri uri) {
 
+        if (uri == null) {
+            Log.d(TAG, "The uri is not exist.");
+            return;
+        }
+
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
-
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
+                Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(outFile));
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString()); // 输出的图片格式
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(outFile.getPath()));
         intent.putExtra("crop", "true");
-
+        // aspectX aspectY 是宽高的比例
         intent.putExtra("aspectX", 1);
         intent.putExtra("aspectY", 1);
+        // 取消人脸识别
+        intent.putExtra("noFaceDetection", true);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 300);
+        intent.putExtra("outputY", 300);
 
-        intent.putExtra("outputX", output_X);
-        intent.putExtra("outputY", output_Y);
-        intent.putExtra("return-data", true);
+//        Intent intent = new Intent("com.android.camera.action.CROP");
+//        intent.setDataAndType(uri, "image/*");
+//
+//        intent.putExtra("crop", "true");
+//
+//        intent.putExtra("aspectX", 1);
+//        intent.putExtra("aspectY", 1);
+//
+//        intent.putExtra("outputX", output_X);
+//        intent.putExtra("outputY", output_Y);
+//        intent.putExtra("return-data", true);
 
         startActivityForResult(intent, CODE_RESULT_REQUEST);
     }
@@ -1114,11 +1528,24 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
      * 提取保存裁剪之后的图片数据，并设置头像部分的View
      */
     private void setImageToHeadView(Intent intent) {
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            Bitmap photo = extras.getParcelable("data");
-            mHeadImageview.setImageBitmap(photo);
+        Uri uri = intent.getData();
+
+        if (uri == null)
+            uri = Uri.fromFile(outFile);
+        Logger.d("裁剪后的uri" + uri);
+        if (uri != null) {
+            Logger.d("uri.toString():::" + uri.toString());
+            mHeadImageview.setImageURI(uri.toString());
+            startUploadPic(Constant.DIR_HEADPIC, outFile.getPath(), uri, FileType.PIC_TYPE_HEAD);
+//            startUploadPic(outFile.getPath(), FileType.PIC_TYPE_HEAD);
         }
+
+//        Bundle extras = intent.getExtras();
+//        if (extras != null) {
+//            Bitmap photo = (Bitmap) extras.get("data");
+////            mHeadImageview.setImageURI();
+//            mHeadImageview.setImageBitmap(photo);
+//        }
     }
 
 }

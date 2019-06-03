@@ -7,6 +7,7 @@ import android.os.Environment;
 import android.support.multidex.MultiDex;
 import android.util.Log;
 
+import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.art.recruitment.artperformance.utils.ResourceUtils;
 import com.art.recruitment.common.base.BaseApplication;
 import com.art.recruitment.common.http.Api;
@@ -57,6 +58,7 @@ public class MyApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
 
+
         //设置异常捕获
 //        Thread.setDefaultUncaughtExceptionHandler(this);
 //        //排除InputMethodManager泄漏检测，貌似是SDK泄漏，有时间再检测
@@ -70,6 +72,7 @@ public class MyApplication extends BaseApplication {
         ResourceUtils.init(this);
 
         initLogger(TAG, true);
+        OSSLog.enableLog();//开启阿里云存储log
         initUM();
 
         initApiConfig();

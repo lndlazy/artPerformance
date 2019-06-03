@@ -197,5 +197,9 @@
     <!--===================================错误提示============================-->
 
     <string name="exception_tip_illegal_argument">缺少传递相应参数</string>
+    <string name="input_name">请输入姓名</string>
+    <string name="input_sex">请选择性别</string>
+    <string name="input_tel">请输入电话号码</string>
+    <string name="apply_input_all">应聘需填写所有内容</string>
 
 </resources>

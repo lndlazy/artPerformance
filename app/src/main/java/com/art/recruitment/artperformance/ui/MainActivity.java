@@ -40,6 +40,7 @@ import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -136,6 +137,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         head = event;
     }
 
+    //发布招募
     private void initButtonClick() {
         RxView.clicks(mPublishImageViewMain).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -211,6 +213,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         } else if (bean.getRealNameFlag() == 1) {
             Intent intent = new Intent(MainActivity.this, ReleaseRecruitmentActivity.class);
             intent.putExtra("release_id", 0);
+            Logger.d("head-===>" + head);
             intent.putExtra("group_head", head);
             startActivity(intent);
         }

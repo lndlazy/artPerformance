@@ -99,6 +99,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintRight_toLeftOf="@+id/mine_arrow_imageview"
                     fresco:failureImage="@mipmap/ic_head_error"
+                    fresco:placeholderImage="@mipmap/ic_head_error"
                     fresco:roundAsCircle="true" />
 
                 <ImageView
@@ -629,16 +630,54 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/mine_master_graph_recyclerView"
-                android:layout_width="match_parent"
+
+            <RelativeLayout
+                android:layout_width="@dimen/x164"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/y32"
                 android:layout_marginLeft="@dimen/x46"
                 android:layout_marginRight="@dimen/x60"
                 android:layout_marginTop="@dimen/y30">
 
-            </android.support.v7.widget.RecyclerView>
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/coverPic"
+                    android:layout_width="@dimen/x146"
+                    android:layout_height="@dimen/y146"
+                    android:layout_marginTop="@dimen/x16"
+                    android:src="@mipmap/icon_my_add"
+                    fresco:placeholderImage="@mipmap/icon_my_add" />
+
+                <!--<ImageView-->
+                <!--android:id="@+id/item_appeal_evidence_list_evidence_image"-->
+                <!--android:layout_width="@dimen/x124"-->
+                <!--android:layout_height="@dimen/y124"-->
+                <!--android:layout_marginLeft="@dimen/x22"-->
+                <!--android:layout_marginRight="@dimen/x22"-->
+                <!--android:layout_marginTop="@dimen/y22"-->
+                <!--android:src="@mipmap/ic_launcher"/>-->
+
+                <ImageView
+                    android:id="@+id/coverDelete"
+                    android:layout_width="@dimen/x32"
+                    android:layout_height="@dimen/y32"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/icon_release_delete"
+                    android:visibility="invisible" />
+
+
+            </RelativeLayout>
+
+
+            <!--<android.support.v7.widget.RecyclerView-->
+            <!--android:id="@+id/mine_master_graph_recyclerView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="@dimen/y32"-->
+            <!--android:layout_marginLeft="@dimen/x46"-->
+            <!--android:layout_marginRight="@dimen/x60"-->
+            <!--android:layout_marginTop="@dimen/y30">-->
+
+            <!--</android.support.v7.widget.RecyclerView>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -752,6 +791,7 @@
                     android:textColorHint="@color/color_b7bcbe"
                     android:textSize="14sp"
                     android:theme="@style/TextInputLayoutLineColor"
+                    app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent" />
 

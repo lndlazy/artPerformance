@@ -33,6 +33,7 @@ import com.art.recruitment.artperformance.ui.group.presenter.ReleaseRecruitmentP
 import com.art.recruitment.artperformance.ui.home.activity.CityActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineFecruitmentActivity;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.DateFormatUtils;
 import com.art.recruitment.artperformance.view.CustomDatePicker;
 import com.art.recruitment.artperformance.view.DialogWrapper;
@@ -61,6 +62,9 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.functions.Consumer;
 
+/**
+ * 发布招募
+ */
 public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentPresenter> implements ReleaseRecruitmentContract {
 
     @BindView(R.id.release_title_edittext)
@@ -313,8 +317,10 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         String codeStr = gson.toJson(recruitmentRequest);
 
         if (release_id == 1){
+            //编辑招募信息
             mPresenter.recruitmentEdit(data.getId(), codeStr);
         } else {
+            //发布招募
             mPresenter.releaseRecruitmen(codeStr);
         }
 
@@ -336,7 +342,10 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         mDetermineTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(MineDataActivity.class);
+                //完善个人 资料
+                Intent m = new Intent(ReleaseRecruitmentActivity.this, MineDataActivity.class);
+                m.putExtra(Constant.EDITOR_TYPE, Constant.EDITOR_TYPE_RELEASE);
+                startActivity(m);
             }
         });
 

@@ -44,6 +44,7 @@ import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
+import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -215,7 +216,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                                     URL url = null;
                                     try {
                                         String mContent = URLEncoder.encode(content, "UTF-8");
-                                        url = new URL("http://47.94.8.204:18080/oss/signature?content=" + mContent);
+                                        url = new URL(Api.HTTP_URL + Api.OSS_SIGNATURE + mContent);
                                         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
                                         httpURLConnection.setRequestMethod("POST");
                                         httpURLConnection.setDoInput(true);

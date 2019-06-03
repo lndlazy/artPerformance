@@ -1,5 +1,7 @@
 package com.art.recruitment.artperformance;
 
+import com.art.recruitment.common.http.Api;
+
 import org.junit.Test;
 
 import java.io.BufferedInputStream;
@@ -14,7 +16,7 @@ public class UrlTest {
         URL url = null;
         try {
             String mContent = URLEncoder.encode("PUT%0A%0Aimage%2Fjpeg%0AMon%2C+27+May+2019+10%3A50%3A36+GMT%0A%2Fyizhan-app-dev%2Ffilem12", "UTF-8");
-            url = new URL("http://47.94.8.204:18080/oss/signature?content=" + mContent);
+            url = new URL(Api.HTTP_URL + Api.OSS_SIGNATURE + mContent);
             System.out.println(url.toString());
             HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("POST");

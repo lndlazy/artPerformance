@@ -34,6 +34,12 @@ public class Api {
      * 网络请求添加认证头
      */
     public static final int TYPE_HEADER = 1;
+
+
+    public static final String HTTP_URL = "http://47.94.8.204:18080/";
+    public static final String OSS_SIGNATURE = "oss/signature?content=";
+
+
     /**
      * retrofit--H5
      */
@@ -129,7 +135,7 @@ public class Api {
                 .client(mOkHttpClient)
                 .addConverterFactory(ConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .baseUrl("http://47.94.8.204:18080/")
+                .baseUrl(HTTP_URL)
                 .build();
 
     }

@@ -28,8 +28,11 @@ public interface MineDataContract extends BaseView {
     void returnOssBean(OssBean.DataBean bean);
 
     /**
-     * OSS转换文件地址
+     * id转换为url
+     * @param picUrl 图片地址
+     * @param type
      */
-//    void returnPathUrlBean(String bean);
+    void returnPathUrlBean(String picUrl, int type);
+
 
 }

@@ -11,6 +11,7 @@ import com.art.recruitment.artperformance.R;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
+import com.art.recruitment.common.http.Api;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import butterknife.BindView;
@@ -47,7 +48,7 @@ public class UserAgreementActivity extends BaseActivity {
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
         String web = getIntent().getStringExtra("web");
-        String url = "http://47.94.8.204:18080/";
+        String url = Api.HTTP_URL;
         webView.setWebViewClient(new WebViewClient());
         webView.loadUrl(url + web);
 

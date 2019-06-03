@@ -1,5 +1,8 @@
 package com.art.recruitment.common.baserx;
 
+import android.content.Intent;
+
+import com.art.recruitment.common.R;
 import com.art.recruitment.common.base.BaseBean;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.base.ui.BaseFragment;
@@ -32,7 +35,7 @@ public abstract class RxSubscriber<R, T extends BaseBean<R>> implements Observer
 
     public BaseActivity mActivity;
     public BaseFragment mFragment;
-//    private CustomDialog mCustomDialog; //用于在dialog之上显示loadingvie
+    //    private CustomDialog mCustomDialog; //用于在dialog之上显示loadingvie
     private RequestConfig<R, T> mRequestConfig;
     private Disposable mDisposable;
     private R mOnNextData;  //onNext方法的data，成功回调
@@ -71,6 +74,13 @@ public abstract class RxSubscriber<R, T extends BaseBean<R>> implements Observer
                             return Observable.just(t.getData());
                             //成功直接返回数据
 
+                        } else if (t.getCode() == ErrorCode.CODE_UNAUTHORIZED) {
+
+//                            //TODO 401 重新登录
+//
+//                            Intent m = new Intent()
+
+                            return null;
                         } else {
                             if (mRequestConfig != null && !StringUtils.isTrimEmpty(mRequestConfig.getTag())) {
                                 LogUtils.d(mRequestConfig.getTag(), "-----JavaBean的Code为" + t.getCode());
