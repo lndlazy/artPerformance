@@ -1,15 +1,10 @@
 package com.art.recruitment.artperformance.ui.group.activity;
 
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -23,7 +18,6 @@ import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.group.RecruitmentEditBean;
-import com.art.recruitment.artperformance.bean.group.RecruitmentEditRequest;
 import com.art.recruitment.artperformance.bean.group.ReleaseRecruitmentRequest;
 import com.art.recruitment.artperformance.bean.group.ReleaseRecruitmentbBean;
 import com.art.recruitment.artperformance.bean.home.RecruitmentInforBean;
@@ -35,10 +29,10 @@ import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineFecruitmentActivity;
 import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.DateFormatUtils;
+import com.art.recruitment.artperformance.utils.StringsUtils;
 import com.art.recruitment.artperformance.view.CustomDatePicker;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.Flowlayout;
-import com.art.recruitment.artperformance.view.TagCloudView;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
@@ -46,19 +40,13 @@ import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.utils.UIUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.functions.Consumer;
 
@@ -133,10 +121,14 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
     private boolean mIsWorkTimeOk = false;
     private boolean mIsDetailedLocationTimeOk = false;
     private int code;
-    List<String> strings = new ArrayList<>();
+
+    //标签列表
+    List<String> labelsList = new ArrayList<>();
     private int release_id;
     private int pos;
     private MineFecruitmentBean.ContentBean data;
+    private long startTime;//集合时间
+    private long workEndTime;//报名截止时间
 
     @Override
     protected IToolbar getIToolbar() {
@@ -208,7 +200,20 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                     @Override
                     public void accept(Object o) throws Exception {
                         count = 1;
-                        mTimerPicker.show(mSelectionTimeTextview.getText().toString());
+                        mTimerPicker.show(System.currentTimeMillis());
+
+                    }
+                });
+
+        RxView.
+                clicks(mSelectionTimeTextview).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        count = 1;
+//                        mTimerPicker.show(mSelectionTimeTextview.getText().toString());
+                        mTimerPicker.show(System.currentTimeMillis());
                     }
                 });
 
@@ -219,7 +224,20 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                     @Override
                     public void accept(Object o) throws Exception {
                         count = 2;
-                        mTimerPicker.show(mDeadlineForRegistrationTextview.getText().toString());
+//                        mTimerPicker.show(mDeadlineForRegistrationTextview.getText().toString());
+                        mTimerPicker.show(System.currentTimeMillis());
+                    }
+                });
+
+        RxView.
+                clicks(mDeadlineForRegistrationTextview).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        count = 2;
+//                        mTimerPicker.show(mDeadlineForRegistrationTextview.getText().toString());
+                        mTimerPicker.show(System.currentTimeMillis());
                     }
                 });
 
@@ -233,24 +251,19 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                     }
                 });
 
-        /*mFaceTextview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                faceColor(true);
-                mWagesEdittext.setText("");
-            }
-        });*/
-
         RxView.
                 clicks(mFaceTextview).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
+
                         mFaceTextview.setChecked(true);
-                        if (mFaceTextview.isChecked() == true){
+                        if (mFaceTextview.isChecked())
                             mWagesEdittext.setText("");
-                        }
+
+                        setButtonStatus();
+
                     }
                 });
 
@@ -273,6 +286,15 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                         startActivityForResult(CityActivity.class, 100);
                     }
                 });
+        RxView.
+                clicks(mCityTextview).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        startActivityForResult(CityActivity.class, 100);
+                    }
+                });
     }
 
     @Override
@@ -285,6 +307,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         }
     }
 
+    //发布招募
     private void confirmPublication() {
 
         String mTitle = mTitleEdittext.getText().toString().trim();
@@ -292,20 +315,39 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         String mWages = mWagesEdittext.getText().toString().trim();
         String mWorkTime = mWorkTimeEdittext.getText().toString().trim();
         String mSelectionTime = mSelectionTimeTextview.getText().toString().trim();
+
+        //集合时间
+        if (startTime <= System.currentTimeMillis()) {
+            ToastUtils.showShort("集合时间不能早于当前时间");
+            return;
+        }
+
+
+//        if (workEndTime <= startTime) {
+//            ToastUtils.showShort("报名截止时间需大于集合时间");
+//            return;
+//        }
+
+
         String mDetailedLocation = mDetailedLocationEdittext.getText().toString().trim();
         String mDeadlineForRegistration = mDeadlineForRegistrationTextview.getText().toString().trim();
         String mOther = mOtherEdittext.getText().toString().trim();
 
         ReleaseRecruitmentRequest recruitmentRequest = new ReleaseRecruitmentRequest();
         recruitmentRequest.setCityId(code);
-        recruitmentRequest.setLabels(strings);
+        recruitmentRequest.setLabels(labelsList);
         recruitmentRequest.setTitle(mTitle);
+
+        if (StringsUtils.is2Int(mNumber))
         recruitmentRequest.setRecruitNumber(Integer.parseInt(mNumber));
-        recruitmentRequest.setSalary(Integer.parseInt(mWages));
+        if (StringsUtils.is2Int(mWages))
+            recruitmentRequest.setSalary(Integer.parseInt(mWages));
         recruitmentRequest.setGatheringAddress(mDetailedLocation);
         recruitmentRequest.setApplyEndTime(mDeadlineForRegistration);
         recruitmentRequest.setGatheringTime(mSelectionTime);
-        recruitmentRequest.setWorkingHours(Integer.parseInt(mWorkTime));
+
+        if (StringsUtils.is2Int(mWorkTime))
+            recruitmentRequest.setWorkingHours(Integer.parseInt(mWorkTime));
         recruitmentRequest.setOtherRequirement(mOther);
 
         if (mFaceTextview.isClickable()) {
@@ -334,7 +376,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                 customViewDialog().
                 context(this).
                 contentView(inflate).
-                cancelable(false, false).
+                cancelable(true, true).
                 build();
 
         dialog.show();
@@ -351,13 +393,13 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
 
     }
 
-    /**
-     * 面议按钮状态
-     */
-    public void faceColor(boolean tvScreenIsSelect) {
-        mFaceTextview.setTextColor(tvScreenIsSelect ? UIUtils.getColor(R.color.color_fd7b25) : UIUtils.getColor(R.color.color_b7bcbe));
-        mFaceTextview.setBackground(tvScreenIsSelect ? UIUtils.getDrawable(R.drawable.dialog_release_recruitment_face_enable) : UIUtils.getDrawable(R.drawable.dialog_release_recruitment_face_unenable));
-    }
+//    /**
+//     * 面议按钮状态
+//     */
+//    public void faceColor(boolean tvScreenIsSelect) {
+//        mFaceTextview.setTextColor(tvScreenIsSelect ? UIUtils.getColor(R.color.color_fd7b25) : UIUtils.getColor(R.color.color_b7bcbe));
+//        mFaceTextview.setBackground(tvScreenIsSelect ? UIUtils.getDrawable(R.drawable.dialog_release_recruitment_face_enable) : UIUtils.getDrawable(R.drawable.dialog_release_recruitment_face_unenable));
+//    }
 
     private void addLabelDialog() {
 
@@ -386,11 +428,17 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
             public void onClick(View v) {
                 String label = mtitleEdittext.getText().toString().trim();
 
-                if (label != null && !label.equals("")) {
+                if (!TextUtils.isEmpty(label)) {
                     list.add(label);
                     initLayout(list);
                     dialog.cancel();
                 }
+
+//                if (label != null && !label.equals("")) {
+//                    list.add(label);
+//                    initLayout(list);
+//                    dialog.cancel();
+//                }
             }
         });
 
@@ -401,7 +449,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
      */
     private void setButtonStatus() {
 
-        if (mIsTitleOk && mIsNumberOk && mIsWagesOk && mIsWorkTimeOk && mIsDetailedLocationTimeOk) {
+        if (mIsTitleOk && mIsNumberOk && (mIsWagesOk || mFaceTextview.isChecked())&& mIsWorkTimeOk && mIsDetailedLocationTimeOk) {
             mConfirmPublicationTextview.setEnabled(true);
         } else {
             mConfirmPublicationTextview.setEnabled(false);
@@ -464,9 +512,10 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mFaceTextview.setChecked(false);
+
                 if (!TextUtils.isEmpty(s)) {
                     mIsWagesOk = true;
+                    mFaceTextview.setChecked(false);
                 } else {
                     mIsWagesOk = false;
                 }
@@ -553,9 +602,8 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         final TextView[] textViews = new TextView[arr.size()];
         final ImageView[] icons = new ImageView[arr.size()];
 
-
         for (int i = 0; i < arr.size(); i++) {
-            strings.add(arr.get(i));
+            labelsList.add(arr.get(i));
             final View view = LayoutInflater.from(this).inflate(R.layout.text_view, mLabelFlowlayout, false);
 
             final TextView text = view.findViewById(R.id.release_label_text);
@@ -586,24 +634,28 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
     }
 
     private void initTimerPicker() {
-        String beginTime = "2010.10.17 18:00";
+        String beginTime = "2010.01.01 00:00";
         String endTime = "2090.12.30 00:00";
+//        String beginTime = DateFormatUtils.getTodayDateTime(DateFormatUtils.DATE_FORMAT_PATTERN_YMD_HM);
+//        long currentTime = System.currentTimeMillis();
 
-        if (count == 1) {
-            mSelectionTimeTextview.setText(endTime);
-        } else if (count == 2) {
-            mDeadlineForRegistrationTextview.setText(endTime);
-        }
+//        if (count == 1) {
+//            mSelectionTimeTextview.setText(endTime);
+//        } else if (count == 2) {
+//            mDeadlineForRegistrationTextview.setText(endTime);
+//        }
 
         // 通过日期字符串初始化日期，格式请用：yyyy-MM-dd HH:mm
         mTimerPicker = new CustomDatePicker(this, new CustomDatePicker.Callback() {
             @Override
             public void onTimeSelected(long timestamp) {
                 if (count == 1) {
+                    startTime = timestamp;
                     mSelectionTimeTextview.setText(DateFormatUtils.long2Str(timestamp, true));
 
                 } else if (count == 2) {
                     mDeadlineForRegistrationTextview.setText(DateFormatUtils.long2Str(timestamp, true));
+                    workEndTime = timestamp;
                 }
             }
         }, beginTime, endTime);
@@ -615,11 +667,14 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         mTimerPicker.setScrollLoop(true);
         // 允许滚动动画
         mTimerPicker.setCanShowAnim(true);
+
+//        mTimerPicker.setSelectedTime(System.currentTimeMillis(), true);
     }
 
     @Override
     public void returnReleaseRecruitmentBean(ReleaseRecruitmentbBean.DataBean bean) {
         ToastUtils.showShort("发布招募成功");
+        finish();
     }
 
     @Override

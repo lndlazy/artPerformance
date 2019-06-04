@@ -40,6 +40,12 @@ public interface MineService {
     Observable<ConsummateInfoBean> consummateInfo(@Body RequestBody body);
 
     /**
+     * 完善3项基本信息
+     */
+    @PUT(ApiUrls.ACCOUNTS_CONSUMMATE3)
+    Observable<ConsummateInfoBean> consummateInfo3(@Body RequestBody body);
+
+    /**
      * OSS转换文件地址
      */
     @FormUrlEncoded

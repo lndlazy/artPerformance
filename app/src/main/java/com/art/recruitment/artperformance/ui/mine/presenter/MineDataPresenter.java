@@ -68,6 +68,30 @@ public class MineDataPresenter extends BasePresenter<MineDataContract> {
     }
 
     /**
+     * 完善3项基本信息
+     */
+    public void consummateInfo3(String codeStr) {
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), codeStr);
+
+        Api.
+                observable(Api.getService(MineService.class).consummateInfo3(body)).
+                presenter(this).
+                requestMode(RequestMode.SINGLE).
+                showLoading(true).
+                doRequest(new RxSubscriber<ConsummateInfoBean.DataBean, ConsummateInfoBean>() {
+                    @Override
+                    protected void _onSuccess(ConsummateInfoBean.DataBean bean, String successMessage) {
+                        mView.returnEssentialInfoBean(bean);
+                    }
+
+                    @Override
+                    protected void _onError(ErrorType errorType, int errorCode, String message, ConsummateInfoBean.DataBean bean) {
+                        mView.showErrorTip(errorType, errorCode, message);
+                    }
+                });
+    }
+
+    /**
      * OSS签名
      */
     public void signaTure(String codeStr) {

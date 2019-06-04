@@ -6,8 +6,8 @@ import java.util.Locale;
 
 public class DateFormatUtils {
 
-    private static final String DATE_FORMAT_PATTERN_YMD = "yyyy.MM.dd";
-    private static final String DATE_FORMAT_PATTERN_YMD_HM = "yyyy.MM.dd HH:mm";
+    public static final String DATE_FORMAT_PATTERN_YMD = "yyyy.MM.dd";
+    public static final String DATE_FORMAT_PATTERN_YMD_HM = "yyyy.MM.dd HH:mm";
 
     /**
      * 时间戳转字符串
@@ -49,6 +49,12 @@ public class DateFormatUtils {
         } else {
             return DATE_FORMAT_PATTERN_YMD;
         }
+    }
+
+    public static String getTodayDateTime(String dateFormat) {
+        SimpleDateFormat format = new SimpleDateFormat(dateFormat,
+                Locale.getDefault());
+        return format.format(new Date());
     }
 
 }

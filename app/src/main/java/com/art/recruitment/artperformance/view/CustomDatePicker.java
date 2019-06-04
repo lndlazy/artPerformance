@@ -16,6 +16,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class CustomDatePicker implements View.OnClickListener, PickerView.OnSelectListener {
 
@@ -254,18 +255,37 @@ public class CustomDatePicker implements View.OnClickListener, PickerView.OnSele
             }
         }
 
+
+        Calendar calendar = Calendar.getInstance();
+        int currentYear = calendar.get(Calendar.YEAR);
+        int currentMonth = calendar.get(Calendar.MONTH) + 1;
+        int currentDay = calendar.get(Calendar.DAY_OF_MONTH);
+        int currentHour = calendar.get(Calendar.HOUR_OF_DAY);
+        int currentMinute = calendar.get(Calendar.MINUTE);
+
         mDpvYear.setDataList(mYearUnits);
         mDpvYear.setSelected(0);
+//        com.orhanobut.logger.Logger.d("年的position：：" +  (currentYear - mBeginYear));
+        mDpvYear.setSelected(currentYear - mBeginYear);
+
         mDpvMonth.setDataList(mMonthUnits);
         mDpvMonth.setSelected(0);
+//        mDpvMonth.setSelected(currentMonth - mBeginMonth);
+
         mDpvDay.setDataList(mDayUnits);
         mDpvDay.setSelected(0);
+//        mDpvDay.setSelected(currentDay - mBeginDay);
         mDpvHour.setDataList(mHourUnits);
         mDpvHour.setSelected(0);
+//        mDpvHour.setSelected(currentHour - mBeginHour);
         mDpvMinute.setDataList(mMinuteUnits);
         mDpvMinute.setSelected(0);
+//        mDpvMinute.setSelected(currentMinute - mBeginMinute);
 
         setCanScroll();
+
+//        mPickerDialog.invalidateOptionsMenu();
+
     }
 
     private void setCanScroll() {

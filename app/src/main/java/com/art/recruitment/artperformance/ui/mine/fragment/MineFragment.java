@@ -18,6 +18,7 @@ import com.art.recruitment.artperformance.bean.mine.MineBean;
 import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActivity;
 import com.art.recruitment.artperformance.ui.group.activity.MineRecruitActivity;
 import com.art.recruitment.artperformance.ui.login.activity.LoginActivity;
+import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
 import com.art.recruitment.artperformance.ui.mine.activity.AboutUsActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatListActivity;
@@ -29,6 +30,7 @@ import com.art.recruitment.artperformance.ui.mine.activity.MineSignUpActivity;
 import com.art.recruitment.artperformance.ui.mine.contract.MineContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MinePresenter;
 import com.art.recruitment.artperformance.utils.Defaultcontent;
+import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.utils.ShareUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
@@ -310,6 +312,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
 
     @Override
     public void returnMineDataBean(MineBean.DataBean bean) {
+
         mNameTextview.setText(bean.getUsername());
         mWechatServiceTextview.setText(bean.getWechat());
         RequestOptions options = new RequestOptions();
@@ -318,6 +321,14 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
 
         if (!TextUtils.isEmpty(bean.getAvatarView()))
         EventBus.getDefault().post(bean.getAvatarView());
+
+        //保存个人资料
+        SaveUtils.put(getContext(), MyInfoSave.HEAD_PIC_URL, bean.getAvatar());
+        SaveUtils.put(getContext(), MyInfoSave.PHONE_NUM, bean.getTelephone());
+        SaveUtils.put(getContext(), MyInfoSave.SEX, bean.getGender());
+        SaveUtils.put(getContext(), MyInfoSave.USER_NAME, bean.getUsername());
+        SaveUtils.put(getContext(), MyInfoSave.AGE, bean.getAge());
+        SaveUtils.put(getContext(), MyInfoSave.WECHAT, bean.getWechat());
 
     }
 

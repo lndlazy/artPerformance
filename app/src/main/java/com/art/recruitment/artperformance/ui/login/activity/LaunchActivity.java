@@ -74,7 +74,7 @@ public class LaunchActivity extends BaseActivity<LaunchPresenter> implements Lau
         mTimeCountDownHelper
                 .countInterval(1000)
                 .timeUnit(TimeUnit.MILLISECONDS)
-                .timeSpan(5)
+                .timeSpan(3)
                 .listener(new TimeCountDownHelper.TimeCountListener() {
                     @Override
                     public void onTimeCountDown(final long time) {

@@ -1,5 +1,6 @@
 package com.art.recruitment.artperformance.ui;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -9,10 +10,12 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -25,8 +28,13 @@ import com.art.recruitment.artperformance.ui.group.activity.RealNameActivity;
 import com.art.recruitment.artperformance.ui.group.activity.ReleaseRecruitmentActivity;
 import com.art.recruitment.artperformance.ui.group.fragment.GroupFragment;
 import com.art.recruitment.artperformance.ui.home.fragment.HomeFragment;
+import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
+import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.ui.mine.fragment.MineFragment;
+import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.view.CustomViewPager;
+import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.TabEntity;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.ui.BaseActivity;
@@ -131,7 +139,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void messageEventBus(String event){
+    public void messageEventBus(String event) {
         RequestOptions options = new RequestOptions();
         options.placeholder(R.mipmap.login_logo);
         head = event;
@@ -208,14 +216,27 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Override
     public void returbStatusBean(StatusBean.DataBean bean) {
+
+        //先判断是否实名认证
         if (bean.getRealNameFlag() == 0) {
+            //未实名认证， 开始认证
             startActivity(RealNameActivity.class);
         } else if (bean.getRealNameFlag() == 1) {
-            Intent intent = new Intent(MainActivity.this, ReleaseRecruitmentActivity.class);
-            intent.putExtra("release_id", 0);
-            Logger.d("head-===>" + head);
-            intent.putExtra("group_head", head);
-            startActivity(intent);
+            //已经实名认证， 判断是否填写过 基本三项信息
+
+            if (!TextUtils.isEmpty((String)SaveUtils.get(this, MyInfoSave.PHONE_NUM, ""))
+                    && !TextUtils.isEmpty((String)SaveUtils.get(this, MyInfoSave.USER_NAME, ""))
+                    && ((int)SaveUtils.get(this, MyInfoSave.SEX, -1) != -1)) {
+                Intent intent = new Intent(MainActivity.this, ReleaseRecruitmentActivity.class);
+                intent.putExtra("release_id", 0);
+                Logger.d("head-===>" + head);
+                intent.putExtra("group_head", head);
+                startActivity(intent);
+            }else {
+                perfectInformation();
+            }
+
+
         }
     }
 
@@ -225,4 +246,36 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
             ToastUtils.showShort(message);
         }
     }
+
+
+    private Dialog dialog;
+
+    private void perfectInformation() {
+
+        View inflate = View.inflate(this, R.layout.dialog_perfect_information, null);
+        TextView mDetermineTextview = inflate.findViewById(R.id.release_perfect_determine_textview);
+        dialog = DialogWrapper.
+                customViewDialog().
+                context(this).
+                contentView(inflate).
+                cancelable(true, true).
+                build();
+
+        dialog.show();
+
+        mDetermineTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //完善个人 资料
+                Intent m = new Intent(MainActivity.this, MineDataActivity.class);
+                m.putExtra(Constant.EDITOR_TYPE, Constant.EDITOR_TYPE_RELEASE);
+                startActivity(m);
+
+                if (dialog!=null && dialog.isShowing())
+                    dialog.dismiss();
+            }
+        });
+
+    }
+
 }

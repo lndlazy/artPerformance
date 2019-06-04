@@ -67,6 +67,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.orhanobut.logger.Logger;
 import com.yanzhenjie.permission.Action;
@@ -206,8 +207,9 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private File outFile;//裁剪输出文件夹
     private String bucket;
     private String endpoint;
-    private String picObjectKey;
+    private String coverObjectKey;////封面ObjectKey
     private String coverPicUrl;//封面图片
+    private String headPicObjectKey;//头像ObjectKey
 
     @Override
     protected IToolbar getIToolbar() {
@@ -233,7 +235,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     protected void initView(@Nullable Bundle savedInstanceState) {
 
         editorType = getIntent().getIntExtra(Constant.EDITOR_TYPE, -1);
-        cityCode = -1;
 
         mPresenter.getPersonalData();
 
@@ -473,15 +474,15 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
     private void inputInfo() {
 
-
         ConsummateInfoRequest request = new ConsummateInfoRequest();
 
         if (StringsUtils.is2Int(mAge))
-        request.setAge(Integer.parseInt(mAge));
+            request.setAge(Integer.parseInt(mAge));
 //        request.setAvatar(mAvaterList);
 
-        if (!TextUtils.isEmpty(headPicUrl))
-            request.setAvatar(headPicUrl);
+        Logger.d("头像地址::" + headPicUrl + ",头像objectKey::" + headPicObjectKey);
+        if (!TextUtils.isEmpty(headPicObjectKey))
+            request.setAvatar(headPicObjectKey);
 
         if (StringsUtils.is2Int(mWeight))
             request.setBodyWeight(Integer.parseInt(mWeight));
@@ -505,7 +506,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         //封面
 //        request.setPrimaryPhoto(mPrimaryPhotoList);
         ArrayList<String> strings = new ArrayList<>();
-        strings.add(coverPicUrl);
+        strings.add(coverObjectKey);
         request.setPrimaryPhoto(strings);
         request.setTelephone(mTelePhone);
         //是否隐藏电话
@@ -517,9 +518,9 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         //是否隐藏微信
         request.setWechatHiddenFlag(wxChatSwitchButton);
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
         String codeStr = gson.toJson(request);
-        mPresenter.consummateInfo(codeStr);
+        mPresenter.consummateInfo3(codeStr);
     }
 
     private void setProvider() {
@@ -568,7 +569,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     @Override
     public void returnMineDataBean(MineBean.DataBean bean) {
 
-        mNameEdittext.setText(bean.getUsername());
+        mNameEdittext.setText(bean.getName());
         if (bean.getGender() == 1) {
             mManRedioButton.setChecked(true);
             mWomanRedioButton.setChecked(false);
@@ -602,35 +603,35 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             mCitiyEdittext.setText(bean.getCityName());
 
         //设置头像
-        if (!TextUtils.isEmpty(bean.getAvatar())) {
-            mHeadImageview.setImageURI(Uri.parse(bean.getAvatar()));
+        if (!TextUtils.isEmpty(bean.getAvatarView())) {
+            mHeadImageview.setImageURI(Uri.parse(bean.getAvatarView()));
             headPicUrl = bean.getAvatar();
         }
 
         mOtherEdittext.setText(bean.getPersonalExperience());
         dataBean = bean;
 
-        if (bean.getPhotoView() != null && bean.getPhotoView().size() > 0) {
-            List<ImageModel> mTempImageList = new ArrayList<>();
-            for (int i = 0; i < dataBean.getPhotoView().size(); i++) {
-                ImageModel model = new ImageModel();
-                model.setUris(dataBean.getPhotoView().get(i));
-                mTempImageList.add(model);
-            }
-            mImageList.remove(mClickedItemPosition);
-            mImageList.addAll(mTempImageList);
-            if (mImageList.size() < 4) {
-                mImageList.add(mAddImageModel);
-            }
-            mPhotoAdapter.setNewData(mImageList);
-            for (int i = 0; i < mImageList.size() - 1; i++) {
-                mPhoto.add(mImageList.get(i).getUris());
-                String urisPhoto = mImageList.get(i).getUris();
-                String subPhoto = urisPhoto.substring(urisPhoto.indexOf("minedata/"), urisPhoto.indexOf("?"));
-                mPhotoList.add(subPhoto);
-            }
-            mPhotoAdapter.notifyDataSetChanged();
-        }
+//        if (bean.getPhotoView() != null && bean.getPhotoView().size() > 0) {
+//            List<ImageModel> mTempImageList = new ArrayList<>();
+//            for (int i = 0; i < dataBean.getPhotoView().size(); i++) {
+//                ImageModel model = new ImageModel();
+//                model.setUris(dataBean.getPhotoView().get(i));
+//                mTempImageList.add(model);
+//            }
+//            mImageList.remove(mClickedItemPosition);
+//            mImageList.addAll(mTempImageList);
+//            if (mImageList.size() < 4) {
+//                mImageList.add(mAddImageModel);
+//            }
+//            mPhotoAdapter.setNewData(mImageList);
+//            for (int i = 0; i < mImageList.size() - 1; i++) {
+//                mPhoto.add(mImageList.get(i).getUris());
+//                String urisPhoto = mImageList.get(i).getUris();
+//                String subPhoto = urisPhoto.substring(urisPhoto.indexOf("minedata/"), urisPhoto.indexOf("?"));
+//                mPhotoList.add(subPhoto);
+//            }
+//            mPhotoAdapter.notifyDataSetChanged();
+//        }
 
 
 //          封面??????
@@ -687,18 +688,18 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
 //        Glide.with(this).load(bean.getAvatar()).into(mHeadImageview).onLoadFailed(new BitmapDrawable( getResources().getDrawable(R.mipmap.icon_my_e)));
 
-        if (!TextUtils.isEmpty(dataBean.getAvatarView())) {
-            List<ImageModel> mTempImageList3 = new ArrayList<>();
-            ImageModel imageModel3 = new ImageModel();
-            imageModel3.setUris(dataBean.getAvatarView());
-            mTempImageList3.add(imageModel3);
-            mImageLisa = new ArrayList<>();
-            mImageLisa.addAll(mTempImageList3);
-            avater = mImageLisa.get(0).getUris();
-            String urisAvater = mImageLisa.get(0).getUris();
-            String subAvater = urisAvater.substring(urisAvater.indexOf("minedata/"), urisAvater.indexOf("?"));
-            mAvaterList = subAvater;
-        }
+//        if (!TextUtils.isEmpty(dataBean.getAvatarView())) {
+//            List<ImageModel> mTempImageList3 = new ArrayList<>();
+//            ImageModel imageModel3 = new ImageModel();
+//            imageModel3.setUris(dataBean.getAvatarView());
+//            mTempImageList3.add(imageModel3);
+//            mImageLisa = new ArrayList<>();
+//            mImageLisa.addAll(mTempImageList3);
+//            avater = mImageLisa.get(0).getUris();
+//            String urisAvater = mImageLisa.get(0).getUris();
+//            String subAvater = urisAvater.substring(urisAvater.indexOf("minedata/"), urisAvater.indexOf("?"));
+//            mAvaterList = subAvater;
+//        }
 
     }
 
@@ -730,7 +731,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         oss = new OSSClient(getApplicationContext(), bean.getEndpoint(), provider);
         bucket = bean.getBucket();
         endpoint = bean.getEndpoint();
-
 
 //        if (mHeadImageview != null) {
 //            // 构造上传请求
@@ -1085,7 +1085,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
     //开始上传图片
 //    private void startUploadPic(String filePath, final int type) {
-    private void startUploadPic(String pic_type, String filePath, Uri uri, final int type) {
+    private void startUploadPic(final String pic_type, final String filePath, final Uri uri, final int type) {
 
         Logger.d("文件地址:::" + filePath);
 
@@ -1098,8 +1098,21 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             }
 
             // 构造上传请求
-            picObjectKey = pic_type + StringsUtils.getMd5Name(uri, this);
-            putHead = new PutObjectRequest(bucket, picObjectKey, filePath);
+            switch (pic_type) {
+
+                case Constant.DIR_COVER://封面
+
+                    coverObjectKey = pic_type + StringsUtils.getMd5Name(uri, this);
+                    putHead = new PutObjectRequest(bucket, coverObjectKey, filePath);
+
+                    break;
+
+                case Constant.DIR_HEADPIC://头像
+                    headPicObjectKey = pic_type + StringsUtils.getMd5Name(uri, this);
+                    putHead = new PutObjectRequest(bucket, headPicObjectKey, filePath);
+                    break;
+
+            }
 
             putHead.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
                 @Override
@@ -1115,15 +1128,26 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //                    Log.d("ETag", result.getETag());
 //                    Log.d("RequestId", result.getRequestId());
 
-                    if (TextUtils.isEmpty(picObjectKey)) {
-                        ToastUtils.showShort("文件不存在");
-                        return;
-                    }
+//                    if (TextUtils.isEmpty(coverObjectKey)) {
+//                        ToastUtils.showShort("文件不存在");
+//                        return;
+//                    }
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mPresenter.pathUrl(picObjectKey, type);
+                            String objectKey = "";
+                            switch (pic_type) {
+
+                                case Constant.DIR_COVER://封面
+                                    objectKey = coverObjectKey;
+                                    break;
+                                case Constant.DIR_HEADPIC://头像
+                                    objectKey = headPicObjectKey;
+                                    break;
+                            }
+
+                            mPresenter.pathUrl(objectKey, type);
                         }
                     });
 //                    Logger.d("body：：：" + result.getServerCallbackReturnBody());

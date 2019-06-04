@@ -153,6 +153,11 @@ public class ApiUrls {
     public static final String ACCOUNTS_CONSUMMATE = "accounts/consummate";
 
     /**
+     * 完善3项基本信息
+     */
+    public static final String ACCOUNTS_CONSUMMATE3 = "accounts/consummate3";
+
+    /**
      *OSS签名
      */
     public static final String SIGNATURE = "oss/signature";
