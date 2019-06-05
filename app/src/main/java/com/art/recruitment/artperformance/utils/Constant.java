@@ -25,8 +25,8 @@ public interface Constant {
     String DIR_VIDEO = "video/";
     //封面
     String DIR_COVER = "cover/";
-    //照片
-    String DIR_PHOTO = "photo/";
+    //照片集
+    String DIR_PHOTOS = "photos/";
 
 
 }

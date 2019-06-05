@@ -1,7 +1,9 @@
 package com.art.recruitment.artperformance.ui.login.activity;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -116,9 +118,16 @@ public class LaunchActivity extends BaseActivity<LaunchPresenter> implements Lau
                 });
     }
 
+//    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void returnStartUpBean(StartUpBean.DataBean bean) {
-        Glide.with(this).load(bean.getImageUrl()).into(launchImageview);
+        try {
+//            if (isDestroyed())
+                Glide.with(this).load(bean.getImageUrl()).into(launchImageview);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

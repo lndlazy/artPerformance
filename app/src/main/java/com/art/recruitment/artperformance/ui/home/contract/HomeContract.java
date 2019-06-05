@@ -20,7 +20,9 @@ public interface HomeContract extends BaseView {
      * 返回招募列表 bean
      *
      * @param bean BannerBean bean
+     * @param page
      */
+    void returnRecruitListBean(RecruitListBean.DataBean bean, int page);
     void returnRecruitListBean(RecruitListBean.DataBean bean);
 
     /**

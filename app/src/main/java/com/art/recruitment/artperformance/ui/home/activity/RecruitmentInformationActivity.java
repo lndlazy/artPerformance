@@ -14,11 +14,16 @@ import android.widget.TextView;
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.home.ApplyBean;
 import com.art.recruitment.artperformance.bean.home.RecruitmentInforBean;
+import com.art.recruitment.artperformance.ui.MainActivity;
 import com.art.recruitment.artperformance.ui.home.adapter.ImageAdapter;
 import com.art.recruitment.artperformance.ui.home.contract.RecruitmentInformaContract;
 import com.art.recruitment.artperformance.ui.home.presenter.RecruitmentInformaPresenter;
 import com.art.recruitment.artperformance.ui.login.activity.UserAgreementActivity;
+import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
+import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
+import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.TagCloudView;
 import com.art.recruitment.common.base.callback.IToolbar;
@@ -29,14 +34,17 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
+/**
+ * 招募详情页面
+ */
 public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInformaPresenter> implements RecruitmentInformaContract {
 
     @BindView(R.id.details_return_imageview)
@@ -84,7 +92,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     @BindView(R.id.home_communicate_constraintLayout)
     ConstraintLayout mCommunicateConstraintLayout;
     private Dialog dialog;
-    private int position;
+    private int recruitmentId;
     private String home_name;
 
     @Override
@@ -110,9 +118,10 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
-        position = getIntent().getIntExtra("position", 0);
+
+        recruitmentId = getIntent().getIntExtra("recruitmentId", 0);
         home_name = getIntent().getStringExtra("home_name");
-        mPresenter.recuitDetail(position);
+        mPresenter.recuitDetail(recruitmentId);
 
         initButtonClick();
 
@@ -120,6 +129,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
     private void initButtonClick() {
 
+        //返回
         RxView.
                 clicks(mReturnImageview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -130,6 +140,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
                     }
                 });
 
+        //分享
         RxView.
                 clicks(mShareImageview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -137,11 +148,12 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
                     @Override
                     public void accept(Object o) throws Exception {
                         Intent intent = new Intent(RecruitmentInformationActivity.this, UserAgreementActivity.class);
-                        intent.putExtra("web", "recruitment/" + position + "/share");
+                        intent.putExtra("web", "recruitment/" + recruitmentId + "/share");
                         startActivity(intent);
                     }
                 });
 
+        //立即报名
         RxView.
                 clicks(mSignUpImmediately).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -224,6 +236,14 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     }
 
     private void signUpImmediately() {
+
+        //判断是否完善了所以信息
+        if (!isImproveInformation()) {
+            Logger.d("本地判断资料未完成");
+            perfectInformation();
+            return;
+        }
+
         View inflate = View.inflate(this, R.layout.dialog_recruit_details, null);
         TextView mCleanTextview = inflate.findViewById(R.id.recruit_details_clean_textview);
         TextView mDetermineTextview = inflate.findViewById(R.id.recruit_details_determine_textview);
@@ -247,9 +267,51 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
             @Override
             public void onClick(View v) {
                 dialog.cancel();
-                mPresenter.apply(position);
+                mPresenter.apply(recruitmentId);
             }
         });
+    }
+
+    /**
+     * 是否完善了全部资料
+     * 通过是否保存了微信号 进行判断
+     *
+     * @return true 完善， false未完善
+     */
+    private boolean isImproveInformation() {
+
+        String weChat = (String) SaveUtils.get(this, MyInfoSave.WECHAT, "");
+        return !TextUtils.isEmpty(weChat);
+
+    }
+
+    private void perfectInformation() {
+
+        View inflate = View.inflate(this, R.layout.dialog_perfect_information, null);
+        TextView mDetermineTextview = inflate.findViewById(R.id.release_perfect_determine_textview);
+        dialog = DialogWrapper.
+                customViewDialog().
+                context(this).
+                contentView(inflate).
+                cancelable(true, true).
+                build();
+
+        dialog.show();
+
+        mDetermineTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //完善个人 资料
+                Intent m = new Intent(RecruitmentInformationActivity.this, MineDataActivity.class);
+                //应聘，报名
+                m.putExtra(Constant.EDITOR_TYPE, Constant.EDITOR_TYPE_APPLY);
+                startActivity(m);
+
+                if (dialog != null && dialog.isShowing())
+                    dialog.dismiss();
+            }
+        });
+
     }
 
 }

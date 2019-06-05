@@ -116,7 +116,7 @@ public class ActivityManager {
     /**
      * 结束所有Activity
      */
-    private void finishAllActivity() {
+    public void finishAllActivity() {
 
         for (Activity activity : activityStack) {
             if (activity != null) {

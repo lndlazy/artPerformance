@@ -2,6 +2,7 @@ package com.art.recruitment.common.baserx;
 
 import android.content.Intent;
 
+import com.art.recruitment.common.ActivityManager;
 import com.art.recruitment.common.R;
 import com.art.recruitment.common.base.BaseBean;
 import com.art.recruitment.common.base.ui.BaseActivity;
@@ -14,6 +15,11 @@ import com.art.recruitment.common.http.error.ExceptionConverter;
 //import com.art.recruitment.common.view.CustomDialog;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.facebook.stetho.common.LogUtil;
+
+import org.json.JSONObject;
+
+import java.util.logging.Logger;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -74,14 +80,21 @@ public abstract class RxSubscriber<R, T extends BaseBean<R>> implements Observer
                             return Observable.just(t.getData());
                             //成功直接返回数据
 
-                        } else if (t.getCode() == ErrorCode.CODE_UNAUTHORIZED) {
-
-//                            //TODO 401 重新登录
+                        }
+//                        else if (t.getCode() == ErrorCode.CODE_UNAUTHORIZED) {
 //
-//                            Intent m = new Intent()
-
-                            return null;
-                        } else {
+////                            //TODO 401 重新登录
+//
+//                            if (mActivity!=null) {
+//                                Intent intent = new Intent("com.art.recruitment.artperformance.LOGIN_IN");
+//                                intent.addCategory("com.art.recruitment.artperformance.LOGIN_IN");
+//                                mActivity.startActivity(intent);
+//                            }
+//
+//                            return null;
+//                            throw new ApiException(t.getCode(), ErrorType.ERROR_API, t.getMessage(), mThrowable);
+//                        }
+                        else {
                             if (mRequestConfig != null && !StringUtils.isTrimEmpty(mRequestConfig.getTag())) {
                                 LogUtils.d(mRequestConfig.getTag(), "-----JavaBean的Code为" + t.getCode());
                             }
@@ -100,6 +113,38 @@ public abstract class RxSubscriber<R, T extends BaseBean<R>> implements Observer
                     @Override
                     public ObservableSource<? extends R> apply(Throwable throwable) throws Exception {
                         LogUtils.e(throwable.toString());
+
+                        try {
+                            ApiException apiException = ExceptionConverter.convertException(throwable);
+                            if (apiException.getCode() == ErrorCode.CODE_UNAUTHORIZED) {
+                                if (mActivity != null) {
+                                    ActivityManager.getInstance().finishAllActivity();
+                                    LogUtils.d("重新登录=====>>");
+                                    Intent intent = new Intent("com.art.recruitment.artperformance.LOGIN_IN");
+                                    intent.addCategory("com.art.recruitment.artperformance.LOGIN_IN");
+                                    mActivity.startActivity(intent);
+                                }
+                                return Observable.error(ExceptionConverter.convertException(
+                                        new ApiException(ErrorCode.CODE_UNAUTHORIZED, ErrorType.ERROR_API, "登录过期", null)));
+
+                            }
+//                            JSONObject j = new JSONObject(throwable.getMessage());
+//
+//                            int code = j.getInt("code");
+//
+//                            if (code == ErrorCode.CODE_UNAUTHORIZED) {
+//                                if (mActivity!=null) {
+//                                    Intent intent = new Intent("com.art.recruitment.artperformance.LOGIN_IN");
+//                                    intent.addCategory("com.art.recruitment.artperformance.LOGIN_IN");
+//                                    mActivity.startActivity(intent);
+//                                }
+//                                return Observable.error(ExceptionConverter.convertException(new Throwable("登录超时")));
+//                            }
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
                         return Observable.error(ExceptionConverter.convertException(throwable));
                     }
                 }).
@@ -252,7 +297,7 @@ public abstract class RxSubscriber<R, T extends BaseBean<R>> implements Observer
 
             if (mActivity != null) {
                 mActivity.showLoadingView();
-            } else {
+            } else if (mFragment != null) {
                 mFragment.showLoadingView();
             }
         } else {

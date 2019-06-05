@@ -101,9 +101,12 @@ public class MineFecruitmentFragment extends BaseFragment<MineFecruitmentPresent
 
     @Override
     public void returnMineFecruitmentBean(final MineFecruitmentBean.DataBean bean) {
-        adapter = new MineFecruitmentAdapter(getContext(), bean.getContent());
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        mRecyclerView.setAdapter(adapter);
+
+        if (adapter==null) {
+            adapter = new MineFecruitmentAdapter(getContext(), bean.getContent());
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+            mRecyclerView.setAdapter(adapter);
+        }
 
         adapter.setOnViewClickListener(new MineFecruitmentAdapter.OnItemClickListener() {
             @Override

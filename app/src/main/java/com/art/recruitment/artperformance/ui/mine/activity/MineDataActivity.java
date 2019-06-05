@@ -2,6 +2,7 @@ package com.art.recruitment.artperformance.ui.mine.activity;
 
 import android.Manifest;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -18,7 +19,9 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -44,13 +47,15 @@ import com.art.recruitment.artperformance.bean.mine.SignaTureBean;
 import com.art.recruitment.artperformance.ui.home.activity.CityActivity;
 import com.art.recruitment.artperformance.ui.mine.FileType;
 import com.art.recruitment.artperformance.ui.mine.ImageModel;
+import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
 import com.art.recruitment.artperformance.ui.mine.adapter.MinePhotoAdapter;
-import com.art.recruitment.artperformance.ui.mine.adapter.MineVideoAdapter;
 import com.art.recruitment.artperformance.ui.mine.contract.MineDataContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MineDataPresenter;
 import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.ImageUtils;
 import com.art.recruitment.artperformance.utils.MatisseGlideEngine;
 import com.art.recruitment.artperformance.utils.PermissionTipUtils;
+import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.utils.StringsUtils;
 import com.art.recruitment.artperformance.utils.UriUtil;
 import com.art.recruitment.artperformance.view.DialogWrapper;
@@ -86,9 +91,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -137,8 +140,10 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //    RecyclerView mMasterGraphRecyclerView;
     @BindView(R.id.mine_photo_recyclerView)
     RecyclerView mPhotoRecyclerView;
-    @BindView(R.id.mine_video_recyclerView)
-    RecyclerView mVideoRecyclerView;
+
+//    @BindView(R.id.mine_video_recyclerView)
+//    RecyclerView mVideoRecyclerView;
+
     @BindView(R.id.mine_other_edittext)
     EditText mOtherEdittext;
     @BindView(R.id.mine_other_number_textviewv)
@@ -156,34 +161,40 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     @BindView(R.id.coverPic)
     SimpleDraweeView coverPic;
 
+    @BindView(R.id.videoPicView)
+    ImageView videoPicView;
+
+    @BindView(R.id.videoDeleteView)
+    ImageView videoDeleteView;
+
     private ImageModel mAddImageModel;
     private static int PHOTO_MAX_LIMIT_COUNT = 4;  //限定最多选择4张图片
-    private static int MASTER_MAX_LIMIT_COUNT = 1;  //限定最多选择4张图片
-    private static int VIDEO_MAX_LIMIT_COUNT = 1;  //限定最多选择4张图片
+    //    private static int MASTER_MAX_LIMIT_COUNT = 1;  //限定最多选择4张图片
+//    private static int VIDEO_MAX_LIMIT_COUNT = 1;  //限定最多选择4张图片
     private SelectionCreator mMatisseBuilder;
     private int mClickedItemPosition;
     private MinePhotoAdapter mPhotoAdapter;
     //    private MineMasterAdapter mMasterAdapter;
-    private MineVideoAdapter mVideoAdapter;
-    private List<ImageModel> mImageLists;
+//    private MineVideoAdapter mVideoAdapter;
+//    private List<ImageModel> mImageLists;
     //    private List<ImageModel> mImageListt;
     private List<ImageModel> mImageList;
-    private List<ImageModel> mImageLisa;
+    //    private List<ImageModel> mImageLisa;
     private Dialog mPermissionSettingDialog;
     private int gender;
-    private List<String> mPhoto = new ArrayList<>();
-    private List<String> mPhotoList = new ArrayList<>();
-    private List<String> mPrimaryPhoto = new ArrayList<>();
+//    private List<String> mPhoto = new ArrayList<>();
+//    private List<String> mPhotoList = new ArrayList<>();
+    //    private List<String> mPrimaryPhoto = new ArrayList<>();
     //    private List<String> mPrimaryPhotoList = new ArrayList<>();
-    private String personalIntroductionVideo;
-    private String personalIntroductionVideoList;
+//    private String personalIntroductionVideo;
+//    private String personalIntroductionVideoList;
     private String mAvaterList;
-    private String avater;
+    //    private String avater;
     private int telePhoneSwitchButton = 1;
     private int wxChatSwitchButton = 1;
     private int cityCode;
     private boolean isAddItemClicked;
-    private int returnImageview;
+    //    private int returnImageview;
     private static final int CODE_GALLERY_REQUEST = 0xa0;
     private static final int CODE_COVER_REQUEST = 0xa1;
     private static final int CODE_RESULT_REQUEST = 0xa2;
@@ -196,20 +207,27 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private String mAge, mWeight, mBust, mHeight, mHips, mName, mOther, mTelePhone, mWaist, mWeChat;
     private PutObjectRequest putVideo;
     private PutObjectRequest putPhoto;
-    private PutObjectRequest putPrimaryPhoto;
+    //    private PutObjectRequest putPrimaryPhoto;
+    private PutObjectRequest putPhotoList;
     private PutObjectRequest putHead;
-    private MineBean.DataBean dataBean;
+//    private MineBean.DataBean dataBean;
     private int editorType;
-
 
     private String headPicUrl;//用户头像
     private File photoFile;
     private File outFile;//裁剪输出文件夹
     private String bucket;
     private String endpoint;
-    private String coverObjectKey;////封面ObjectKey
     private String coverPicUrl;//封面图片
     private String headPicObjectKey;//头像ObjectKey
+    private String videoObjectKey;//视频objectKey
+    private String coverObjectKey;////封面ObjectKey
+    //    private String videoPicUrl;//video的图片url
+    private List<Uri> photoList = new ArrayList<>();//存放照片集的uri集合
+    private List<String> photoObjectKeyList = new ArrayList<>();//存放照片集的objectKey集合
+    private ProgressDialog show;
+    private String mCity;
+
 
     @Override
     protected IToolbar getIToolbar() {
@@ -285,6 +303,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         });
 
         coverDelete.setVisibility(View.INVISIBLE);
+        videoDeleteView.setVisibility(View.INVISIBLE);
 
     }
 
@@ -304,7 +323,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         if (!photoFile.exists())
             photoFile.mkdirs();
 
-
     }
 
     private void initButtonClick() {
@@ -318,6 +336,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     }
                 });
 
+        //保存数据
         RxView.
                 clicks(mPreservationTextview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -358,6 +377,17 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     }
                 });
 
+        //选择视频
+        RxView.
+                clicks(videoPicView).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        choiceVideo();
+                    }
+                });
+
         RxView.
                 clicks(coverPic).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -369,12 +399,51 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                         chooseCoverPic();
                     }
                 });
+
+
         coverDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //删除封面
                 coverPicUrl = "";
+                coverObjectKey = "";
                 coverPic.setImageURI(Uri.parse("res://" + getPackageName() + "/" + R.mipmap.icon_my_add));
+                coverDelete.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        videoDeleteView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //删除封面
+                videoObjectKey = "";
+                videoPicView.setImageURI(Uri.parse("res://" + getPackageName() + "/" + R.mipmap.icon_my_add));
+                videoDeleteView.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        mOtherEdittext.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+                String txt = s.toString();
+
+                if (!TextUtils.isEmpty(txt)) {
+                    int length = txt.length();
+                    mOtherNumberTextviewv.setText(length + "/300");
+                }else {
+                    mOtherNumberTextviewv.setText( "0/300");
+                }
             }
         });
     }
@@ -406,6 +475,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         mTelePhone = mTelePhoneEdittext.getText().toString().trim();
         mWaist = mWaistEdittext.getText().toString().trim();
         mWeChat = mWeChatEdittext.getText().toString().trim();
+        mCity = mCitiyEdittext.getText().toString().trim();
 
         switch (editorType) {
 
@@ -429,26 +499,36 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
     private void applyNextStep() {
 
+        if (!mManRedioButton.isChecked() && !mWomanRedioButton.isChecked()) {
+            ToastUtils.showShort(getResources().getString(R.string.input_sex));
+            return;
+        }
+
         if (!TextUtils.isEmpty(mAge) && !TextUtils.isEmpty(mWeight) && !TextUtils.isEmpty(mBust) &&
                 !TextUtils.isEmpty(mHeight) && !TextUtils.isEmpty(mHips) && !TextUtils.isEmpty(mName) &&
                 !TextUtils.isEmpty(mOther) && !TextUtils.isEmpty(mTelePhone) && !TextUtils.isEmpty(mWaist) &&
-                !TextUtils.isEmpty(mWeChat) && !TextUtils.isEmpty(avater) && !TextUtils.isEmpty(personalIntroductionVideo)) {
+                !TextUtils.isEmpty(mWeChat) && !TextUtils.isEmpty(coverObjectKey) && !TextUtils.isEmpty(videoObjectKey)
+                && !TextUtils.isEmpty(headPicObjectKey) && !TextUtils.isEmpty(mCity) && photoObjectKeyList.size() > 0) {
 
-            setProvider();
+//            setProvider();
 
-            Logger.d("personalIntroductionVideo==>" + personalIntroductionVideo
-                    + "    ,avater:" + avater);
-
-            if (mPhoto.size() > 0 && mPrimaryPhoto.size() > 0 && personalIntroductionVideo.length() > 0 && avater.length() > 0) {
-                mPresenter.oss();
-            } else {
-                ToastUtils.showShort(getResources().getString(R.string.apply_input_all));
-            }
+//            Logger.d("videoObjectKey 视频封面==>" + videoObjectKey
+//                    + "    ,avater头像:" + coverObjectKey);
+//
+//            if (mPhoto.size() > 0 && videoObjectKey.length() > 0 && coverObjectKey.length() > 0) {
+//            mPresenter.oss();
+//            } else {
+//                ToastUtils.showShort(getResources().getString(R.string.apply_input_all));
+//            }
+            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+            String codeStr = gson.toJson(inputInfo());
+            mPresenter.consummateInfo(codeStr);
 
         } else {
             ToastUtils.showShort(getResources().getString(R.string.apply_input_all));
         }
     }
+
 
     //发布招募的保存信息
     private void releaseNextStep() {
@@ -468,11 +548,13 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             return;
         }
 
-        inputInfo();
-
+//        ConsummateInfoRequest req = inputInfo();
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        String codeStr = gson.toJson(inputInfo());
+        mPresenter.consummateInfo3(codeStr);
     }
 
-    private void inputInfo() {
+    private ConsummateInfoRequest inputInfo() {
 
         ConsummateInfoRequest request = new ConsummateInfoRequest();
 
@@ -480,7 +562,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             request.setAge(Integer.parseInt(mAge));
 //        request.setAvatar(mAvaterList);
 
-        Logger.d("头像地址::" + headPicUrl + ",头像objectKey::" + headPicObjectKey);
+//        Logger.d("头像地址::" + headPicUrl + ",头像objectKey::" + headPicObjectKey);
         if (!TextUtils.isEmpty(headPicObjectKey))
             request.setAvatar(headPicObjectKey);
 
@@ -501,8 +583,10 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         request.setName(mName);
         //其他经历
         request.setPersonalExperience(mOther);
-        request.setPersonalIntroductionVideo(personalIntroductionVideoList);
-        request.setPhoto(mPhotoList);
+        //视频
+        request.setPersonalIntroductionVideo(videoObjectKey);
+        //图片列表
+        request.setPhoto(photoObjectKeyList);
         //封面
 //        request.setPrimaryPhoto(mPrimaryPhotoList);
         ArrayList<String> strings = new ArrayList<>();
@@ -518,9 +602,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         //是否隐藏微信
         request.setWechatHiddenFlag(wxChatSwitchButton);
 
-        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-        String codeStr = gson.toJson(request);
-        mPresenter.consummateInfo3(codeStr);
+        return request;
     }
 
     private void setProvider() {
@@ -570,6 +652,10 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     public void returnMineDataBean(MineBean.DataBean bean) {
 
         mNameEdittext.setText(bean.getName());
+
+//        if (!TextUtils.isEmpty(bean.getAvatar()))
+//            headPicObjectKey = bean.getAvatar();
+
         if (bean.getGender() == 1) {
             mManRedioButton.setChecked(true);
             mWomanRedioButton.setChecked(false);
@@ -602,14 +688,37 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         if (!TextUtils.isEmpty(bean.getCityName()))
             mCitiyEdittext.setText(bean.getCityName());
 
+        if (bean.getCityId()!=0)
+            cityCode = bean.getCityId();
+
+
         //设置头像
-        if (!TextUtils.isEmpty(bean.getAvatarView())) {
+        if (!TextUtils.isEmpty(bean.getAvatar())) {
             mHeadImageview.setImageURI(Uri.parse(bean.getAvatarView()));
-            headPicUrl = bean.getAvatar();
+//            headPicUrl = bean.getAvatar();
+            headPicObjectKey = bean.getAvatar();
+        }
+
+        //设置主图
+        if (bean.getPrimaryPhoto()!=null && bean.getPrimaryPhoto().size() > 0
+                 && !TextUtils.isEmpty(bean.getPrimaryPhotoView().get(0))) {
+
+            coverPic.setImageURI(Uri.parse(bean.getPrimaryPhotoView().get(0)));
+//            headPicUrl = bean.getAvatar();
+            coverObjectKey = bean.getPrimaryPhoto().get(0);
+        }
+
+        if (bean.getPhoto()!=null && bean.getPhoto().size() > 0) {
+
+            //TODO 显示图片集
+
+            photoObjectKeyList.clear();
+            photoObjectKeyList.addAll(bean.getPhoto());
+
         }
 
         mOtherEdittext.setText(bean.getPersonalExperience());
-        dataBean = bean;
+//        dataBean = bean;
 
 //        if (bean.getPhotoView() != null && bean.getPhotoView().size() > 0) {
 //            List<ImageModel> mTempImageList = new ArrayList<>();
@@ -655,6 +764,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //            mMasterAdapter.notifyDataSetChanged();
 //        }
 
+        //TODO 视频
         if (!TextUtils.isEmpty(bean.getPersonalIntroductionVideo())) {
             //TODO videolist?
 //            List<ImageModel> mTempImageList2 = new ArrayList<>();
@@ -706,9 +816,22 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     @Override
     public void returnEssentialInfoBean(ConsummateInfoBean.DataBean bean) {
         ToastUtils.showShort("资料已保存");
-        mPhotoList.clear();
+
+        if (!TextUtils.isEmpty(mWeChat)) {
+            Logger.d("保存微信::" + mWeChat);
+            SaveUtils.put(this, MyInfoSave.WECHAT, "");
+        }
+
+//        SaveUtils.put(this, MyInfoSave.HEAD_PIC_URL, bean.getAvatar());
+        SaveUtils.put(this, MyInfoSave.PHONE_NUM, bean.getTelephone());
+        SaveUtils.put(this, MyInfoSave.SEX, bean.getGender());
+        SaveUtils.put(this, MyInfoSave.USER_NAME, bean.getUsername());
+//        SaveUtils.put(this, MyInfoSave.AGE, bean.getAge());
+//        SaveUtils.put(this, MyInfoSave.WECHAT, bean.getWechat());
+
+//        mPhotoList.clear();
 //        mPrimaryPhotoList.clear();
-        personalIntroductionVideoList = null;
+//        personalIntroductionVideoList = null;
         finish();
 //        mHeadImageview = null;
     }
@@ -941,11 +1064,12 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
                 break;
 
-            case FileType.PIC_TYPE_PHOTO://照片
+            case FileType.PIC_TYPE_PHOTOS://照片
 
                 break;
 
             case FileType.PIC_TYPE_VIDEO://视频
+                videoDeleteView.setVisibility(View.VISIBLE);
                 break;
 
         }
@@ -963,57 +1087,37 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 10 && resultCode == AppCompatActivity.RESULT_OK) {
-            mPhoto.removeAll(mPhoto);
-            List<Uri> mSelectedImages = Matisse.obtainResult(data);
-            if (mSelectedImages != null && mSelectedImages.size() > 0) {
-                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
-                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
-                    List<ImageModel> mTempImageList = new ArrayList<>();
-                    for (String path : mSelectedImagesPath) {
-                        ImageModel imageModel = new ImageModel();
-                        imageModel.setUris(path);
-                        mTempImageList.add(imageModel);
-                    }
-                    if (isAddItemClicked) {  //点击的添加item
-                        mImageList.remove(mClickedItemPosition);
-                        mImageList.addAll(mTempImageList);  //追加新选择数据
-                        if (mImageList.size() < 4) {
-                            mImageList.add(mAddImageModel);
-                        }
-                    } else {  //更换图片，只能选择一张
-                        mImageList.set(mClickedItemPosition, mTempImageList.get(0));
-                    }
-                    mPhotoAdapter.setNewData(mImageList);
-                    for (int i = 0; i < mImageList.size() - 1; i++) {
-                        mPhoto.add(mImageList.get(i).getUris());
-                    }
-                    mPhotoAdapter.notifyDataSetChanged();
-                }
-            }
-        } else if (requestCode == 300 && resultCode == AppCompatActivity.RESULT_OK) {
-            personalIntroductionVideo = null;
-            List<Uri> mSelectedImages = Matisse.obtainResult(data);
-            if (mSelectedImages != null && mSelectedImages.size() > 0) {
-                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
-                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
-                    List<ImageModel> mTempImageList = new ArrayList<>();
-                    for (String path : mSelectedImagesPath) {
-                        ImageModel imageModel = new ImageModel();
-                        imageModel.setUris(path);
-                        mTempImageList.add(imageModel);
-                    }
-                    mImageLists.remove(mClickedItemPosition);
-                    mImageLists.addAll(mTempImageList);
-                    if (mImageLists.size() < 1) {
-                        mImageLists.add(mAddImageModel);
-                    }
-                    personalIntroductionVideo = mImageLists.get(0).getUris();
-                    mVideoAdapter.setNewData(mImageLists);
-                    mVideoAdapter.notifyDataSetChanged();
-                }
-            }
-        } else if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK) {
+            //选择 照片集返回的数据
+            photoListBack(data);
 
+        } else if (requestCode == 300 && resultCode == AppCompatActivity.RESULT_OK && data != null) {
+
+            videoBack(data);
+
+//            personalIntroductionVideo = null;
+//            List<Uri> mSelectedImages = Matisse.obtainResult(data);
+//            if (mSelectedImages != null && mSelectedImages.size() > 0) {
+//                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
+//                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
+//                    List<ImageModel> mTempImageList = new ArrayList<>();
+//                    for (String path : mSelectedImagesPath) {
+//                        ImageModel imageModel = new ImageModel();
+//                        imageModel.setUris(path);
+//                        mTempImageList.add(imageModel);
+//                    }
+//                    mImageLists.remove(mClickedItemPosition);
+//                    mImageLists.addAll(mTempImageList);
+//                    if (mImageLists.size() < 1) {
+//                        mImageLists.add(mAddImageModel);
+//                    }
+//                    personalIntroductionVideo = mImageLists.get(0).getUris();
+//                    mVideoAdapter.setNewData(mImageLists);
+//                    mVideoAdapter.notifyDataSetChanged();
+//                }
+//            }
+
+        } else if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK) {
+            //选择城市
             if (data != null && data.getExtras() != null) {
                 String city = data.getExtras().getString("city");
                 cityCode = data.getExtras().getInt("code");
@@ -1022,7 +1126,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         } else if (requestCode == CODE_GALLERY_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
 
-            //相册选择后 开始裁剪
+            // 头像  ==>  相册选择后 开始裁剪
             outFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
 //            Logger.d("outFile地址::" + outFile.getPath() + "====>" + outFile.getAbsolutePath());
             cropRawPhoto(checkSelectPhoto(data));//裁剪
@@ -1039,16 +1143,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         } else if (requestCode == CODE_COVER_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
 
             //选择封面
-
-            if (data == null)
-                return;
-
-            Uri uri = data.getData();
-            if (uri != null) {
-                coverPic.setImageURI(uri.toString());
-                Logger.d("uri路径::" + uri.toString() + "   ::uri.getPath():" + uri.getPath());
-                startUploadPic(Constant.DIR_COVER, UriUtil.getRealFilePath(this, uri), uri, FileType.PIC_TYPE_COVER);
-            }
+            coverBack(data);
 
 //            mPrimaryPhoto.removeAll(mPrimaryPhoto);
 //            List<Uri> mSelectedImages = Matisse.obtainResult(data);
@@ -1074,13 +1169,262 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //                }
 //            }
         } else if (requestCode == CODE_RESULT_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
-            //裁剪后返回的数据
+            // 头像==>裁剪后返回的数据
             if (data != null) {
                 //加载,上传 头像
                 setImageToHeadView(data);
             }
         }
 
+    }
+
+    private void photoListBack(Intent data) {
+
+        List<Uri> mSelectedImages = Matisse.obtainResult(data);
+
+        if (mSelectedImages == null || mSelectedImages.size() < 1)
+            return;
+
+//        for (int i = 0; i < mSelectedImages.size(); i++) {
+//            Logger.d("选择的图片::" + mSelectedImages.get(i).toString());
+//        }
+
+        List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
+
+        if (mSelectedImagesPath == null || mSelectedImagesPath.size() < 1)
+            return;
+
+        List<ImageModel> mTempImageList = new ArrayList<>();
+        for (String path : mSelectedImagesPath) {
+            ImageModel imageModel = new ImageModel();
+            imageModel.setUris(path);
+            mTempImageList.add(imageModel);
+        }
+        if (isAddItemClicked) {  //点击的添加item
+            mImageList.remove(mClickedItemPosition);
+            mImageList.addAll(mTempImageList);  //追加新选择数据
+            if (mImageList.size() < 4) {
+                mImageList.add(mAddImageModel);
+            }
+
+            photoList.addAll(mSelectedImages);
+
+        } else {  //更换图片，只能选择一张
+            mImageList.set(mClickedItemPosition, mTempImageList.get(0));
+            photoList.set(mClickedItemPosition, mSelectedImages.get(0));
+        }
+        mPhotoAdapter.setNewData(mImageList);
+//        mPhoto.clear();
+//        for (int i = 0; i < mImageList.size() - 1; i++) {
+//            mPhoto.add(mImageList.get(i).getUris());
+//        }
+        mPhotoAdapter.notifyDataSetChanged();
+
+//        for (int i = 0; i < photoList.size(); i++) {
+//            Logger.d("photoList::" + photoList.get(i).toString());
+//        }
+
+        startUploadPhotoList();
+    }
+
+
+    private void coverBack(Intent data) {
+        if (data == null)
+            return;
+
+        Uri uri = data.getData();
+        if (uri != null) {
+            coverPic.setImageURI(uri.toString());
+            Logger.d("uri路径::" + uri.toString() + "   ::uri.getPath():" + uri.getPath());
+            startUploadPic(Constant.DIR_COVER, UriUtil.getRealFilePath(this, uri), uri, FileType.PIC_TYPE_COVER);
+        }
+    }
+
+
+    private void videoBack(Intent data) {
+
+        Uri selectedVideo = data.getData();
+
+        if (selectedVideo == null) {
+            ToastUtils.showShort("视频不存在");
+            return;
+        }
+
+        String[] filePathColumn = {MediaStore.Video.Media.DATA};
+
+        Cursor cursor = getContentResolver().query(selectedVideo,
+                filePathColumn, null, null, null);
+
+        if (cursor == null) {
+            ToastUtils.showShort("视频不存在");
+            return;
+        }
+
+        cursor.moveToFirst();
+
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        String videoPath = cursor.getString(columnIndex);
+
+        cursor.close();
+
+        Logger.d("videoPath::" + videoPath);
+
+        Bitmap videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 300, 300);
+
+        videoPicView.setImageBitmap(videoThumbnail);
+
+        startUploadVideo(selectedVideo, videoPath);
+    }
+
+    //开始上传视频
+    private void startUploadVideo(Uri videoUri, String videoPath) {
+        if (oss != null && !TextUtils.isEmpty(bucket) && !TextUtils.isEmpty(endpoint)) {
+
+            videoObjectKey = Constant.DIR_VIDEO + StringsUtils.getMd5Name(videoUri, this);
+
+            putVideo = new PutObjectRequest(bucket, videoObjectKey, videoPath);
+            putVideo.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+                @Override
+                public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+//                    Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
+                }
+            });
+
+            oss.asyncPutObject(putVideo, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+                @Override
+                public void onSuccess(PutObjectRequest request, final PutObjectResult result) {
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            //转换成url
+                            mPresenter.pathUrl(videoObjectKey, FileType.PIC_TYPE_VIDEO);
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+                    // 请求异常。
+                    if (clientExcepion != null) {
+                        // 本地异常，如网络异常等。
+                        clientExcepion.printStackTrace();
+                    }
+                    if (serviceException != null) {
+                        // 服务异常。
+                        Log.e("ErrorCode", serviceException.getErrorCode());
+//                        Log.e("RequestId", serviceException.getRequestId());
+//                        Log.e("HostId", serviceException.getHostId());
+//                        Log.e("RawMessage", serviceException.getRawMessage());
+                    }
+                }
+            });
+
+        } else {
+            //TODO 统一操作
+        }
+    }
+
+
+    /**
+     * 开始上传照片集
+     */
+    private void startUploadPhotoList() {
+
+        //生成上传的objectkey集合
+        for (int i = 0; i < photoList.size(); i++) {
+            //获取上传的objectkey
+            photoObjectKeyList.add(Constant.DIR_PHOTOS + StringsUtils.getMd5Name(photoList.get(i), this));
+        }
+
+        show = ProgressDialog.show(this, "", "");
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                for (int i = 0; i < photoObjectKeyList.size(); i++) {
+
+                    putPhotoList = new PutObjectRequest(bucket, photoObjectKeyList.get(i), UriUtil.getRealFilePath(MineDataActivity.this, photoList.get(i)));
+
+                    try {
+                        PutObjectResult putResult = oss.putObject(putPhotoList);
+
+                        final int finalI = i;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mPresenter.pathUrl(photoObjectKeyList.get(finalI), FileType.PIC_TYPE_PHOTOS);
+                            }
+                        });
+
+                        Log.d("PutObject", "UploadSuccess");
+                        stopShow(i);
+                    } catch (ClientException e) {
+                        e.printStackTrace();
+                        stopShow(i);
+                    } catch (ServiceException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }).start();
+
+//        for (int i = 0; i < photoObjectKeyList.size(); i++) {
+//
+////            String s = photoObjectKeyList.get(i);
+////            Uri uri = photoList.get(i);
+//            putPhotoList = new PutObjectRequest(bucket, photoObjectKeyList.get(i), UriUtil.getRealFilePath(this, photoList.get(i)));
+//
+//            oss.asyncPutObject(putPhotoList, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+//                @Override
+//                public void onSuccess(PutObjectRequest request, final PutObjectResult result) {
+//
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//
+//                        }
+//                    });
+////                    Logger.d("body：：：" + result.getServerCallbackReturnBody());
+//
+//                }
+//
+//                @Override
+//                public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+//                    // 请求异常。
+//                    if (clientExcepion != null) {
+//                        // 本地异常，如网络异常等。
+//                        clientExcepion.printStackTrace();
+//                    }
+//                    if (serviceException != null) {
+//                        // 服务异常。
+//                        Log.e("ErrorCode", serviceException.getErrorCode());
+//                    }
+//                }
+//            });
+//
+//        }
+
+
+//        s
+
+    }
+
+    private void stopShow(int i) {
+        if (i == photoObjectKeyList.size() - 1) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if (show != null && show.isShowing())
+                        show.dismiss();
+
+                }
+            });
+        }
     }
 
     //开始上传图片
@@ -1092,10 +1436,10 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         //oss签名信息
         if (oss != null && !TextUtils.isEmpty(bucket) && !TextUtils.isEmpty(endpoint)) {
 
-            if (TextUtils.isEmpty(StringsUtils.getMd5Name(uri, this))) {
-                ToastUtils.showShort("文件未找到");
-                return;
-            }
+//            if (TextUtils.isEmpty(StringsUtils.getMd5Name(uri, this))) {
+//                ToastUtils.showShort("文件未找到");
+//                return;
+//            }
 
             // 构造上传请求
             switch (pic_type) {
@@ -1124,14 +1468,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             oss.asyncPutObject(putHead, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
                 @Override
                 public void onSuccess(PutObjectRequest request, final PutObjectResult result) {
-//                    Log.d("PutObject", "UploadSuccess");
-//                    Log.d("ETag", result.getETag());
-//                    Log.d("RequestId", result.getRequestId());
-
-//                    if (TextUtils.isEmpty(coverObjectKey)) {
-//                        ToastUtils.showShort("文件不存在");
-//                        return;
-//                    }
 
                     runOnUiThread(new Runnable() {
                         @Override
@@ -1225,13 +1561,13 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
      */
     private void initMatisse() {
 
-        Set<MimeType> mMimeType = new HashSet<>();
-        mMimeType.add(MimeType.PNG);
-        mMimeType.add(MimeType.JPEG);
-        mMimeType.add(MimeType.MP4);
+//        Set<MimeType> mMimeType = new HashSet<>();
+//        mMimeType.add(MimeType.PNG);
+//        mMimeType.add(MimeType.JPEG);
+//        mMimeType.add(MimeType.MP4);
         mMatisseBuilder = Matisse.
                 from(this).
-                choose(mMimeType).
+                choose(MimeType.ofImage()).
                 capture(false).
                 captureStrategy(new CaptureStrategy(true, Constant.FILE_PROVIDER_PATH)).
                 countable(false).
@@ -1240,12 +1576,13 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                 gridExpectedSize(getResources().getDimensionPixelSize(R.dimen.grid_expected_size)).
                 restrictOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT).
                 thumbnailScale(0.85f).
-                theme(R.style.Matisse_Dracula);
+                theme(R.style.Matisse_Dracula)
+                .maxSelectable(4);
 
-        resetPhotoImagePicker(PHOTO_MAX_LIMIT_COUNT);
-        resetPhotoImagePicker(MASTER_MAX_LIMIT_COUNT);
-
-        resetPhotoImagePicker(VIDEO_MAX_LIMIT_COUNT);
+//        resetPhotoImagePicker(PHOTO_MAX_LIMIT_COUNT);
+//        resetPhotoImagePicker(MASTER_MAX_LIMIT_COUNT);
+//
+//        resetPhotoImagePicker(VIDEO_MAX_LIMIT_COUNT);
 
     }
 
@@ -1257,14 +1594,14 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private void resetPhotoImagePicker(int photolimitNum) {
         mMatisseBuilder.maxSelectable(photolimitNum);
     }
-
-    private void resetMasterImagePicker(int masterlimitNum) {
-        mMatisseBuilder.maxSelectable(masterlimitNum);
-    }
-
-    private void resetVideoImagePicker(int videolimitNum) {
-        mMatisseBuilder.maxSelectable(videolimitNum);
-    }
+//
+//    private void resetMasterImagePicker(int masterlimitNum) {
+//        mMatisseBuilder.maxSelectable(masterlimitNum);
+//    }
+//
+//    private void resetVideoImagePicker(int videolimitNum) {
+//        mMatisseBuilder.maxSelectable(videolimitNum);
+//    }
 
     private void initRecyclerView() {
         mImageList = new ArrayList<>();
@@ -1283,24 +1620,24 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //        mMasterAdapter = new MineMasterAdapter(this, mImageListt);
 //        mMasterGraphRecyclerView.setAdapter(mMasterAdapter);
 
-        mImageLists = new ArrayList<>();
-        mAddImageModel = new ImageModel();
-        mAddImageModel.setUris(ImageModel.ADD_IMAGE_URI);
-        mImageLists.add(mAddImageModel);
-        mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        mVideoAdapter = new MineVideoAdapter(this, mImageLists);
-        mVideoRecyclerView.setAdapter(mVideoAdapter);
+//        mImageLists = new ArrayList<>();
+//        mAddImageModel = new ImageModel();
+//        mAddImageModel.setUris(ImageModel.ADD_IMAGE_URI);
+//        mImageLists.add(mAddImageModel);
+//        mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+//        mVideoAdapter = new MineVideoAdapter(this, mImageLists);
+//        mVideoRecyclerView.setAdapter(mVideoAdapter);
 
         mPhotoAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 mClickedItemPosition = position;
-                returnImageview = 1;
+//                returnImageview = 1;
                 switch (adapter.getItemViewType(position)) {
                     case ImageModel.TYPE_IMAGE_ADD:
                         isAddItemClicked = true;
                         int imageCountsCanSelect = PHOTO_MAX_LIMIT_COUNT - position;
-                        boolean isMultiMode = imageCountsCanSelect > 1;
+//                        boolean isMultiMode = imageCountsCanSelect > 1;
                         resetPhotoImagePicker(imageCountsCanSelect);
 
                         requestPermissionAndSelectImage();
@@ -1316,6 +1653,17 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                                 break;
 
                             case R.id.item_appeal_evidence_list_delete_image:
+
+                                //删除照片集里的照片
+                                photoList.remove(position);
+
+                                try {
+                                    //删除该objectkey
+                                    photoObjectKeyList.remove(position);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                                 adapter.getData().remove(position);
                                 if (!adapter.getData().contains(mAddImageModel)) {
                                     adapter.getData().add(mAddImageModel);
@@ -1371,46 +1719,46 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //            }
 //        });
 
-        mVideoAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                mClickedItemPosition = position;
-                returnImageview = 3;
-
-                switch (adapter.getItemViewType(position)) {
-                    case ImageModel.TYPE_IMAGE_ADD:
-                        isAddItemClicked = true;
-                        int imageCountsCanSelect = VIDEO_MAX_LIMIT_COUNT - position;
-                        boolean isMultiMode = imageCountsCanSelect > 1;
-                        resetVideoImagePicker(imageCountsCanSelect);
-
-                        requestPermissionAndSelectImage();
-                        break;
-
-                    case ImageModel.TYPE_IMAGE_SELECTED:
-
-                        switch (view.getId()) {
-                            case R.id.item_appeal_evidence_list_evidence_image:
-//                                注释代码是点击替换图片的功能代码
-                                isAddItemClicked = false;
-                                resetVideoImagePicker(1);
-                                requestPermissionAndSelectImage();
-                                break;
-
-                            case R.id.item_appeal_evidence_list_delete_image:  //删除图片
-                                adapter.getData().remove(position);
-                                if (!adapter.getData().contains(mAddImageModel)) {
-                                    adapter.getData().add(mAddImageModel);
-                                }
-                                adapter.notifyDataSetChanged();
-                                break;
-                        }
-
-                        break;
-                }
-
-            }
-        });
+//        mVideoAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+//            @Override
+//            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+//                mClickedItemPosition = position;
+//                returnImageview = 3;
+//
+//                switch (adapter.getItemViewType(position)) {
+//                    case ImageModel.TYPE_IMAGE_ADD:
+//                        isAddItemClicked = true;
+//                        int imageCountsCanSelect = VIDEO_MAX_LIMIT_COUNT - position;
+//                        boolean isMultiMode = imageCountsCanSelect > 1;
+//                        resetVideoImagePicker(imageCountsCanSelect);
+//
+//                        requestPermissionAndSelectImage();
+//                        break;
+//
+//                    case ImageModel.TYPE_IMAGE_SELECTED:
+//
+//                        switch (view.getId()) {
+//                            case R.id.item_appeal_evidence_list_evidence_image:
+////                                注释代码是点击替换图片的功能代码
+//                                isAddItemClicked = false;
+//                                resetVideoImagePicker(1);
+//                                requestPermissionAndSelectImage();
+//                                break;
+//
+//                            case R.id.item_appeal_evidence_list_delete_image:  //删除图片
+//                                adapter.getData().remove(position);
+//                                if (!adapter.getData().contains(mAddImageModel)) {
+//                                    adapter.getData().add(mAddImageModel);
+//                                }
+//                                adapter.notifyDataSetChanged();
+//                                break;
+//                        }
+//
+//                        break;
+//                }
+//
+//            }
+//        });
     }
 
     /**
@@ -1449,7 +1797,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
                                         @Override
                                         public void onSingleButtonClicked(TextView view) {
-
                                         }
 
                                         @Override
@@ -1469,21 +1816,26 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                 onGranted(new Action() {
                     @Override
                     public void onAction(List<String> permissions) {
-                        if (returnImageview == 1) {
-                            mMatisseBuilder.forResult(10);
-
-                        } else if (returnImageview == 2) {
-                            mMatisseBuilder.forResult(200);
-
-                        } else if (returnImageview == 3) {
-                            mMatisseBuilder.forResult(300);
-
-                        }
+//                        if (returnImageview == 1) {
+                        mMatisseBuilder.forResult(10);
+//                        }
+//                        else if (returnImageview == 2) {
+//                            mMatisseBuilder.forResult(200);
+//                        } else if (returnImageview == 3) {
+//                            mMatisseBuilder.forResult(300);
+//                        }
 
                     }
-                }).
-                start();
+                }).start();
 
+    }
+
+    /**
+     * 从相册中选择视频
+     */
+    private void choiceVideo() {
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(i, 300);
     }
 
     // 从本地相册选取图片作为头像
@@ -1556,9 +1908,9 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         if (uri == null)
             uri = Uri.fromFile(outFile);
-        Logger.d("裁剪后的uri" + uri);
+//        Logger.d("裁剪后的uri" + uri);
         if (uri != null) {
-            Logger.d("uri.toString():::" + uri.toString());
+//            Logger.d("uri.toString():::" + uri.toString());
             mHeadImageview.setImageURI(uri.toString());
             startUploadPic(Constant.DIR_HEADPIC, outFile.getPath(), uri, FileType.PIC_TYPE_HEAD);
 //            startUploadPic(outFile.getPath(), FileType.PIC_TYPE_HEAD);

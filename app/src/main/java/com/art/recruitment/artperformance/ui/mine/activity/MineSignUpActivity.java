@@ -7,7 +7,7 @@ import com.art.recruitment.artperformance.R;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.ui.BaseActivity;
 
-public class MineSignUpActivity extends BaseActivity{
+public class MineSignUpActivity extends BaseActivity {
 
     @Override
     protected int getLayoutId() {

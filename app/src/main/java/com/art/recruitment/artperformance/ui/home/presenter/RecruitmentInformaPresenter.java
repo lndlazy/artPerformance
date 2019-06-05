@@ -44,7 +44,7 @@ public class RecruitmentInformaPresenter extends BasePresenter<RecruitmentInform
     public void apply(int recruitmentId) {
 
         Api.
-                observable(Api.getService(HomeService.class).apply(recruitmentId)).
+                observable(Api.getService(HomeService.class).applyPost(recruitmentId)).
                 presenter(this).
                 requestMode(RequestMode.SINGLE).
                 showLoading(true).

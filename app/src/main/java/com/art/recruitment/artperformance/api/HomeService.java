@@ -61,4 +61,10 @@ public interface HomeService {
      */
     @GET(ApiUrls.APPLY_LIST)
     Observable<ApplyBean> apply(@Path("recruitmentId") int recruitmentId);
+
+    /**
+     * 招募报名
+     */
+    @POST(ApiUrls.APPLY_LIST)
+    Observable<ApplyBean> applyPost(@Path("recruitmentId") int recruitmentId);
 }

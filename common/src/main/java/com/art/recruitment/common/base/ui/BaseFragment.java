@@ -256,8 +256,8 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
             getRecyclerView().setAdapter(mRecyclerViewAdapter);
             mRecyclerViewAdapter.bindToRecyclerView(getRecyclerView());
 
-            mRecyclerViewAdapter.setOnItemClickListener(this);
-            mRecyclerViewAdapter.setOnItemChildClickListener(this);
+//            mRecyclerViewAdapter.setOnItemClickListener(this);
+//            mRecyclerViewAdapter.setOnItemChildClickListener(this);
 
             if (enableAdapterLoadMore()) {
                 mRecyclerViewAdapter.setEnableLoadMore(true);
@@ -368,9 +368,9 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
                 getSmartRefreshLayout().finishRefresh(true);
                 if (mRecyclerViewAdapter != null) {
                     mRecyclerViewAdapter.setNewData(dataList);
-                    getRecyclerView().smoothScrollToPosition(0);
+//                    getRecyclerView().smoothScrollToPosition(0);
                     mRecyclerViewAdapter.disableLoadMoreIfNotFullPage();
-                    if (mRecyclerViewAdapter.getData() == null || mRecyclerViewAdapter.getData().size() == 0) {
+                    if ( mRecyclerViewAdapter.getData().size() == 0) {
                         showEmptyErrorView(CODE_EMPTY_LIST_DATA, mEmptyErrorViewTipMessage);
                     }else {
                         //以下一行代码是为了避免发布按键遮挡“没有更多数据”提示，此处进行了全局处理
@@ -407,7 +407,7 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
             if (isRefreshMode) {
                 getSmartRefreshLayout().finishRefresh(false);
                 if (mRecyclerViewAdapter.getData().size() > 0){
-                     //刷新时列表有数据
+                    //刷新时列表有数据
                     if (!"9107".equals(message)) {
                         ToastUtils.showShort(message);
                     }

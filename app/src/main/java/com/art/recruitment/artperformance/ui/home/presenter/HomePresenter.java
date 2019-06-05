@@ -12,6 +12,7 @@ import com.art.recruitment.common.baserx.RxSubscriber;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.http.mode.RequestMode;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -48,7 +49,7 @@ public class HomePresenter extends BasePresenter<HomeContract> {
      * 获取招募列表
      *
      */
-    public void recuitList(int citycode, String keyword, int page, int size, String sort) {
+    public void recuitList(int citycode, String keyword, final int page, int size, String sort) {
 
         Api.
                 observable(Api.getService(HomeService.class).recuitList(citycode, keyword, page, size, sort)).
@@ -58,7 +59,7 @@ public class HomePresenter extends BasePresenter<HomeContract> {
                 doRequest(new RxSubscriber<RecruitListBean.DataBean, RecruitListBean>() {
                     @Override
                     protected void _onSuccess(RecruitListBean.DataBean bean, String successMessage) {
-                        mView.returnRecruitListBean(bean);
+                        mView.returnRecruitListBean(bean, page);
                     }
 
                     @Override

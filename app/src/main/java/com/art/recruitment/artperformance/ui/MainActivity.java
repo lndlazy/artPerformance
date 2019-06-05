@@ -36,6 +36,7 @@ import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.view.CustomViewPager;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.TabEntity;
+import com.art.recruitment.common.ActivityManager;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.base.ui.BaseFragment;
@@ -277,5 +278,19 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         });
 
     }
+
+    @Override
+    public void onBackPressed() {
+//        if (!isDoubleClickExit) {
+//            //说明可以回退,直接调用super，系统finish掉Activity，在onPause方法中从AppMananger中移除
+//            //exitAnim();
+//            super.onBackPressed();
+//        } else {
+            //两次点击才能finish掉activity
+            ActivityManager.getInstance().exitByDoubleClick(System.currentTimeMillis());
+//        }
+    }
+
+
 
 }

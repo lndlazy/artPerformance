@@ -53,7 +53,6 @@ public class ExceptionConverter {
                     errorType=ErrorType.ERROR_HTTP;
                     errorCode= ErrorCode.CODE_UNAUTHORIZED;
 
-
                     break;
                 case ErrorCode.CODE_FORBIDDEN:
                     errorMessage = "网络错误";
@@ -101,7 +100,7 @@ public class ExceptionConverter {
 
             apiException = new ApiException(errorCode,errorType,errorMessage,throwable);
 
-        }else {
+        } else {
             errorMessage="未知错误";
             errorType=ErrorType.ERROR_UNKNOWN;
             errorCode= ErrorCode.CODE_UNKNOWN;

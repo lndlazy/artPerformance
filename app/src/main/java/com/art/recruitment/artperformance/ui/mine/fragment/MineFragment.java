@@ -328,6 +328,8 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         SaveUtils.put(getContext(), MyInfoSave.SEX, bean.getGender());
         SaveUtils.put(getContext(), MyInfoSave.USER_NAME, bean.getUsername());
         SaveUtils.put(getContext(), MyInfoSave.AGE, bean.getAge());
+
+        if (!TextUtils.isEmpty(bean.getWechat()))
         SaveUtils.put(getContext(), MyInfoSave.WECHAT, bean.getWechat());
 
     }

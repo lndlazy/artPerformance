@@ -51,7 +51,8 @@ public class HomeAdapter extends BaseRecyclerViewAdapter<RecruitListBean.Content
             cloudView.setVisibility(View.GONE);
         }
 
-        helper.addOnClickListener(R.id.home_arrow_imageview);
+//        helper.addOnClickListener(R.id.home_arrow_imageview);
+        helper.addOnClickListener(R.id.constraint_content);
 
     }
     /*private List<RecruitListBean.ContentBean> beans;

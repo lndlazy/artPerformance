@@ -14,6 +14,11 @@ import java.math.BigDecimal;
 
 public class StringsUtils {
 
+
+
+    public static  final int PAGE_COUNT = 20;
+
+
     public static String getSecretNo(String no) {
         if (com.blankj.utilcode.util.StringUtils.isTrimEmpty(no)) {
             return "";

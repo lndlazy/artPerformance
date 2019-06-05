@@ -16,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -59,11 +60,13 @@ import com.youth.banner.loader.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
 
 public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.ContentBean> implements HomeContract {
+
     @BindView(R.id.home_recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.home_smartRefreshLayout)
@@ -72,8 +75,10 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     TextView mCityTextview;
     @BindView(R.id.home_city_imageview)
     ImageView mCityImageview;
+
     @BindView(R.id.home_city_constrainLayout)
     ConstraintLayout mCityConstrainLayout;
+
     @BindView(R.id.home_message_imageview)
     ImageView mMessageImageview;
     @BindView(R.id.home_banner)
@@ -86,16 +91,27 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     TextView mSortTextview;
     @BindView(R.id.home_sort_next_imageview)
     ImageView mSortNextImageview;
+
     @BindView(R.id.home_desc_radioButton)
-    RadioButton mDescRadioButton;
+    TextView mDescRadioButton;
+
     @BindView(R.id.home_esc_radioButton)
-    RadioButton mEscRadioButton;
+    TextView mEscRadioButton;
+
     @BindView(R.id.home_desc_imageView)
     ImageView mDescImageView;
     @BindView(R.id.home_esc_imiageView)
     ImageView mEscImiageView;
-    @BindView(R.id.home_sort_next_constraintLayout)
-    ConstraintLayout mSortNextConstraintLayout;
+
+    @BindView(R.id.rlSortView)
+    RelativeLayout rlSortView;
+
+    @BindView(R.id.r1)
+    RelativeLayout r1;
+
+    @BindView(R.id.r2)
+    RelativeLayout r2;
+
     @BindView(R.id.home_search_edittext)
     EditText mSearchEdittext;
 
@@ -103,9 +119,9 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
     private MyImageLoader mMyImageLoader;
-    private String mSort = "desc";
+    private String mSort = "";
     private Dialog dialog;
-    private int mCityCode;
+    private int mCityCode = -1;
     private String mSearch;
     private Dialog mPermissionSettingDialog;
 
@@ -143,6 +159,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
     @Override
     protected void initView() {
+
         setEmptyErrorViewData(R.mipmap.img_show_empty, "暂时没有数据");
 
         initMap();
@@ -158,6 +175,9 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     @Override
     protected void initListRequest(int page) {
         super.initListRequest(page);
+
+        com.orhanobut.logger.Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearch + ",page:" + page + ",mSort:" + mSort);
+
         mPresenter.recuitList(mCityCode, mSearch, page, 20, mSort);
     }
 
@@ -165,7 +185,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
         mSearchEdittext.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH){//搜索按键action
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {//搜索按键action
                     String trim = mSearchEdittext.getText().toString().trim();
                     mSearch = trim;
                     autoRefresh();
@@ -192,8 +212,9 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     }
 
     private void initButtonClick() {
+        //选择城市
         RxView.
-                clicks(mCityTextview).
+                clicks(mCityConstrainLayout).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
@@ -219,7 +240,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                     @Override
                     public void accept(Object o) throws Exception {
                         mSortConstraintLayout.setVisibility(View.GONE);
-                        mSortNextConstraintLayout.setVisibility(View.VISIBLE);
+                        rlSortView.setVisibility(View.VISIBLE);
                     }
                 });
 
@@ -230,12 +251,12 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                     @Override
                     public void accept(Object o) throws Exception {
                         mSortConstraintLayout.setVisibility(View.VISIBLE);
-                        mSortNextConstraintLayout.setVisibility(View.GONE);
+                        rlSortView.setVisibility(View.GONE);
                     }
                 });
 
         RxView.
-                clicks(mDescRadioButton).
+                clicks(r1).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
@@ -244,14 +265,14 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                         mEscImiageView.setVisibility(View.INVISIBLE);
 
                         mSortConstraintLayout.setVisibility(View.VISIBLE);
-                        mSortNextConstraintLayout.setVisibility(View.GONE);
+                        rlSortView.setVisibility(View.GONE);
                         mSort = "desc";
                         autoRefresh();
                     }
                 });
 
         RxView.
-                clicks(mEscRadioButton).
+                clicks(r2).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
@@ -260,8 +281,9 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                         mEscImiageView.setVisibility(View.VISIBLE);
 
                         mSortConstraintLayout.setVisibility(View.VISIBLE);
-                        mSortNextConstraintLayout.setVisibility(View.GONE);
-                        mSort = "esc";
+                        rlSortView.setVisibility(View.GONE);
+//                        mSort = "esc";
+                        mSort = "asc";
 
                         autoRefresh();
                     }
@@ -295,43 +317,85 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     }
 
     @Override
-    public void returnRecruitListBean(final RecruitListBean.DataBean bean) {
-        mPresenter.getBanner();
+    public void returnRecruitListBean(final RecruitListBean.DataBean bean, int page) {
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-//        homeAdapter.setData(bean.getContent());
-        /*homeAdapter.setHeaderView(mBanner);
-        mRecyclerView.setAdapter(homeAdapter);
+        if (page == 0) {
 
-        homeAdapter.setOnViewClickListener(new HomeAdapter.OnItemClickListener() {
-            @Override
-            public void onArrowClickListener(int position) {
-                Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
-                intent.putExtra("position", bean.getContent().get(position).getId());
-                startActivity(intent);
-            }
-        });*/
-        homeAdapter.setHeaderView(mBanner);
-        homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.home_arrow_imageview:
-                        Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
-                        intent.putExtra("position", bean.getContent().get(position).getId());
-                        intent.putExtra("home_name", bean.getContent().get(position).getPublisherName());
-                        startActivity(intent);
-                        break;
+            mPresenter.getBanner();
+
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+            homeAdapter.setHeaderView(mBanner);
+
+            homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                @Override
+                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+
+                    Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
+                    intent.putExtra("recruitmentId", bean.getContent().get(position).getId());
+                    intent.putExtra("home_name", bean.getContent().get(position).getPublisherName());
+                    startActivity(intent);
+
                 }
-            }
-        });
+            });
+//            homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+//                @Override
+//                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+//                    switch (view.getId()) {
+//                        case R.id.home_arrow_imageview:
+//                            Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
+//                            intent.putExtra("position", bean.getContent().get(position).getId());
+//                            intent.putExtra("home_name", bean.getContent().get(position).getPublisherName());
+//                            startActivity(intent);
+//                            break;
+//                    }
+//                }
+//            });
+
+        }
 
         resetStateWhenLoadDataSuccess(bean.getContent());
+
+    }
+
+    @Override
+    public void returnRecruitListBean(final RecruitListBean.DataBean bean) {
+//        mPresenter.getBanner();
+//
+//        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+////        homeAdapter.setData(bean.getContent());
+//        /*homeAdapter.setHeaderView(mBanner);
+//        mRecyclerView.setAdapter(homeAdapter);
+//
+//        homeAdapter.setOnViewClickListener(new HomeAdapter.OnItemClickListener() {
+//            @Override
+//            public void onArrowClickListener(int position) {
+//                Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
+//                intent.putExtra("position", bean.getContent().get(position).getId());
+//                startActivity(intent);
+//            }
+//        });*/
+//        homeAdapter.setHeaderView(mBanner);
+//        homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+//            @Override
+//            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+//                switch (view.getId()) {
+//                    case R.id.home_arrow_imageview:
+//                        Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
+//                        intent.putExtra("position", bean.getContent().get(position).getId());
+//                        intent.putExtra("home_name", bean.getContent().get(position).getPublisherName());
+//                        startActivity(intent);
+//                        break;
+//                }
+//            }
+//        });
+//
+//        resetStateWhenLoadDataSuccess(bean.getContent());
     }
 
     @Override
     public void returnCitiSearchBean(CitiSearch.DataBean bean) {
         mCityCode = bean.getCityCode();
+        autoRefresh();
     }
 
     private void initBanner(final List<BannerBean.DataBean> bean) {
@@ -365,11 +429,12 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK) {
+        if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK
+                && data!=null && data.getExtras()!=null) {
             String city = data.getExtras().getString("city");
             mCityTextview.setText(city);
             mPresenter.citiSearch(city);
-            autoRefresh();
+
 
         }
     }
@@ -385,7 +450,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                     mPresenter.citiSearch(amapLocation.getCity());
 
                 } else {
-                    if (amapLocation.getErrorCode() == 12){
+                    if (amapLocation.getErrorCode() == 12) {
                         initlLocation();
                     }
                     //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
