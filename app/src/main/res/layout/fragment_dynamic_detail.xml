@@ -14,10 +14,11 @@
 
         <ImageView
             android:id="@+id/dynamic_datail_return_imageview"
-            android:layout_width="@dimen/x34"
-            android:layout_height="@dimen/y34"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/x15"
             android:src="@mipmap/nav_arrow"
-            android:layout_marginLeft="@dimen/x34"
+            android:layout_marginLeft="@dimen/x20"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
         <TextView

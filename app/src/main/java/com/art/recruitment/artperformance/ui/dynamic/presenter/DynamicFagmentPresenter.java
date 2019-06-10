@@ -17,7 +17,7 @@ public class DynamicFagmentPresenter extends BasePresenter<DynamicFagmentContrac
     /**
      * 动态圈列表
      */
-    public void dynamicList(int page, int size, String sort) {
+    public void dynamicList(final int page, int size, String sort) {
 
         Api.
                 observable(Api.getService(DynamicService.class).dynamicList(page, size, sort)).
@@ -27,7 +27,7 @@ public class DynamicFagmentPresenter extends BasePresenter<DynamicFagmentContrac
                 doRequest(new RxSubscriber<DynamicListBean.DataBean, DynamicListBean>() {
                     @Override
                     protected void _onSuccess(DynamicListBean.DataBean bean, String successMessage) {
-                        mView.returnDynamicListBean(bean);
+                        mView.returnDynamicListBean(bean, page);
                     }
 
                     @Override

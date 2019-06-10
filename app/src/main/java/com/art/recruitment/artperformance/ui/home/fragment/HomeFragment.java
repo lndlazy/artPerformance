@@ -148,6 +148,19 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
         homeAdapter = new HomeAdapter(mContext, mDataList);
         homeAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+
+        homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+
+                //招募详情页面
+                Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
+                intent.putExtra("recruitmentId", homeAdapter.getData().get(position).getId());
+                intent.putExtra("home_name", homeAdapter.getData().get(position).getPublisherName());
+                startActivity(intent);
+
+            }
+        });
         return homeAdapter;
     }
 
@@ -335,19 +348,6 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             homeAdapter.setHeaderView(mBanner);
-
-            homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-                @Override
-                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-
-                    //招募详情页面
-                    Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
-                    intent.putExtra("recruitmentId", bean.getContent().get(position).getId());
-                    intent.putExtra("home_name", bean.getContent().get(position).getPublisherName());
-                    startActivity(intent);
-
-                }
-            });
 //            homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
 //                @Override
 //                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {

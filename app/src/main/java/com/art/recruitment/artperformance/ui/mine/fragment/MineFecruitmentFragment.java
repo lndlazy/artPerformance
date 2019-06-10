@@ -68,6 +68,44 @@ public class MineFecruitmentFragment extends BaseFragment<MineFecruitmentPresent
 
         commAdapter = new MineFecruitmentCommAdapter(getActivity(), mDataList);
         commAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        commAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.mine_next_frame_textview://上架  下架
+
+                        contentBean = commAdapter.getData().get(position);
+
+                        mPresenter.recruitmentOpt(commAdapter.getData().get(position).getId(),
+                                commAdapter.getData().get(position).getFrontendFlag() == 1 ? Constant.MSG_ACTION_DOWN
+                                        : Constant.MSG_ACTION_UP
+                        );
+                        contentBean.setFrontendFlag(contentBean.getFrontendFlag() == 1 ? 0 : 1);
+                        commAdapter.notifyItemChanged(position);
+
+                        break;
+                    case R.id.mine_editorial_recruitment_information_textview:
+
+                        //编辑招募信息
+//                            editorPosition = position;
+                        Intent intent1 = new Intent(getContext(), ReleaseRecruitmentActivity.class);
+                        intent1.putExtra("release_id", 1);
+                        intent1.putExtra("pos", position);
+                        intent1.putExtra("id_id", commAdapter.getData().get(position));
+                        startActivity(intent1);
+
+                        break;
+                    case R.id.mine_fecruitment_personnel_textview:
+                        //人员录用
+                        Intent intent = new Intent(getContext(), MineRecruitActivity.class);
+                        intent.putExtra("id", commAdapter.getData().get(position).getId());
+                        startActivity(intent);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         return commAdapter;
     }
 
@@ -119,46 +157,6 @@ public class MineFecruitmentFragment extends BaseFragment<MineFecruitmentPresent
 //            commAdapter = new MineFecruitmentCommAdapter(getContext(), bean.getContent());
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 //            mRecyclerView.setAdapter(commAdapter);
-
-            commAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-                @Override
-                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                    switch (view.getId()) {
-                        case R.id.mine_next_frame_textview://上架  下架
-
-                            contentBean = bean.getContent().get(position);
-
-                            mPresenter.recruitmentOpt(bean.getContent().get(position).getId(),
-                                    bean.getContent().get(position).getFrontendFlag() == 1 ? Constant.MSG_ACTION_DOWN
-                                            : Constant.MSG_ACTION_UP
-                            );
-                            contentBean.setFrontendFlag(contentBean.getFrontendFlag() == 1 ? 0 : 1);
-                            commAdapter.notifyItemChanged(position);
-
-                            break;
-                        case R.id.mine_editorial_recruitment_information_textview:
-
-                            //编辑招募信息
-//                            editorPosition = position;
-                            Intent intent1 = new Intent(getContext(), ReleaseRecruitmentActivity.class);
-                            intent1.putExtra("release_id", 1);
-                            intent1.putExtra("pos", position);
-                            intent1.putExtra("id_id", bean.getContent().get(position));
-                            startActivity(intent1);
-
-                            break;
-                        case R.id.mine_fecruitment_personnel_textview:
-                            //人员录用
-                            Intent intent = new Intent(getContext(), MineRecruitActivity.class);
-                            intent.putExtra("id", bean.getContent().get(position).getId());
-//                            intent.putExtra("id", bean.getContent().get(position).get);
-                            startActivity(intent);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            });
         }
 
 //        commAdapter.setOnViewClickListener(new MineFecruitmentAdapter.OnItemClickListener() {

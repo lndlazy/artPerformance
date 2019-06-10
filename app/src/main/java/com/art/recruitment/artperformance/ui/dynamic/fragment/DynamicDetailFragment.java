@@ -29,15 +29,18 @@ import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.ExpandableTextView;
 import com.art.recruitment.artperformance.view.NineGridTestLayout;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
+import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.utils.UIUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,6 +53,9 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.functions.Consumer;
 
+/**
+ * 动态圈详情页面
+ */
 public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, DynamicCommentsBean.ContentBean> implements DynamicDataContract {
 
     @BindView(R.id.dynamic_datail_return_imageview)
@@ -95,6 +101,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
     private int pageSize;
     private DynamicCommentsAdapter adapter;
     private List<NineGridTestModel> mList;
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_dynamic_detail;
@@ -136,7 +143,15 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
     @Override
     protected void initView() {
 
+        if (getActivity() ==null)
+            return;
+
         dynamic_id = getActivity().getIntent().getIntExtra("dynamic_id", 0);
+
+//        int userID = SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.ID);
+//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, registerBean.getId());
+//        Logger.d("dynamic_id::" + dynamic_id + "，userID:" + userID);
+
         mPresenter.dynamicDetail(dynamic_id);
 
         initButtonClick();
@@ -228,7 +243,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
 
     @Override
     public void returnDynamicDataBean(DynamicDetailBean.DataBean bean) {
-        mPresenter.dynamicComments(dynamic_id, pageSize, 20, Constant.SORT_DESC);
+        mPresenter.dynamicComments(dynamic_id, pageSize, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
 
         Glide.with(mContext).load(bean.getPublisherAvatar()).into(mHeadImageview);
         mNameTextview.setText(bean.getPublisherName());
@@ -236,6 +251,9 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
         mExpandableTextView.setText(bean.getContent());
         mGiveTextview.setText(bean.getLikes() + "");
         mCommentTextview.setText(bean.getCommentNumber() + "");
+
+        mDeleteImageview.setVisibility(bean.isCanDelete()? View.VISIBLE : View.GONE);
+//        bean.isCanDelete()
 
         if (bean.isIsLikes()) {
             mGiveImageview.setImageDrawable(UIUtils.getDrawable(R.mipmap.icon_circle_like_p));
@@ -247,7 +265,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
         NineGridTestModel model1 = new NineGridTestModel();
 
         for (int i = 0; i < bean.getImagePath().size(); i++) {
-            if (bean.getImagePath().size() > 0){
+            if (bean.getImagePath().size() > 0) {
                 model1.urlList.add(bean.getImagePath().get(i));
             }
         }

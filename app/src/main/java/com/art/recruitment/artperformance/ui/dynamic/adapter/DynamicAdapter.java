@@ -20,16 +20,16 @@ import java.util.List;
 
 public class DynamicAdapter extends BaseRecyclerViewAdapter<DynamicListBean.ContentBean> {
 
-    private List<NineGridTestModel> mList;
+//    private List<NineGridTestModel> mList;
 
     public DynamicAdapter(Context context, List<DynamicListBean.ContentBean> data) {
         super(context, data);
         addItemType(BaseConfig.SINGLE_ITEM_TYPE, R.layout.item_dynamic_list);
     }
 
-    public void setList(List<NineGridTestModel> list) {
-        mList = list;
-    }
+//    public void setList(List<NineGridTestModel> list) {
+//        mList = list;
+//    }
 
     @Override
     protected void convert(BaseViewHolder helper, DynamicListBean.ContentBean item) {
@@ -37,41 +37,30 @@ public class DynamicAdapter extends BaseRecyclerViewAdapter<DynamicListBean.Cont
         Glide.with(mContext).load(item.getPublisherAvatar()).into(headImageView);
         helper.addOnClickListener(R.id.dynamic_comment_imageview);
 
+        //9宫格图片
         NineGridTestLayout view = helper.getView(R.id.dynamic_nineGridTestLayout);
+        view.setIsShowAll(false);
 
-        mList = new ArrayList<>();
-        NineGridTestModel model1 = new NineGridTestModel();
-        for (int i = 0; i < item.getImagePath().size(); i++) {
+        view.setUrlList(new ArrayList<String>());
 
-            if (item.getImagePath().size() > 0){
-                model1.urlList.add(item.getImagePath().get(i));
-            }
-        }
-        mList.add(model1);
-        for (int i = 0; i < mList.size(); i++) {
-            view.setIsShowAll(mList.get(i).isShowAll);
-            view.setUrlList(mList.get(i).urlList);
-        }
-
-
-        if (item.isIsLikes()) {
-            helper.setImageDrawable(R.id.dynamic_give_imageview, UIUtils.getDrawable(R.mipmap.icon_circle_like_p));
+        if (item.getImagePath() == null) {
+            view.setVisibility(View.GONE);
         } else {
-            helper.setImageDrawable(R.id.dynamic_give_imageview, UIUtils.getDrawable(R.mipmap.icon_circle_like));
+            view.setVisibility(View.VISIBLE);
+            view.setUrlList(item.getImagePath());
         }
+
+        helper.setImageDrawable(R.id.dynamic_give_imageview, UIUtils.getDrawable(
+                item.isIsLikes() ? R.mipmap.icon_circle_like_p : R.mipmap.icon_circle_like));
+
         helper.addOnClickListener(R.id.dynamic_give_imageview);
+        helper.addOnClickListener(R.id.ll_content);
 
-        if (item.getLikes() > 0){
-            helper.setText(R.id.dynamic_give_textview, item.getLikes() + "");
-        } else {
-            helper.setText(R.id.dynamic_give_textview, UIUtils.getString(R.string.dynamic_give_thumbs_up));
-        }
+        helper.setText(R.id.dynamic_give_textview,
+                (item.getLikes() > 0) ? item.getLikes() + "" : UIUtils.getString(R.string.dynamic_give_thumbs_up));
 
-        if (item.getCommentNumber() > 0){
-            helper.setText(R.id.dynamic_comment_textView, item.getCommentNumber() + "");
-        } else {
-            helper.setText(R.id.dynamic_comment_textView, UIUtils.getString(R.string.dynamic_comment));
-        }
+        helper.setText(R.id.dynamic_comment_textView,
+                (item.getCommentNumber() > 0) ? item.getCommentNumber() + "" : UIUtils.getString(R.string.dynamic_comment));
 
         helper.setText(R.id.dynamic_name_textview, item.getPublisherName())
                 .setText(R.id.dynamic_time_textview, item.getTimeAgo())

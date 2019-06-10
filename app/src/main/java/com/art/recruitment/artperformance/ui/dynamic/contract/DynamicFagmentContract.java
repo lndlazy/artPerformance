@@ -9,7 +9,7 @@ public interface DynamicFagmentContract extends BaseView {
     /**
      * 动态圈列表
      */
-    void returnDynamicListBean(DynamicListBean.DataBean bean);
+    void returnDynamicListBean(DynamicListBean.DataBean bean, int page);
 
     /**
      * 动态圈点赞

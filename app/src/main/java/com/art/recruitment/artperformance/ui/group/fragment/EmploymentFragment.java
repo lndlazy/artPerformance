@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.group.ApplyListBean;
@@ -23,14 +22,13 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
-import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 
+/**
+ * 人员录用
+ */
 public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyListBean.ContentBean> implements EmploymentContract {
 
     @BindView(R.id.release_employment_recyclerView)
@@ -39,7 +37,7 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
     SmartRefreshLayout mSmartRefreshLayout;
     private MineRecruitActivity mTransferCallback;
     private String mTitleType;
-    private EmploymentAdapter adapter;
+    private EmploymentAdapter mAdapter;
     private String recruitment_id;
 
     public static EmploymentFragment newInstance(Bundle bundle) {
@@ -69,9 +67,41 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
     @Override
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
-        adapter = new EmploymentAdapter(mContext, mDataList);
-        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        return adapter;
+        mAdapter = new EmploymentAdapter(mContext, mDataList);
+        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.mine_recruit_clean_employment_textview://取消录用
+                        mPresenter.cencelHiring(mAdapter.getData().get(position).getRecruitmentId(), mAdapter.getData().get(position).getId());
+                        break;
+                    case R.id.mine_recruit_chat_imageview:
+                        Intent chat = new Intent(getContext(), ChatActivity.class);
+                        chat.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getApplyUserName());  //对方账号
+                        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
+                        startActivity(chat);
+                        break;
+                    case R.id.mine_recruit_refuse_textview:
+                        mPresenter.cencelHiring(mAdapter.getData().get(position).getRecruitmentId(), mAdapter.getData().get(position).getId());
+                        break;
+                    case R.id.mine_recruit_employment_textview:
+                        //录用
+                        mPresenter.hiring(mAdapter.getData().get(position).getRecruitmentId()
+                                , mAdapter.getData().get(position).getId(), true);
+                        break;
+                    case R.id.mine_recruit_employment_chat_imageview:
+                        Intent chat2 = new Intent(getContext(), ChatActivity.class);
+                        chat2.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getApplyUserName());  //对方账号
+                        chat2.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
+                        startActivity(chat2);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        return mAdapter;
     }
 
     @Override
@@ -93,8 +123,8 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
         mTitleType = getArguments().getString(BaseConfig.FRAGMENT_TAG_NAME_ADS_TYPE);
 
-        if (adapter != null)
-            adapter.setmTitleType(mTitleType);
+        if (mAdapter != null)
+            mAdapter.setmTitleType(mTitleType);
 
         recruitment_id = getArguments().getString("recruitment_id");
 //        if (mTitleType == 1){
@@ -129,38 +159,7 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
 //        if (bean!=null)
 
-        adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()) {
-                    case R.id.mine_recruit_clean_employment_textview://取消录用
-                        mPresenter.cencelHiring(bean.getContent().get(position).getRecruitmentId(), bean.getContent().get(position).getId());
-                        break;
-                    case R.id.mine_recruit_chat_imageview:
-                        Intent chat = new Intent(getContext(), ChatActivity.class);
-                        chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getContent().get(position).getApplyUserName());  //对方账号
-                        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
-                        startActivity(chat);
-                        break;
-                    case R.id.mine_recruit_refuse_textview:
-                        mPresenter.cencelHiring(bean.getContent().get(position).getRecruitmentId(), bean.getContent().get(position).getId());
-                        break;
-                    case R.id.mine_recruit_employment_textview:
-                        //录用
-                        mPresenter.hiring(bean.getContent().get(position).getRecruitmentId()
-                                , bean.getContent().get(position).getId(), true);
-                        break;
-                    case R.id.mine_recruit_employment_chat_imageview:
-                        Intent chat2 = new Intent(getContext(), ChatActivity.class);
-                        chat2.putExtra(EaseConstant.EXTRA_USER_ID, bean.getContent().get(position).getApplyUserName());  //对方账号
-                        chat2.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
-                        startActivity(chat2);
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
+
 
 //        if (bean == null) {
 //            bean = new ApplyListBean.DataBean();

@@ -58,6 +58,29 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
         mAdapter = new MineSignUpMAdapter(getContext(), mDataList);
         mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.mine_sign_clean_textview:
+                        //取消报名
+                        mPresenter.cancelRecruitment(mAdapter.getData().get(position).getId(), mAdapter.getData().get(position).getRecruitmentId());
+                        break;
+                    case R.id.mine_sign_chat_imageview:
+                        //聊天
+                        break;
+
+                    case R.id.enter_next:
+                        //进入详情页面
+                        Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
+                        intent.putExtra("recruitmentId", mAdapter.getData().get(position).getRecruitmentId());
+                        intent.putExtra("home_name", mAdapter.getData().get(position).getPublisherName());
+                        startActivity(intent);
+
+                        break;
+                }
+            }
+        });
         return mAdapter;
     }
 
@@ -124,29 +147,6 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
 
         if (page == 0) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-            mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-                @Override
-                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                    switch (view.getId()) {
-                        case R.id.mine_sign_clean_textview:
-                            //取消报名
-                            mPresenter.cancelRecruitment(bean.getContent().get(position).getId(), bean.getContent().get(position).getRecruitmentId());
-                            break;
-                        case R.id.mine_sign_chat_imageview:
-                            //聊天
-                            break;
-
-                        case R.id.enter_next:
-                            //进入详情页面
-                            Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
-                            intent.putExtra("recruitmentId", bean.getContent().get(position).getRecruitmentId());
-                            intent.putExtra("home_name", bean.getContent().get(position).getPublisherName());
-                            startActivity(intent);
-
-                            break;
-                    }
-                }
-            });
         }
 
         resetStateWhenLoadDataSuccess(bean.getContent());

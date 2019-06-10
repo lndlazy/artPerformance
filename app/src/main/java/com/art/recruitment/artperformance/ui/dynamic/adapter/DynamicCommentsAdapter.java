@@ -29,5 +29,9 @@ public class DynamicCommentsAdapter extends BaseRecyclerViewAdapter<DynamicComme
         helper.setText(R.id.dynamic_detail_name_textview, item.getCommentUserName())
                 .setText(R.id.dynamic_detail_time_textview, item.getCommentTime())
                 .setText(R.id.dynamic_detail_coutent_textview, item.getCommentContent());
+
+
+//        item.ca
+
     }
 }
