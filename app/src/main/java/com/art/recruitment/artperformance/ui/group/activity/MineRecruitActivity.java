@@ -123,6 +123,16 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
                     }
                 });
 
+        RxView.
+                clicks(mReturnImageview).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        finish();
+                    }
+                });
+
     }
 
     private void initFragmentList() {

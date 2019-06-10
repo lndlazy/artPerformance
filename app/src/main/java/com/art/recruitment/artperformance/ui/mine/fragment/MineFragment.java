@@ -221,6 +221,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                     }
                 });
 
+        //我的报名
         RxView.
                 clicks(mSignUpConstrainLayout).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -243,7 +244,8 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                         SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "");
 
                         startActivity(new Intent(getContext(), LoginActivity.class));
-                        getActivity().finish();
+                        if (getActivity() != null)
+                            getActivity().finish();
                     }
                 });
     }
@@ -327,7 +329,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         Glide.with(mContext).load(bean.getAvatarView()).apply(options).into(mHeadPortraitImageview);
 
         if (!TextUtils.isEmpty(bean.getAvatarView()))
-        EventBus.getDefault().post(bean.getAvatarView());
+            EventBus.getDefault().post(bean.getAvatarView());
 
         //保存个人资料
         SaveUtils.put(getContext(), MyInfoSave.HEAD_PIC_URL, bean.getAvatar());
@@ -337,7 +339,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         SaveUtils.put(getContext(), MyInfoSave.AGE, bean.getAge());
 
         if (!TextUtils.isEmpty(bean.getWechat()))
-        SaveUtils.put(getContext(), MyInfoSave.WECHAT, bean.getWechat());
+            SaveUtils.put(getContext(), MyInfoSave.WECHAT, bean.getWechat());
 
     }
 

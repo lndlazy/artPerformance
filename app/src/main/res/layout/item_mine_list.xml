@@ -118,6 +118,7 @@
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/enter_next"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="@dimen/y22"
@@ -140,15 +141,16 @@
             android:textSize="12sp"
             android:textColor="@color/color_9aa0a2"
             android:layout_marginLeft="@dimen/x14"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/mine_sign_adress_imageview"/>
 
         <ImageView
             android:id="@+id/mine_sign_arrow_imageview"
-            android:layout_width="@dimen/x54"
-            android:layout_height="@dimen/y22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@mipmap/icon_a_arrow"
-            android:paddingLeft="@dimen/x20"
-            android:paddingRight="@dimen/x20"
+            android:padding="@dimen/x20"
             android:layout_marginRight="@dimen/x20"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

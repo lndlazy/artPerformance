@@ -120,6 +120,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
         recruitmentId = getIntent().getStringExtra("recruitmentId");
         home_name = getIntent().getStringExtra("home_name");
+
+        Logger.d("recruitmentId::" + recruitmentId + ",home_name::" + home_name);
         mPresenter.recuitDetail(recruitmentId);
 
         initButtonClick();
@@ -182,12 +184,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     @Override
     public void showErrorTip(ErrorType errorType, int errorCode, String message) {
 
-//        if (errorCode == )
-
-        if (message != null) {
+        if (!TextUtils.isEmpty(message))
             ToastUtils.showShort(message);
-        }
-
     }
 
     @Override
@@ -210,7 +208,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
     private void listSuccess(RecruitmentInforBean.DataBean bean) {
         mTitleTextview.setText(bean.getTitle());
-        mPriceTextview.setText("￥" + bean.getSalary());
+
+        mPriceTextview.setText((Constant.TYPE_PRICE_FACE.equals(bean.getSalaryType())) ? "面议" : "￥" + bean.getSalary());
         mReleaseTimeTextview.setText("发布时间：" + bean.getReleaseTime());
         mReleasePeopleTextview.setText("发布人：" + bean.getPublisherName());
         mDeadlineTextview.setText("报名截止：" + bean.getApplyEndTime());
@@ -224,9 +223,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
             mOtherConstraintLayout.setVisibility(View.GONE);
         }
         List<String> tags = new ArrayList<>();
-        for (int i = 0; i < bean.getLabelList().size(); i++) {
-            tags.add(bean.getLabelList().get(i));
-        }
+        if (bean.getLabelList() != null)
+            tags.addAll(bean.getLabelList());
         mFlowlayout.setTags(tags);
     }
 

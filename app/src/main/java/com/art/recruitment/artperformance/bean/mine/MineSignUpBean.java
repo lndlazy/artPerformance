@@ -1,5 +1,6 @@
 package com.art.recruitment.artperformance.bean.mine;
 
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.BaseBean;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
@@ -233,9 +234,27 @@ public class MineSignUpBean extends BaseBean<MineSignUpBean.DataBean> {
         private int id;
         private String modifyTime;
         private String publisherName;
-        private int recruitmentId;
+        private String recruitmentId;
         private String recruitmentTitle;
         private List<String> labels;
+        private String salary;
+        private int salaryType;
+
+        public String getSalary() {
+            return salary;
+        }
+
+        public void setSalary(String salary) {
+            this.salary = salary;
+        }
+
+        public int getSalaryType() {
+            return salaryType;
+        }
+
+        public void setSalaryType(int salaryType) {
+            this.salaryType = salaryType;
+        }
 
         public int getApplyUserId() {
             return applyUserId;
@@ -293,11 +312,11 @@ public class MineSignUpBean extends BaseBean<MineSignUpBean.DataBean> {
             this.publisherName = publisherName;
         }
 
-        public int getRecruitmentId() {
+        public String getRecruitmentId() {
             return recruitmentId;
         }
 
-        public void setRecruitmentId(int recruitmentId) {
+        public void setRecruitmentId(String recruitmentId) {
             this.recruitmentId = recruitmentId;
         }
 

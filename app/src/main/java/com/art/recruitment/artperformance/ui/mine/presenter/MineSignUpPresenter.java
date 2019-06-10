@@ -18,7 +18,7 @@ public class MineSignUpPresenter extends BasePresenter<MineSignUpContract> {
     /**
      * 我的报名
      */
-    public void applyList(int page, int size, String sort) {
+    public void applyList(final int page, int size, String sort) {
 
         Api.
                 observable(Api.getService(MineService.class).applyList(page, size, sort)).
@@ -28,7 +28,7 @@ public class MineSignUpPresenter extends BasePresenter<MineSignUpContract> {
                 doRequest(new RxSubscriber<MineSignUpBean.DataBean, MineSignUpBean>() {
                     @Override
                     protected void _onSuccess(MineSignUpBean.DataBean bean, String successMessage) {
-                        mView.returnApplyListBean(bean);
+                        mView.returnApplyListBean(bean , page);
                     }
 
                     @Override
@@ -41,7 +41,7 @@ public class MineSignUpPresenter extends BasePresenter<MineSignUpContract> {
     /**
      * 取消报名
      */
-    public void cancelRecruitment(int applyId, int recruitmentId) {
+    public void cancelRecruitment(int applyId, String recruitmentId) {
 
         Api.
                 observable(Api.getService(MineService.class).cancelRecruitment(applyId, recruitmentId)).

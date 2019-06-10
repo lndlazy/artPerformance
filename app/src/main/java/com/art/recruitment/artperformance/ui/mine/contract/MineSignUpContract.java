@@ -8,7 +8,7 @@ public interface MineSignUpContract extends BaseView {
     /**
      * 我的报名列表
      */
-    void returnApplyListBean(MineSignUpBean.DataBean bean);
+    void returnApplyListBean(MineSignUpBean.DataBean bean, int page);
 
     /**
      * 取消报名

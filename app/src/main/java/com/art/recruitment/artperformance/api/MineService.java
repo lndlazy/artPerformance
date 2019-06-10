@@ -83,7 +83,7 @@ public interface MineService {
      */
     @DELETE(ApiUrls.CANCEL_RECRUITMENT)
     Observable<CancelRecruitmentBean> cancelRecruitment(@Path("applyId") int applyId,
-                                                        @Path("recruitmentId") int recruitmentId);
+                                                        @Path("recruitmentId") String recruitmentId);
 
     /**
      * 我的招募

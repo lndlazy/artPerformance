@@ -7,6 +7,7 @@ import com.art.recruitment.artperformance.R;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.ui.BaseActivity;
 
+//我的报名
 public class MineSignUpActivity extends BaseActivity {
 
     @Override
