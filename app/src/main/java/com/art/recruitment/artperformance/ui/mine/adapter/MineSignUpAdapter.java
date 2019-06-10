@@ -48,7 +48,7 @@ public class MineSignUpAdapter extends RecyclerView.Adapter<MineSignUpAdapter.My
     @Override
     public void onBindViewHolder(MineSignUpAdapter.MyViewHolder holder, final int position) {
 
-        if (beans.get(position).getHireState() == "已录用"){
+        if ("已录用".equals(beans.get(position).getHireState())){
             holder.mSignCleanTextview.setVisibility(View.VISIBLE);
         } else {
             holder.mSignCleanTextview.setVisibility(View.VISIBLE);
@@ -60,11 +60,12 @@ public class MineSignUpAdapter extends RecyclerView.Adapter<MineSignUpAdapter.My
         holder.mSignAdressTextview.setText(beans.get(position).getGatheringAddress());
         holder.mSignPeopleTextview.setText(beans.get(position).getPublisherName());
 
-        List<String> tags = new ArrayList<>();
-        for (int i = 0; i < beans.get(position).getLabels().size(); i++) {
-            tags.add(beans.get(position).getLabels().get(i));
+
+        if (beans.get(position).getLabels()!=null) {
+            List<String> tags = new ArrayList<>();
+            tags.addAll(beans.get(position).getLabels());
+            holder.mTagCloudView.setTags(tags);
         }
-        holder.mTagCloudView.setTags(tags);
 
         holder.mSignCleanTextview.setOnClickListener(new View.OnClickListener() {
             @Override

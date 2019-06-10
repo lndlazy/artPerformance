@@ -7,8 +7,10 @@ import com.art.recruitment.common.base.BaseView;
 public interface MineFecruitmentContract extends BaseView {
     /**
      * 我的招募
+     * @param bean
+     * @param page
      */
-    void returnMineFecruitmentBean(MineFecruitmentBean.DataBean bean);
+    void returnMineFecruitmentBean(MineFecruitmentBean.DataBean bean, int page);
 
     /**
      * 上下架

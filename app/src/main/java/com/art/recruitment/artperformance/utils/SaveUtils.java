@@ -11,6 +11,13 @@ import java.util.Set;
 
 public class SaveUtils {
 
+    //城市名称
+    public static final String CITY_NAME = "CITY_NAME";
+    //城市编码
+    public static final String CITY_CODE = "CITY_CODE";
+
+
+
     public static String CONFIG = "art_performance";//sp配置文件名称
 
 //    private static SaveUtils instance;//单例模式 双重检查锁定

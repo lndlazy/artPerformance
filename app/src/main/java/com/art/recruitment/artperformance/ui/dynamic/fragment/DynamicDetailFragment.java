@@ -24,6 +24,7 @@ import com.art.recruitment.artperformance.ui.dynamic.adapter.DynamicCommentsAdap
 import com.art.recruitment.artperformance.ui.dynamic.contract.DynamicDataContract;
 import com.art.recruitment.artperformance.ui.dynamic.presenter.DynamicDataPresenter;
 import com.art.recruitment.artperformance.ui.mine.ImageModel;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.ExpandableTextView;
 import com.art.recruitment.artperformance.view.NineGridTestLayout;
@@ -227,7 +228,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
 
     @Override
     public void returnDynamicDataBean(DynamicDetailBean.DataBean bean) {
-        mPresenter.dynamicComments(dynamic_id, pageSize, 20, "desc");
+        mPresenter.dynamicComments(dynamic_id, pageSize, 20, Constant.SORT_DESC);
 
         Glide.with(mContext).load(bean.getPublisherAvatar()).into(mHeadImageview);
         mNameTextview.setText(bean.getPublisherName());
@@ -271,7 +272,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
 
     @Override
     public void returnDynamicCommentBean(DynamicCommentBean.DataBean bean) {
-        mPresenter.dynamicComments(dynamic_id, pageSize, 20, "desc");
+        mPresenter.dynamicComments(dynamic_id, pageSize, 20, Constant.SORT_DESC);
     }
 
     @Override

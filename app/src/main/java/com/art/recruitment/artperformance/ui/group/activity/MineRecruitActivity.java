@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.art.recruitment.artperformance.ui.group.contract.MineRecruitContract;
 import com.art.recruitment.artperformance.ui.group.fragment.EmploymentFragment;
 import com.art.recruitment.artperformance.ui.group.presenter.MineRecruitPresenter;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.view.CustomViewPager;
 import com.art.recruitment.artperformance.view.TabEntity;
 import com.art.recruitment.common.base.callback.IToolbar;
@@ -31,6 +33,7 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +41,9 @@ import java.util.List;
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
 
+/**
+ * 人员录用
+ */
 public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> implements MineRecruitContract {
 
     @BindView(R.id.mine_recruit_return_imageview)
@@ -49,7 +55,7 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
     @BindView(R.id.mine_recruit_viewpager)
     CustomViewPager mViewpager;
 
-    private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>(2);
+    private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
     private int[] mIconUnselectIds = {
             R.mipmap.ic_launcher, R.mipmap.ic_launcher};
     private int[] mIconSelectIds = {
@@ -57,7 +63,7 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
     private List<BaseFragment> mFragmentList;
     private EmploymentFragment employmentFragmentInto;
     private EmploymentFragment employmentFragmentOut;
-    private int id;
+    private String id;
     private String groupID;
 
     @Override
@@ -83,7 +89,7 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
 
-        id = getIntent().getIntExtra("id", 0);
+        id = getIntent().getStringExtra("id");
 
         mTabEntities.add(new TabEntity("已录用", mIconSelectIds[0], mIconUnselectIds[0]));
         mTabEntities.add(new TabEntity("待录用", mIconSelectIds[0], mIconUnselectIds[0]));
@@ -92,6 +98,7 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
             @Override
             public void onTabSelect(int position) {
                 mViewpager.setCurrentItem(position);
+
             }
 
             @Override
@@ -119,22 +126,24 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
     }
 
     private void initFragmentList() {
-        mFragmentList = new ArrayList<>(2);
+        mFragmentList = new ArrayList<>();
         Bundle bundle = new Bundle();
-        bundle.putInt(BaseConfig.FRAGMENT_TAG_NAME_ADS_TYPE, 1);
-        bundle.putInt("recruitment_id", id);
+        //已录用
+        bundle.putString(BaseConfig.FRAGMENT_TAG_NAME_ADS_TYPE, Constant.APPLY_TYPE_ALREADY);
+        bundle.putString("recruitment_id", id);
         employmentFragmentOut = EmploymentFragment.newInstance(bundle);
         employmentFragmentOut.setTransferCallback(this);
 
         Bundle bundle2 = new Bundle();
-        bundle2.putInt(BaseConfig.FRAGMENT_TAG_NAME_ADS_TYPE, 2);
-        bundle.putInt("recruitment_id", id);
+        //待录用
+        bundle2.putString(BaseConfig.FRAGMENT_TAG_NAME_ADS_TYPE, Constant.APPLY_TYPE_WAIT);
+        bundle2.putString("recruitment_id", id);
         employmentFragmentInto = EmploymentFragment.newInstance(bundle2);
         employmentFragmentInto.setTransferCallback(this);
         mFragmentList.add(employmentFragmentOut);
         mFragmentList.add(employmentFragmentInto);
 
-        mViewpager.setOffscreenPageLimit(2);
+        mViewpager.setOffscreenPageLimit(0);
         mViewpager.setAdapter(new MineRecruitViewPagerAdapter(getSupportFragmentManager(), mFragmentList));
         mViewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -145,6 +154,16 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
             @Override
             public void onPageSelected(int position) {
                 mTablayout.setCurrentTab(position);
+
+                switch (position) {
+                    case 0:
+                        mGroupChatTextview.setVisibility(View.VISIBLE);
+                        break;
+                    case 1:
+                        mGroupChatTextview.setVisibility(View.INVISIBLE);
+                        break;
+                }
+
             }
 
             @Override

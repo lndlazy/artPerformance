@@ -20,7 +20,7 @@ public class EmploymentPresenter extends BasePresenter<EmploymentContract> {
      * 报名列表
      *
      */
-    public void applyList(int recruitmentId, int hireState) {
+    public void applyList(String recruitmentId, String hireState) {
 
         Api.
                 observable(Api.getService(GroupService.class).applyList(recruitmentId, hireState)).
@@ -30,11 +30,11 @@ public class EmploymentPresenter extends BasePresenter<EmploymentContract> {
                 doRequest(new RxSubscriber<ApplyListBean.DataBean, ApplyListBean>() {
                     @Override
                     protected void _onSuccess(ApplyListBean.DataBean bean, String successMessage) {
-                        if (bean.getContent() != null){
+//                        if (bean!=null && bean.getContent() != null){
                             mView.returnApplyListBean(bean);
-                        } else {
-                            ToastUtils.showShort("暂时没有数据");
-                        }
+//                        } else {
+//                            ToastUtils.showShort("暂时没有数据");
+//                        }
                     }
 
                     @Override

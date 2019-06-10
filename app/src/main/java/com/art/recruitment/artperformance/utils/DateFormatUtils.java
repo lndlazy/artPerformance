@@ -3,6 +3,7 @@ package com.art.recruitment.artperformance.utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class DateFormatUtils {
 
@@ -23,6 +24,25 @@ public class DateFormatUtils {
     private static String long2Str(long timestamp, String pattern) {
         return new SimpleDateFormat(pattern, Locale.CHINA).format(new Date(timestamp));
     }
+
+
+    public static long parseServerTime(String serverTime, String format) {
+        if (format == null || format.isEmpty()) {
+            format = "yyyy-MM-dd HH:mm:ss";
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat(format, Locale.CHINESE);
+        sdf.setTimeZone(TimeZone.getTimeZone("GMT+8:00"));
+        Date date = null;
+        try {
+            date = sdf.parse(serverTime);
+        } catch (Exception e) {
+            e.printStackTrace();
+//            Timber.e(e, "");
+            return -1;
+        }
+        return date.getTime();
+    }
+
 
     /**
      * 字符串转时间戳

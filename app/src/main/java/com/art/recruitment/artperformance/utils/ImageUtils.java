@@ -7,6 +7,8 @@ import android.media.ThumbnailUtils;
 import android.os.Build;
 import android.provider.MediaStore;
 
+import java.util.HashMap;
+
 
 public class ImageUtils {
 
@@ -43,6 +45,26 @@ public class ImageUtils {
 //        MediaStore.Video.Thumbnails.MINI_KIND
         return bitmap;
     }
+
+
+    public static Bitmap getVideoBitmapFromNet(String videoUrl) {
+
+        Bitmap bitmap = null;
+
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            //根据url获取缩略图
+            retriever.setDataSource(videoUrl, new HashMap());
+            //获得第一帧图片
+            bitmap = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } finally {
+            retriever.release();
+        }
+        return bitmap;
+    }
+
 
 //    public static Bitmap getVideoThumb(String path) {
 //

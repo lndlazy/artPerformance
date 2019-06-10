@@ -178,11 +178,11 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //    private MineVideoAdapter mVideoAdapter;
 //    private List<ImageModel> mImageLists;
     //    private List<ImageModel> mImageListt;
-    private List<ImageModel> mImageList;
+    private List<ImageModel> mImageList = new ArrayList<>();
     //    private List<ImageModel> mImageLisa;
     private Dialog mPermissionSettingDialog;
     private int gender;
-//    private List<String> mPhoto = new ArrayList<>();
+    //    private List<String> mPhoto = new ArrayList<>();
 //    private List<String> mPhotoList = new ArrayList<>();
     //    private List<String> mPrimaryPhoto = new ArrayList<>();
     //    private List<String> mPrimaryPhotoList = new ArrayList<>();
@@ -198,8 +198,8 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private static final int CODE_GALLERY_REQUEST = 0xa0;
     private static final int CODE_COVER_REQUEST = 0xa1;
     private static final int CODE_RESULT_REQUEST = 0xa2;
-    private static int output_X = 128;
-    private static int output_Y = 128;
+    //    private static int output_X = 128;
+//    private static int output_Y = 128;
     //业务服务器返回的签名content
     private String signatureContent;
     private OSSCustomSignerCredentialProvider provider;
@@ -210,7 +210,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     //    private PutObjectRequest putPrimaryPhoto;
     private PutObjectRequest putPhotoList;
     private PutObjectRequest putHead;
-//    private MineBean.DataBean dataBean;
+    //    private MineBean.DataBean dataBean;
     private int editorType;
 
     private String headPicUrl;//用户头像
@@ -291,10 +291,10 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (group.getCheckedRadioButtonId()) {
                     case R.id.mine_man_redioButton:
-                        gender = 1;
+                        gender = Constant.GENDER_MALE;
                         break;
                     case R.id.mine_woman_redioButton:
-                        gender = 2;
+                        gender = Constant.GENDER_FREMALE;
                         break;
                     default:
                         break;
@@ -400,7 +400,17 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     }
                 });
 
+        //删除短视频
+        videoDeleteView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                videoObjectKey = "";
+                videoDeleteView.setVisibility(View.INVISIBLE);
+                videoPicView.setImageResource(R.mipmap.icon_my_add);
+
+            }
+        });
         coverDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -441,8 +451,8 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                 if (!TextUtils.isEmpty(txt)) {
                     int length = txt.length();
                     mOtherNumberTextviewv.setText(length + "/300");
-                }else {
-                    mOtherNumberTextviewv.setText( "0/300");
+                } else {
+                    mOtherNumberTextviewv.setText("0/300");
                 }
             }
         });
@@ -484,6 +494,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                 applyNextStep();
 
                 break;
+
             case Constant.EDITOR_TYPE_RELEASE://发布招募
 
                 releaseNextStep();
@@ -491,7 +502,19 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                 break;
 
             default:
-                releaseNextStep();
+
+                if ((mManRedioButton.isChecked() || mWomanRedioButton.isChecked()) &&
+
+                        !TextUtils.isEmpty(mAge) && !TextUtils.isEmpty(mWeight) && !TextUtils.isEmpty(mBust) &&
+                        !TextUtils.isEmpty(mHeight) && !TextUtils.isEmpty(mHips) && !TextUtils.isEmpty(mName) &&
+                        !TextUtils.isEmpty(mOther) && !TextUtils.isEmpty(mTelePhone) && !TextUtils.isEmpty(mWaist) &&
+                        !TextUtils.isEmpty(mWeChat) && !TextUtils.isEmpty(coverObjectKey) && !TextUtils.isEmpty(videoObjectKey)
+                        && !TextUtils.isEmpty(headPicObjectKey) && !TextUtils.isEmpty(mCity) && photoObjectKeyList.size() > 0)
+                    //如果全部资料都填写完整
+                    ediotAllInfoNext();
+                else
+                    releaseNextStep();
+
                 break;
         }
 
@@ -520,13 +543,17 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //            } else {
 //                ToastUtils.showShort(getResources().getString(R.string.apply_input_all));
 //            }
-            Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-            String codeStr = gson.toJson(inputInfo());
-            mPresenter.consummateInfo(codeStr);
+            ediotAllInfoNext();
 
         } else {
             ToastUtils.showShort(getResources().getString(R.string.apply_input_all));
         }
+    }
+
+    private void ediotAllInfoNext() {
+        Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+        String codeStr = gson.toJson(inputInfo());
+        mPresenter.consummateInfo(codeStr);
     }
 
 
@@ -649,7 +676,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     }
 
     @Override
-    public void returnMineDataBean(MineBean.DataBean bean) {
+    public void returnMineDataBean(final MineBean.DataBean bean) {
 
         mNameEdittext.setText(bean.getName());
 
@@ -688,7 +715,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         if (!TextUtils.isEmpty(bean.getCityName()))
             mCitiyEdittext.setText(bean.getCityName());
 
-        if (bean.getCityId()!=0)
+        if (bean.getCityId() != 0)
             cityCode = bean.getCityId();
 
 
@@ -700,20 +727,37 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         }
 
         //设置主图
-        if (bean.getPrimaryPhoto()!=null && bean.getPrimaryPhoto().size() > 0
-                 && !TextUtils.isEmpty(bean.getPrimaryPhotoView().get(0))) {
+        if (bean.getPrimaryPhoto() != null && bean.getPrimaryPhoto().size() > 0
+                && !TextUtils.isEmpty(bean.getPrimaryPhotoView().get(0))) {
 
             coverPic.setImageURI(Uri.parse(bean.getPrimaryPhotoView().get(0)));
 //            headPicUrl = bean.getAvatar();
             coverObjectKey = bean.getPrimaryPhoto().get(0);
         }
 
-        if (bean.getPhoto()!=null && bean.getPhoto().size() > 0) {
-
-            //TODO 显示图片集
-
+        if (bean.getPhoto() != null && bean.getPhoto().size() > 0) {
+            //显示图片集
             photoObjectKeyList.clear();
             photoObjectKeyList.addAll(bean.getPhoto());
+
+//            List<ImageModel> mTempImageList = new ArrayList<>();
+            mImageList.clear();
+
+            for (String path : bean.getPhotoView()) {
+                ImageModel imageModel = new ImageModel();
+                imageModel.setUris(path);
+                mImageList.add(imageModel);
+            }
+
+            if (bean.getPhoto().size() < 4) {
+                //添加
+                mAddImageModel = new ImageModel();
+                mAddImageModel.setUris(ImageModel.ADD_IMAGE_URI);
+                mImageList.add(mAddImageModel);
+            }
+
+            if (mPhotoAdapter != null)
+                mPhotoAdapter.setNewData(mImageList);
 
         }
 
@@ -791,6 +835,29 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //            } catch (Exception e) {
 //                e.printStackTrace();
 //            }
+
+
+            videoObjectKey = bean.getPersonalIntroductionVideo();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+
+                    final Bitmap videoBitmapFromNet = ImageUtils.getVideoBitmapFromNet(bean.getPersonalIntroductionVideoView());
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (videoPicView != null)
+                                videoPicView.setImageBitmap(videoBitmapFromNet);
+                            if (videoDeleteView != null)
+                                videoDeleteView.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+
+                }
+            }).start();
 
         }
 
@@ -1185,9 +1252,9 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         if (mSelectedImages == null || mSelectedImages.size() < 1)
             return;
 
-//        for (int i = 0; i < mSelectedImages.size(); i++) {
-//            Logger.d("选择的图片::" + mSelectedImages.get(i).toString());
-//        }
+        for (int i = 0; i < mSelectedImages.size(); i++) {
+            Logger.d("选择的图片::" + mSelectedImages.get(i).toString());
+        }
 
         List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
 
@@ -1213,6 +1280,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             mImageList.set(mClickedItemPosition, mTempImageList.get(0));
             photoList.set(mClickedItemPosition, mSelectedImages.get(0));
         }
+
         mPhotoAdapter.setNewData(mImageList);
 //        mPhoto.clear();
 //        for (int i = 0; i < mImageList.size() - 1; i++) {
@@ -1227,7 +1295,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         startUploadPhotoList();
     }
 
-
     private void coverBack(Intent data) {
         if (data == null)
             return;
@@ -1239,7 +1306,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             startUploadPic(Constant.DIR_COVER, UriUtil.getRealFilePath(this, uri), uri, FileType.PIC_TYPE_COVER);
         }
     }
-
 
     private void videoBack(Intent data) {
 
@@ -1332,41 +1398,52 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
      */
     private void startUploadPhotoList() {
 
-        //生成上传的objectkey集合
-        for (int i = 0; i < photoList.size(); i++) {
-            //获取上传的objectkey
-            photoObjectKeyList.add(Constant.DIR_PHOTOS + StringsUtils.getMd5Name(photoList.get(i), this));
-        }
-
         show = ProgressDialog.show(this, "", "");
 
         new Thread(new Runnable() {
             @Override
             public void run() {
 
-                for (int i = 0; i < photoObjectKeyList.size(); i++) {
+                try {
 
-                    putPhotoList = new PutObjectRequest(bucket, photoObjectKeyList.get(i), UriUtil.getRealFilePath(MineDataActivity.this, photoList.get(i)));
+                    //生成上传的objectkey集合
+                    for (int i = 0; i < photoList.size(); i++) {
+                        //获取上传的objectkey
+                        final String photoObjectKey = Constant.DIR_PHOTOS + StringsUtils.getMd5Name(photoList.get(i), MineDataActivity.this);
+                        photoObjectKeyList.add(photoObjectKey);
 
-                    try {
+                        putPhotoList = new PutObjectRequest(bucket, photoObjectKey,
+                                UriUtil.getRealFilePath(MineDataActivity.this, photoList.get(i)));
+
                         PutObjectResult putResult = oss.putObject(putPhotoList);
 
-                        final int finalI = i;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                mPresenter.pathUrl(photoObjectKeyList.get(finalI), FileType.PIC_TYPE_PHOTOS);
+                                mPresenter.pathUrl(photoObjectKey, FileType.PIC_TYPE_PHOTOS);
                             }
                         });
 
                         Log.d("PutObject", "UploadSuccess");
-                        stopShow(i);
-                    } catch (ClientException e) {
-                        e.printStackTrace();
-                        stopShow(i);
-                    } catch (ServiceException e) {
-                        e.printStackTrace();
+                        if (i == photoList.size() - 1) {
+                            stopShow();
+                        }
                     }
+
+//                    for (int i = 0; i < photoObjectKeyList.size(); i++) {
+
+//                        try {
+
+//                        } catch (ClientException e) {
+//                            e.printStackTrace();
+//                            stopShow(i);
+//                        } catch (ServiceException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    stopShow();
                 }
 
             }
@@ -1413,18 +1490,18 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
     }
 
-    private void stopShow(int i) {
-        if (i == photoObjectKeyList.size() - 1) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+    private void stopShow() {
 
-                    if (show != null && show.isShowing())
-                        show.dismiss();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
 
-                }
-            });
-        }
+                if (show != null && show.isShowing())
+                    show.dismiss();
+
+            }
+        });
+
     }
 
     //开始上传图片
@@ -1604,12 +1681,13 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //    }
 
     private void initRecyclerView() {
-        mImageList = new ArrayList<>();
+
         mAddImageModel = new ImageModel();
         mAddImageModel.setUris(ImageModel.ADD_IMAGE_URI);
         mImageList.add(mAddImageModel);
         mPhotoRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         mPhotoAdapter = new MinePhotoAdapter(this, mImageList);
+
         mPhotoRecyclerView.setAdapter(mPhotoAdapter);
 
 //        mImageListt = new ArrayList<>();
@@ -1654,10 +1732,12 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
                             case R.id.item_appeal_evidence_list_delete_image:
 
-                                //删除照片集里的照片
-                                photoList.remove(position);
-
                                 try {
+
+                                    //删除照片集里的照片
+                                    if (photoList.size() > position)
+                                        photoList.remove(position);
+
                                     //删除该objectkey
                                     photoObjectKeyList.remove(position);
                                 } catch (Exception e) {

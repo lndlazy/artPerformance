@@ -75,6 +75,7 @@ public class MineBean extends BaseBean<MineBean.DataBean> {
         private String name;
         private String personalExperience;
         private String personalIntroductionVideo;
+        private String personalIntroductionVideoView;
         private String realName;
         private int realNameFlag;
         private String residenceAddress;
@@ -88,6 +89,15 @@ public class MineBean extends BaseBean<MineBean.DataBean> {
         private List<String> photoView;
         private List<String> primaryPhoto;
         private List<String> primaryPhotoView;
+
+
+        public String getPersonalIntroductionVideoView() {
+            return personalIntroductionVideoView;
+        }
+
+        public void setPersonalIntroductionVideoView(String personalIntroductionVideoView) {
+            this.personalIntroductionVideoView = personalIntroductionVideoView;
+        }
 
         public int getAge() {
             return age;

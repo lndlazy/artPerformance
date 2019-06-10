@@ -15,6 +15,7 @@ import com.art.recruitment.artperformance.bean.group.GroupListBean;
 import com.art.recruitment.artperformance.ui.group.adapter.GroupAdapter;
 import com.art.recruitment.artperformance.ui.group.contract.SearchContract;
 import com.art.recruitment.artperformance.ui.group.presenter.SearchPresenter;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
@@ -111,7 +112,7 @@ public class SearchFragment extends BaseFragment<SearchPresenter, GroupListBean.
                     @Override
                     public void accept(Object o) throws Exception {
                         String mSearch = mSearchEditText.getText().toString().trim();
-                        mPresenter.actorsList(mSearch, 0, 20, "desc");
+                        mPresenter.actorsList(mSearch, 0, 20, Constant.SORT_DESC);
                     }
                 });
     }

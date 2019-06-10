@@ -62,8 +62,13 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     ImageView mMessageImageview;
     @BindView(R.id.mine_name_textview)
     TextView mNameTextview;
+
     @BindView(R.id.mine_editing_personal_data_textview)
     TextView mEditingPersonalDataTextview;
+
+    @BindView(R.id.constraintView)
+    ConstraintLayout constraintView;
+
     @BindView(R.id.mine_share_cards_textview)
     TextView mShareCardsTextview;
     @BindView(R.id.mine_recruit_constrainLayout)
@@ -164,8 +169,9 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                     }
                 });
 
+        //编辑个人资料
         RxView.
-                clicks(mEditingPersonalDataTextview).
+                clicks(constraintView).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
@@ -194,6 +200,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                     }
                 });
 
+        //我的招募
         RxView.
                 clicks(mRecruitConstrainLayout).
                 compose(RxClickTransformer.getClickTransformer()).

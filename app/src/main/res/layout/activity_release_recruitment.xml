@@ -262,8 +262,8 @@
                     android:textColorHint="@color/color_b7bcbe"
                     android:textSize="14sp"
                     android:theme="@style/TextInputLayoutLineColor"
-                    app:layout_constraintLeft_toRightOf="@+id/release_wages_textview"
-                    app:layout_constraintRight_toLeftOf="@+id/release_face_textview" />
+                    app:layout_constraintLeft_toRightOf="@id/release_wages_textview"
+                    app:layout_constraintRight_toLeftOf="@id/release_face_textview" />
 
                 <CheckBox
                     android:id="@+id/release_face_textview"
@@ -271,7 +271,6 @@
                     android:layout_height="@dimen/y56"
                     android:background="@drawable/release_face_bg"
                     android:button="@null"
-                    android:checked="false"
                     android:gravity="center"
                     android:text="@string/release_face_to_face_hint"
                     android:textColor="@drawable/release_face_text_bg"

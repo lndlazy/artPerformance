@@ -23,6 +23,7 @@ import com.art.recruitment.artperformance.ui.dynamic.contract.DynamicFagmentCont
 import com.art.recruitment.artperformance.ui.dynamic.presenter.DynamicFagmentPresenter;
 import com.art.recruitment.artperformance.ui.group.adapter.GroupAdapter;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDynamicActivity;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
@@ -113,7 +114,7 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
     @Override
     protected void initListRequest(int page) {
         super.initListRequest(page);
-        mPresenter.dynamicList(page, 20, "desc");
+        mPresenter.dynamicList(page, 20, Constant.SORT_DESC);
     }
 
     @Override

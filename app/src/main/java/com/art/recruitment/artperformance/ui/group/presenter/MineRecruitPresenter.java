@@ -14,7 +14,7 @@ public class MineRecruitPresenter extends BasePresenter<MineRecruitContract> {
     /**
      *根据群演ID获取影虎信息
      */
-    public void chatGroups(int actorId) {
+    public void chatGroups(String actorId) {
 
         Api.
                 observable(Api.getService(GroupService.class).chatGroups(actorId)).

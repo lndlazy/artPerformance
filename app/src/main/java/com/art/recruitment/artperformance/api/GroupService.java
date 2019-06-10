@@ -36,7 +36,7 @@ public interface GroupService {
      * 招募编辑
      */
     @PUT(ApiUrls.RECRUIT_DETAIL)
-    Observable<RecruitmentEditBean> recruitmentEdit(@Path("recruitmentId") int recruitmentId,
+    Observable<RecruitmentEditBean> recruitmentEdit(@Path("recruitmentId") String recruitmentId,
                                                     @Body RequestBody body);
 
     /**
@@ -94,8 +94,8 @@ public interface GroupService {
      * 报名列表
      */
     @GET(ApiUrls.APPLY_LIST)
-    Observable<ApplyListBean> applyList(@Path("recruitmentId") int recruitmentId,
-                                        @Query("hireState") int hireState);
+    Observable<ApplyListBean> applyList(@Path("recruitmentId") String recruitmentId,
+                                        @Query("hireState") String hireState);
 
     /**
      * 录用
@@ -122,6 +122,6 @@ public interface GroupService {
      * 群聊
      */
     @POST(ApiUrls.CHAT_GROUPS)
-    Observable<MineRecruitBean> chatGroups(@Path("recruitmentId") int recruitmentId);
+    Observable<MineRecruitBean> chatGroups(@Path("recruitmentId") String recruitmentId);
 
 }

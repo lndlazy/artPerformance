@@ -17,7 +17,7 @@ public class RecruitmentInformaPresenter extends BasePresenter<RecruitmentInform
      * 获取招募详情
      *
      */
-    public void recuitDetail(int recruitmentId) {
+    public void recuitDetail(String recruitmentId) {
 
         Api.
                 observable(Api.getService(HomeService.class).recuitDetail(recruitmentId)).
@@ -41,7 +41,7 @@ public class RecruitmentInformaPresenter extends BasePresenter<RecruitmentInform
      * 报名
      *
      */
-    public void apply(int recruitmentId) {
+    public void apply(String recruitmentId) {
 
         Api.
                 observable(Api.getService(HomeService.class).applyPost(recruitmentId)).

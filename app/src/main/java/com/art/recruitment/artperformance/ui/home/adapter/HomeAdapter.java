@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.home.RecruitListBean;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.view.TagCloudView;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.config.BaseConfig;
@@ -33,7 +34,16 @@ public class HomeAdapter extends BaseRecyclerViewAdapter<RecruitListBean.Content
     protected void convert(BaseViewHolder helper, RecruitListBean.ContentBean item) {
 
         helper.setText(R.id.home_title_textview, item.getTitle());
-        helper.setText(R.id.home_price_textview, "￥" + item.getSalary());
+//        if (item.getSalaryType() == Constant.TYPE_PRICE_SURE_INT) {
+        //
+        helper.setText(R.id.home_price_textview, (item.getSalaryType() == Constant.TYPE_PRICE_FACE_INT)
+                ? "面议" : ("￥" + item.getSalary()));
+
+//        } else {
+//            helper.setText(R.id.home_price_textview, );
+//
+//        }
+
         helper.setText(R.id.home_time_textview, "集合时间：" + item.getGatheringTime());
         helper.setText(R.id.home_address_textview, "集合地点：" + item.getGatheringAddress());
         helper.setText(R.id.home_people_textview, "发布人：" + item.getPublisherName());

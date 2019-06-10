@@ -92,7 +92,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     @BindView(R.id.home_communicate_constraintLayout)
     ConstraintLayout mCommunicateConstraintLayout;
     private Dialog dialog;
-    private int recruitmentId;
+    private String recruitmentId;
     private String home_name;
 
     @Override
@@ -113,13 +113,12 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     @Override
     public void initPresenter() {
         mPresenter.setVM(this);
-
     }
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
 
-        recruitmentId = getIntent().getIntExtra("recruitmentId", 0);
+        recruitmentId = getIntent().getStringExtra("recruitmentId");
         home_name = getIntent().getStringExtra("home_name");
         mPresenter.recuitDetail(recruitmentId);
 
@@ -183,6 +182,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     @Override
     public void showErrorTip(ErrorType errorType, int errorCode, String message) {
 
+//        if (errorCode == )
+
         if (message != null) {
             ToastUtils.showShort(message);
         }
@@ -198,12 +199,6 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
         for (int i = 0; i < bean.getApplyUsers().size(); i++) {
             list.add(bean.getApplyUsers().get(i).getApplyUserAvatar());
         }
-        /*list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559129291054&di=6e18db49281a814fd1c5846769caa9ff&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F23%2F20160823151123_S2eAf.jpeg");
-        list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559129291054&di=6e18db49281a814fd1c5846769caa9ff&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F23%2F20160823151123_S2eAf.jpeg");
-        list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559129291054&di=6e18db49281a814fd1c5846769caa9ff&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F23%2F20160823151123_S2eAf.jpeg");
-        list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559129291054&di=6e18db49281a814fd1c5846769caa9ff&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F23%2F20160823151123_S2eAf.jpeg");
-        list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1559129291054&di=6e18db49281a814fd1c5846769caa9ff&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201608%2F23%2F20160823151123_S2eAf.jpeg");
-*/
         ImageAdapter adapter = new ImageAdapter(this, list);
         mGridview.setAdapter(adapter);
     }
@@ -237,12 +232,12 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
     private void signUpImmediately() {
 
-        //判断是否完善了所以信息
-        if (!isImproveInformation()) {
-            Logger.d("本地判断资料未完成");
-            perfectInformation();
-            return;
-        }
+//        //判断是否完善了所以信息
+//        if (!isImproveInformation()) {
+//            Logger.d("本地判断资料未完成");
+//            perfectInformation();
+//            return;
+//        }
 
         View inflate = View.inflate(this, R.layout.dialog_recruit_details, null);
         TextView mCleanTextview = inflate.findViewById(R.id.recruit_details_clean_textview);
@@ -272,18 +267,18 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
         });
     }
 
-    /**
-     * 是否完善了全部资料
-     * 通过是否保存了微信号 进行判断
-     *
-     * @return true 完善， false未完善
-     */
-    private boolean isImproveInformation() {
-
-        String weChat = (String) SaveUtils.get(this, MyInfoSave.WECHAT, "");
-        return !TextUtils.isEmpty(weChat);
-
-    }
+//    /**
+//     * 是否完善了全部资料
+//     * 通过是否保存了微信号 进行判断
+//     *
+//     * @return true 完善， false未完善
+//     */
+//    private boolean isImproveInformation() {
+//
+//        String weChat = (String) SaveUtils.get(this, MyInfoSave.WECHAT, "");
+//        return !TextUtils.isEmpty(weChat);
+//
+//    }
 
     private void perfectInformation() {
 

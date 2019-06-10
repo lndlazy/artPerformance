@@ -26,6 +26,7 @@ import com.blankj.utilcode.util.NetworkUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.facebook.stetho.common.LogUtil;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.header.MaterialHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -167,7 +168,6 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
         initSmartRefreshLayout();
 
         initLoadMoreAdapter();
-
         initView();
 
         if (mCanBeLoadedWhenInitialized) {
@@ -260,16 +260,21 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
 //            mRecyclerViewAdapter.setOnItemChildClickListener(this);
 
             if (enableAdapterLoadMore()) {
+
+//                LogUtil.d("设置 可以上拉 加载更多 ✅✅✅✅✅✅✅ ");
                 mRecyclerViewAdapter.setEnableLoadMore(true);
                 mRecyclerViewAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
                     @Override
                     public void onLoadMoreRequested() {
+
+                        LogUtil.d("  recycleview  加载更多  ");
                         isRefreshMode = false;
                         mCurrentPage++;
                         initListRequest(mCurrentPage);
                     }
                 }, getRecyclerView());
             } else {
+//                LogUtil.d("设置 不能上拉 加载更多 xxx ");
                 mRecyclerViewAdapter.setEnableLoadMore(false);
             }
 

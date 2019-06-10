@@ -28,6 +28,7 @@ import com.art.recruitment.artperformance.ui.group.presenter.GroupFragmentPresen
 import com.art.recruitment.artperformance.ui.home.activity.RecruitmentInformationActivity;
 import com.art.recruitment.artperformance.ui.home.adapter.ContactAdapter;
 import com.art.recruitment.artperformance.ui.home.adapter.HomeAdapter;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
@@ -169,7 +170,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
     @Override
     protected void initListRequest(int page) {
         super.initListRequest(page);
-        mPresenter.actorsList(maxAge, minAge, cityId, gender, page, 20, "desc");
+        mPresenter.actorsList(maxAge, minAge, cityId, gender, page, 20, Constant.SORT_DESC);
     }
 
     private void initButtonClick() {

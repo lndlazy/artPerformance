@@ -42,6 +42,7 @@
             app:layout_constraintTop_toTopOf="@+id/mine_head_portrait_imageview"/>
 
         <android.support.constraint.ConstraintLayout
+            android:id="@+id/constraintView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/y26"

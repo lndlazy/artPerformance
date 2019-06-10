@@ -14,7 +14,8 @@ public class BaseConfig {
     public static final String FRAGMENT_TAG_NAME = "fragmentTagName";
 
     /**
-     * Fragment的参数：广告类别（1已录用 2待录用）
+     * Fragment的参数：广告类别
+     * 1-待录用，2-已录用
      */
     public static final String FRAGMENT_TAG_NAME_ADS_TYPE = "fragmentTagNameAdsType";
 

@@ -69,7 +69,7 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
         private int recruitNumber;
         private String releaseTime;
         private int salary;
-        private int salaryType;
+        private String salaryType;
         private String title;
         private int workingHours;
         private List<ApplyUsersBean> applyUsers;
@@ -253,11 +253,11 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
             this.salary = salary;
         }
 
-        public int getSalaryType() {
+        public String getSalaryType() {
             return salaryType;
         }
 
-        public void setSalaryType(int salaryType) {
+        public void setSalaryType(String salaryType) {
             this.salaryType = salaryType;
         }
 

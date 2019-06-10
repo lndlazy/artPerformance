@@ -15,7 +15,7 @@ public class MineFecruitmentPresenter extends BasePresenter<MineFecruitmentContr
     /**
      * 我的招募
      */
-    public void mineRecruitmentList(int page, int size, String sort) {
+    public void mineRecruitmentList(final int page, int size, String sort) {
 
         Api.
                 observable(Api.getService(MineService.class).mineRecruitmentList(page, size, sort)).
@@ -25,7 +25,7 @@ public class MineFecruitmentPresenter extends BasePresenter<MineFecruitmentContr
                 doRequest(new RxSubscriber<MineFecruitmentBean.DataBean, MineFecruitmentBean>() {
                     @Override
                     protected void _onSuccess(MineFecruitmentBean.DataBean bean, String successMessage) {
-                        mView.returnMineFecruitmentBean(bean);
+                        mView.returnMineFecruitmentBean(bean, page);
                     }
 
                     @Override
@@ -35,10 +35,33 @@ public class MineFecruitmentPresenter extends BasePresenter<MineFecruitmentContr
                 });
     }
 
+//    /**
+//     * 我的招募
+//     */
+//    public void mineRecruitmentList(int page, int size, String sort) {
+//
+//        Api.
+//                observable(Api.getService(MineService.class).mineRecruitmentList(page, size, sort)).
+//                presenter(this).
+//                requestMode(RequestMode.SINGLE).
+//                showLoading(true).
+//                doRequest(new RxSubscriber<MineFecruitmentBean.DataBean, MineFecruitmentBean>() {
+//                    @Override
+//                    protected void _onSuccess(MineFecruitmentBean.DataBean bean, String successMessage) {
+//                        mView.returnMineFecruitmentBean(bean);
+//                    }
+//
+//                    @Override
+//                    protected void _onError(ErrorType errorType, int errorCode, String message, MineFecruitmentBean.DataBean bean) {
+//                        mView.showErrorTip(errorType, errorCode, message);
+//                    }
+//                });
+//    }
+
     /**
      * 上下架
      */
-    public void recruitmentOpt(int recruitmentId, String opt) {
+    public void recruitmentOpt(String recruitmentId, String opt) {
 
         Api.
                 observable(Api.getService(MineService.class).recruitmentOpt(recruitmentId, opt)).

@@ -97,7 +97,7 @@ public interface MineService {
      * 上下架
      */
     @PUT(ApiUrls.RECRUITMENT_OPT)
-    Observable<RecruitmentOptBean> recruitmentOpt(@Path("recruitmentId") int recruitmentId,
+    Observable<RecruitmentOptBean> recruitmentOpt(@Path("recruitmentId") String recruitmentId,
                                                   @Path("opt") String opt);
 
     /**

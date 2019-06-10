@@ -23,20 +23,24 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
+import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 
 public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyListBean.ContentBean> implements EmploymentContract {
+
     @BindView(R.id.release_employment_recyclerView)
     RecyclerView mRecyclerView;
     @BindView(R.id.release_employment_smartRefreshLayout)
     SmartRefreshLayout mSmartRefreshLayout;
     private MineRecruitActivity mTransferCallback;
-    private int mTitleType;
+    private String mTitleType;
     private EmploymentAdapter adapter;
+    private String recruitment_id;
 
     public static EmploymentFragment newInstance(Bundle bundle) {
         EmploymentFragment mFragment = new EmploymentFragment();
@@ -65,7 +69,7 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
     @Override
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
-        adapter = new EmploymentAdapter(mContext, mDataList, mTitleType);
+        adapter = new EmploymentAdapter(mContext, mDataList);
         adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
         return adapter;
     }
@@ -77,37 +81,59 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
     @Override
     protected void initPresenter() {
-
+        mPresenter.setVM(this);
     }
 
     @Override
     protected void initView() {
         setEmptyErrorViewData(R.mipmap.img_show_empty, "暂时没有数据");
 
-        mTitleType = getArguments().getInt(BaseConfig.FRAGMENT_TAG_NAME_ADS_TYPE);
-        int recruitment_id = getArguments().getInt("recruitment_id");
-        if (mTitleType == 1){
+        if (getArguments() == null)
+            return;
 
-        }else if (mTitleType == 2){
+        mTitleType = getArguments().getString(BaseConfig.FRAGMENT_TAG_NAME_ADS_TYPE);
 
-        }
+        if (adapter != null)
+            adapter.setmTitleType(mTitleType);
+
+        recruitment_id = getArguments().getString("recruitment_id");
+//        if (mTitleType == 1){
+//
+//        }else if (mTitleType == 2){
+//
+//        }
 
         mPresenter.applyList(recruitment_id, mTitleType);
     }
 
     @Override
     protected void lazyLoad() {
-
+        autoRefresh();
     }
 
     @Override
+    protected void initListRequest(int page) {
+        super.initListRequest(page);
+
+//        com.orhanobut.logger.Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearch + ",page:" + page + ",mSort:" + mSort);
+        mPresenter.applyList(recruitment_id, mTitleType);
+//        mPresenter.recuitList(mCityCode, mSearch, page, BaseConfig.DEFAULT_PAGE_SIZE, mSort);
+    }
+
+
+    @Override
     public void returnApplyListBean(final ApplyListBean.DataBean bean) {
+
+        if (bean == null)
+            return;
+
+//        if (bean!=null)
 
         adapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 switch (view.getId()) {
-                    case R.id.mine_recruit_clean_employment_textview:
+                    case R.id.mine_recruit_clean_employment_textview://取消录用
                         mPresenter.cencelHiring(bean.getContent().get(position).getRecruitmentId(), bean.getContent().get(position).getId());
                         break;
                     case R.id.mine_recruit_chat_imageview:
@@ -120,7 +146,9 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                         mPresenter.cencelHiring(bean.getContent().get(position).getRecruitmentId(), bean.getContent().get(position).getId());
                         break;
                     case R.id.mine_recruit_employment_textview:
-                        mPresenter.hiring(bean.getContent().get(position).getRecruitmentId(), bean.getContent().get(position).getId(), true);
+                        //录用
+                        mPresenter.hiring(bean.getContent().get(position).getRecruitmentId()
+                                , bean.getContent().get(position).getId(), true);
                         break;
                     case R.id.mine_recruit_employment_chat_imageview:
                         Intent chat2 = new Intent(getContext(), ChatActivity.class);
@@ -134,6 +162,11 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
             }
         });
 
+//        if (bean == null) {
+//            bean = new ApplyListBean.DataBean();
+//        }
+
+//         bean.setContent(new ArrayList<ApplyListBean.ContentBean>());
         resetStateWhenLoadDataSuccess(bean.getContent());
 
     }
@@ -141,16 +174,22 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
     @Override
     public void returnHiringBean(HiringBean.DataBean bean) {
 
+        ToastUtils.showShort("录用成功");
+        mPresenter.applyList(recruitment_id, mTitleType);
+
     }
 
     @Override
     public void returnCencelHiringBean(CencelHiringBean.DataBean bean) {
 
+        //取消录用成功
+        ToastUtils.showShort("取消成功");
+        mPresenter.applyList(recruitment_id, mTitleType);
     }
 
     @Override
     public void showErrorTip(ErrorType errorType, int errorCode, String message) {
-        if (message != null){
+        if (message != null) {
             resetStateWhenLoadDataFailed(errorCode, message);
         }
     }

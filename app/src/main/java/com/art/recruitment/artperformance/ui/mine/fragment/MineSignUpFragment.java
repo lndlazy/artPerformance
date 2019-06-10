@@ -11,6 +11,7 @@ import com.art.recruitment.artperformance.bean.mine.MineSignUpBean;
 import com.art.recruitment.artperformance.ui.mine.adapter.MineSignUpAdapter;
 import com.art.recruitment.artperformance.ui.mine.contract.MineSignUpContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MineSignUpPresenter;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.http.error.ErrorType;
@@ -62,7 +63,7 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
     @Override
     protected void initListRequest(int page) {
         super.initListRequest(page);
-        mPresenter.applyList(page, 20, "desc");
+        mPresenter.applyList(page, 20, Constant.SORT_DESC);
     }
 
     @Override

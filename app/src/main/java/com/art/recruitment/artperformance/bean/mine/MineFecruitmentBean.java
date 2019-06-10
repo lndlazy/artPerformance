@@ -285,7 +285,7 @@ public class MineFecruitmentBean extends BaseBean<MineFecruitmentBean.DataBean> 
         private String gatheringAddress;
         private String gatheringTime;
         private int hireNumber;
-        private int id;
+        private String id;
         private String labels;
         private int publisher;
         private int recruitNumber;
@@ -305,7 +305,7 @@ public class MineFecruitmentBean extends BaseBean<MineFecruitmentBean.DataBean> 
             gatheringAddress = in.readString();
             gatheringTime = in.readString();
             hireNumber = in.readInt();
-            id = in.readInt();
+            id = in.readString();
             labels = in.readString();
             publisher = in.readInt();
             recruitNumber = in.readInt();
@@ -386,11 +386,11 @@ public class MineFecruitmentBean extends BaseBean<MineFecruitmentBean.DataBean> 
             this.hireNumber = hireNumber;
         }
 
-        public int getId() {
+        public String getId() {
             return id;
         }
 
-        public void setId(int id) {
+        public void setId(String id) {
             this.id = id;
         }
 
@@ -493,7 +493,7 @@ public class MineFecruitmentBean extends BaseBean<MineFecruitmentBean.DataBean> 
             dest.writeString(gatheringAddress);
             dest.writeString(gatheringTime);
             dest.writeInt(hireNumber);
-            dest.writeInt(id);
+            dest.writeString(id);
             dest.writeString(labels);
             dest.writeInt(publisher);
             dest.writeInt(recruitNumber);

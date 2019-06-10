@@ -54,7 +54,7 @@ public interface HomeService {
      * 招募列表详情接口
      */
     @GET(ApiUrls.RECRUIT_DETAIL)
-    Observable<RecruitmentInforBean> recuitDetail(@Path("recruitmentId") int recruitmentId);
+    Observable<RecruitmentInforBean> recuitDetail(@Path("recruitmentId") String recruitmentId);
 
     /**
      * 招募列表详情接口
@@ -66,5 +66,5 @@ public interface HomeService {
      * 招募报名
      */
     @POST(ApiUrls.APPLY_LIST)
-    Observable<ApplyBean> applyPost(@Path("recruitmentId") int recruitmentId);
+    Observable<ApplyBean> applyPost(@Path("recruitmentId") String recruitmentId);
 }

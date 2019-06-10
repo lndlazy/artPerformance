@@ -18,7 +18,9 @@ import com.art.recruitment.artperformance.ui.mine.activity.MineDynamicActivity;
 import com.art.recruitment.artperformance.ui.mine.adapter.MineDynamicAdapter;
 import com.art.recruitment.artperformance.ui.mine.contract.MineDynamicContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MineDynamicPresenter;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
+import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
@@ -35,13 +37,18 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.reactivex.functions.Consumer;
 
+/**
+ * 我的动态
+ */
 public class MineDynamicFragment extends BaseFragment<MineDynamicPresenter, MineDynamicBean.ContentBean> implements MineDynamicContract {
     @BindView(R.id.mine_dynamic_return_imageview)
     ImageView mReturnImageview;
     @BindView(R.id.mine_diynamic_release_textview)
     TextView mReleaseTextview;
+
     @BindView(R.id.mine_diynamic_recyclerView)
     RecyclerView mRecyclerView;
+
     @BindView(R.id.mine_diynamic_smartRefreshLayout)
     SmartRefreshLayout mSmartRefreshLayout;
     private MineDynamicAdapter adapter;
@@ -61,6 +68,14 @@ public class MineDynamicFragment extends BaseFragment<MineDynamicPresenter, Mine
         return mRecyclerView;
     }
 
+//    @Override
+//    protected BaseRecyclerViewAdapter<MineDynamicBean.ContentBean> getRecyclerViewAdapter() {
+//        adapter = new MineDynamicAdapter(mContext, mDataList);
+//        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+//        return adapter;
+//    }
+
+
     @Override
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
         adapter = new MineDynamicAdapter(mContext, mDataList);
@@ -70,7 +85,7 @@ public class MineDynamicFragment extends BaseFragment<MineDynamicPresenter, Mine
 
     @Override
     protected boolean enableAdapterLoadMore() {
-        return false;
+        return true;
     }
 
     @Override
@@ -81,7 +96,7 @@ public class MineDynamicFragment extends BaseFragment<MineDynamicPresenter, Mine
     @Override
     protected void initListRequest(int page) {
         super.initListRequest(page);
-        mPresenter.mineDynamicList(page, 4, "desc");
+        mPresenter.mineDynamicList(page, BaseConfig.DEFAULT_PAGE_SIZE, "");
     }
 
     @Override

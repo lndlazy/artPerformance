@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,10 +37,13 @@ import com.art.recruitment.artperformance.ui.home.presenter.HomePresenter;
 import com.art.recruitment.artperformance.ui.login.activity.UserAgreementActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatListActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.PermissionTipUtils;
+import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.PermissionRationalDialog;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
+import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
@@ -162,6 +166,13 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
         setEmptyErrorViewData(R.mipmap.img_show_empty, "暂时没有数据");
 
+        mCityCode = (int) SaveUtils.get(getContext(), SaveUtils.CITY_CODE, -1);
+
+        String cityName = (String) SaveUtils.get(getContext(), SaveUtils.CITY_NAME, "");
+
+        if (!TextUtils.isEmpty(cityName) && mCityCode != -1)
+            mCityTextview.setText(cityName);
+
         initMap();
 
         autoRefresh();
@@ -178,7 +189,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
         com.orhanobut.logger.Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearch + ",page:" + page + ",mSort:" + mSort);
 
-        mPresenter.recuitList(mCityCode, mSearch, page, 20, mSort);
+        mPresenter.recuitList(mCityCode, mSearch, page, BaseConfig.DEFAULT_PAGE_SIZE, mSort);
     }
 
     private void initEditTextLisnter() {
@@ -266,7 +277,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
                         mSortConstraintLayout.setVisibility(View.VISIBLE);
                         rlSortView.setVisibility(View.GONE);
-                        mSort = "desc";
+                        mSort = Constant.SORT_DESC;
                         autoRefresh();
                     }
                 });
@@ -283,7 +294,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                         mSortConstraintLayout.setVisibility(View.VISIBLE);
                         rlSortView.setVisibility(View.GONE);
 //                        mSort = "esc";
-                        mSort = "asc";
+                        mSort = Constant.SORT_ASC;
 
                         autoRefresh();
                     }
@@ -320,7 +331,6 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     public void returnRecruitListBean(final RecruitListBean.DataBean bean, int page) {
 
         if (page == 0) {
-
             mPresenter.getBanner();
 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
@@ -330,6 +340,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                 @Override
                 public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
 
+                    //招募详情页面
                     Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
                     intent.putExtra("recruitmentId", bean.getContent().get(position).getId());
                     intent.putExtra("home_name", bean.getContent().get(position).getPublisherName());
@@ -396,6 +407,10 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     public void returnCitiSearchBean(CitiSearch.DataBean bean) {
         mCityCode = bean.getCityCode();
         autoRefresh();
+
+        //保存城市code
+        SaveUtils.put(getContext(), SaveUtils.CITY_CODE, bean.getCityCode());
+
     }
 
     private void initBanner(final List<BannerBean.DataBean> bean) {
@@ -430,11 +445,14 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK
-                && data!=null && data.getExtras()!=null) {
+                && data != null && data.getExtras() != null) {
             String city = data.getExtras().getString("city");
+
+            //保存城市名称
+            SaveUtils.put(getContext(), SaveUtils.CITY_NAME, city);
+
             mCityTextview.setText(city);
             mPresenter.citiSearch(city);
-
 
         }
     }

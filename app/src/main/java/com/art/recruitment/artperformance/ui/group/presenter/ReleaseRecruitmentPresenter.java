@@ -46,7 +46,7 @@ public class ReleaseRecruitmentPresenter extends BasePresenter<ReleaseRecruitmen
      * 编辑招募信息
      *
      */
-    public void recruitmentEdit(int recruitmentId, String str) {
+    public void recruitmentEdit(String recruitmentId, String str) {
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), str);
         Api.
                 observable(Api.getService(GroupService.class).recruitmentEdit(recruitmentId, body)).
@@ -70,7 +70,7 @@ public class ReleaseRecruitmentPresenter extends BasePresenter<ReleaseRecruitmen
      * 获取招募详情
      *
      */
-    public void recuitDetail(int recruitmentId) {
+    public void recuitDetail(String recruitmentId) {
 
         Api.
                 observable(Api.getService(HomeService.class).recuitDetail(recruitmentId)).

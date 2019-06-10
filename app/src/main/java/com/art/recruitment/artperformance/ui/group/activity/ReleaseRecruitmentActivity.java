@@ -37,11 +37,13 @@ import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
-import com.art.recruitment.common.utils.UIUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.orhanobut.logger.Logger;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,7 +114,6 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
     private ConstraintLayout addLabel;
     private Dialog dialog;
     private TextView mtitleEdittext;
-    List<String> list = new ArrayList<String>();
     private CustomDatePicker mTimerPicker;
     private int count;
     private boolean mIsTitleOk = false;
@@ -124,6 +125,8 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
 
     //标签列表
     List<String> labelsList = new ArrayList<>();
+//    List<String> lableList = new ArrayList<String>();
+
     private int release_id;
     private int pos;
     private MineFecruitmentBean.ContentBean data;
@@ -158,15 +161,16 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         data = getIntent().getParcelableExtra("id_id");
         String group_head = getIntent().getStringExtra("group_head");
         Glide.with(this).load(group_head).into(mHeadPortraitImageview);
-        if (release_id == 1) {
+
+        //如果是编辑信息，先获取之前发布的招募信息
+        if (release_id == 1)
             mPresenter.recuitDetail(data.getId());
-        }
 
         addLabel = (ConstraintLayout) LayoutInflater.from(this).inflate(R.layout.layout_add_label, null);
-
-        initLayout(list);
+        initLayout(labelsList);
 
         initEtittextLisnter();
+
         initButtonClick();
         initTimerPicker();
 
@@ -267,6 +271,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                     }
                 });
 
+        //发布招募
         RxView.
                 clicks(mConfirmPublicationTextview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -301,7 +306,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK) {
-            String city=data.getExtras().getString("city");
+            String city = data.getExtras().getString("city");
             code = data.getExtras().getInt("code");
             mCityTextview.setText(city);
         }
@@ -322,12 +327,10 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
             return;
         }
 
-
 //        if (workEndTime <= startTime) {
 //            ToastUtils.showShort("报名截止时间需大于集合时间");
 //            return;
 //        }
-
 
         String mDetailedLocation = mDetailedLocationEdittext.getText().toString().trim();
         String mDeadlineForRegistration = mDeadlineForRegistrationTextview.getText().toString().trim();
@@ -339,9 +342,12 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         recruitmentRequest.setTitle(mTitle);
 
         if (StringsUtils.is2Int(mNumber))
-        recruitmentRequest.setRecruitNumber(Integer.parseInt(mNumber));
+            recruitmentRequest.setRecruitNumber(Integer.parseInt(mNumber));
+
+//        Logger.d("价格+++ ：" + mWages);
         if (StringsUtils.is2Int(mWages))
             recruitmentRequest.setSalary(Integer.parseInt(mWages));
+
         recruitmentRequest.setGatheringAddress(mDetailedLocation);
         recruitmentRequest.setApplyEndTime(mDeadlineForRegistration);
         recruitmentRequest.setGatheringTime(mSelectionTime);
@@ -350,15 +356,16 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
             recruitmentRequest.setWorkingHours(Integer.parseInt(mWorkTime));
         recruitmentRequest.setOtherRequirement(mOther);
 
-        if (mFaceTextview.isClickable()) {
-            recruitmentRequest.setSalaryType("2");
+        if (mFaceTextview.isChecked()) {
+            //面议
+            recruitmentRequest.setSalaryType(Constant.TYPE_PRICE_FACE);
         } else {
-            recruitmentRequest.setSalaryType("1");
+            recruitmentRequest.setSalaryType(Constant.TYPE_PRICE_SURE);
         }
         Gson gson = new Gson();
         String codeStr = gson.toJson(recruitmentRequest);
 
-        if (release_id == 1){
+        if (release_id == 1) {
             //编辑招募信息
             mPresenter.recruitmentEdit(data.getId(), codeStr);
         } else {
@@ -429,14 +436,14 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                 String label = mtitleEdittext.getText().toString().trim();
 
                 if (!TextUtils.isEmpty(label)) {
-                    list.add(label);
-                    initLayout(list);
+                    labelsList.add(label);
+                    initLayout(labelsList);
                     dialog.cancel();
                 }
 
 //                if (label != null && !label.equals("")) {
-//                    list.add(label);
-//                    initLayout(list);
+//                    lableList.add(label);
+//                    initLayout(lableList);
 //                    dialog.cancel();
 //                }
             }
@@ -449,7 +456,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
      */
     private void setButtonStatus() {
 
-        if (mIsTitleOk && mIsNumberOk && (mIsWagesOk || mFaceTextview.isChecked())&& mIsWorkTimeOk && mIsDetailedLocationTimeOk) {
+        if (mIsTitleOk && mIsNumberOk && (mIsWagesOk || mFaceTextview.isChecked()) && mIsWorkTimeOk && mIsDetailedLocationTimeOk) {
             mConfirmPublicationTextview.setEnabled(true);
         } else {
             mConfirmPublicationTextview.setEnabled(false);
@@ -593,7 +600,6 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
     private void initLayout(final List<String> arr) {
 
         mLabelFlowlayout.removeAllViewsInLayout();
-
         mLabelFlowlayout.addView(addLabel);
 
         /**
@@ -603,7 +609,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         final ImageView[] icons = new ImageView[arr.size()];
 
         for (int i = 0; i < arr.size(); i++) {
-            labelsList.add(arr.get(i));
+//            labelsList.add(arr.get(i));
             final View view = LayoutInflater.from(this).inflate(R.layout.text_view, mLabelFlowlayout, false);
 
             final TextView text = view.findViewById(R.id.release_label_text);
@@ -621,8 +627,9 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                     for (int j = 0; j < icons.length; j++) {
                         if (icon.equals(icons[j])) {  //获取   当前  点击删除图标的位置：
                             mLabelFlowlayout.removeViewAt(j);
-                            list.remove(j);
-                            initLayout(list);
+//                            Logger.d("删除：：" + la);
+                            labelsList.remove(j);
+                            initLayout(labelsList);
                         }
                     }
                 }
@@ -634,16 +641,6 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
     }
 
     private void initTimerPicker() {
-        String beginTime = "2010.01.01 00:00";
-        String endTime = "2090.12.30 00:00";
-//        String beginTime = DateFormatUtils.getTodayDateTime(DateFormatUtils.DATE_FORMAT_PATTERN_YMD_HM);
-//        long currentTime = System.currentTimeMillis();
-
-//        if (count == 1) {
-//            mSelectionTimeTextview.setText(endTime);
-//        } else if (count == 2) {
-//            mDeadlineForRegistrationTextview.setText(endTime);
-//        }
 
         // 通过日期字符串初始化日期，格式请用：yyyy-MM-dd HH:mm
         mTimerPicker = new CustomDatePicker(this, new CustomDatePicker.Callback() {
@@ -658,7 +655,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
                     workEndTime = timestamp;
                 }
             }
-        }, beginTime, endTime);
+        }, Constant.SELECT_DATE_START, Constant.SELECT_DATE_END);
         // 允许点击屏幕或物理返回键关闭
         mTimerPicker.setCancelable(true);
         // 显示时和分
@@ -680,29 +677,41 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
     @Override
     public void returnRecruitmentEdieBean(RecruitmentEditBean.DataBean bean) {
         ToastUtils.showShort("发布成功");
+        EventBus.getDefault().post(true);
         finish();
     }
 
     @Override
     public void returnRecruitInforBean(RecruitmentInforBean.DataBean bean) {
+
+        if (bean == null)
+            return;
+
         mTitleEdittext.setText(bean.getTitle());
 
         mNumberEdittext.setText(bean.getRecruitNumber() + "");
-        if (bean.getSalaryType() == 2){
+        if (Constant.TYPE_PRICE_FACE.equals(bean.getSalaryType())) {
+            //面议不需要设置价格
             mFaceTextview.setChecked(true);
         } else {
             mFaceTextview.setChecked(false);
+            mWagesEdittext.setText(bean.getSalary() + "");
         }
-        mWagesEdittext.setText(bean.getSalary() + "");
+
+        String gatheringTime = bean.getGatheringTime();
+        startTime = DateFormatUtils.parseServerTime(gatheringTime, DateFormatUtils.DATE_FORMAT_PATTERN_YMD_HM);
+
         mWorkTimeEdittext.setText(bean.getWorkingHours() + "");
-        mSelectionTimeTextview.setText(bean.getGatheringTime());
+        mSelectionTimeTextview.setText(bean.getGatheringTime());//集合时间
         mDetailedLocationEdittext.setText(bean.getGatheringAddress());
         mDeadlineForRegistrationTextview.setText(bean.getApplyEndTime());
         mOtherEdittext.setText(bean.getOtherRequirement());
         mCityTextview.setText(bean.getCityName());
         code = bean.getCityId();
 
+        labelsList.clear();
         if (bean.getLabelList() != null) {
+            labelsList.addAll(bean.getLabelList());
             initLayout(bean.getLabelList());
         }
     }
@@ -721,7 +730,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         }
     }
 
-    private void initlRealName(){
+    private void initlRealName() {
         View inflate = View.inflate(this, R.layout.dialog_cancel_or_ok, null);
         TextView mDialogTitle = inflate.findViewById(R.id.dialog_title_tv);
         TextView mCleanImageView = inflate.findViewById(R.id.release_dialogcancel_textview);

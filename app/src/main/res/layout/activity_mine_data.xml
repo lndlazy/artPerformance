@@ -751,8 +751,8 @@
                     android:layout_width="@dimen/x146"
                     android:layout_height="@dimen/y146"
                     android:layout_marginTop="@dimen/x16"
-                    android:src="@mipmap/icon_my_add"
-                    fresco:placeholderImage="@mipmap/icon_my_add" />
+                    android:scaleType="center"
+                    android:src="@mipmap/icon_my_add" />
 
                 <!--<ImageView-->
                 <!--android:id="@+id/item_appeal_evidence_list_evidence_image"-->
@@ -775,13 +775,13 @@
             </RelativeLayout>
 
             <!--<android.support.v7.widget.RecyclerView-->
-                <!--android:id="@+id/mine_video_recyclerView"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginBottom="@dimen/y32"-->
-                <!--android:layout_marginLeft="@dimen/x46"-->
-                <!--android:layout_marginRight="@dimen/x60"-->
-                <!--android:layout_marginTop="@dimen/y30">-->
+            <!--android:id="@+id/mine_video_recyclerView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="@dimen/y32"-->
+            <!--android:layout_marginLeft="@dimen/x46"-->
+            <!--android:layout_marginRight="@dimen/x60"-->
+            <!--android:layout_marginTop="@dimen/y30">-->
 
             <!--</android.support.v7.widget.RecyclerView>-->
 
