@@ -28,6 +28,9 @@ import io.reactivex.functions.Consumer;
 
 import static com.blankj.utilcode.util.SnackbarUtils.dismiss;
 
+/**
+ * 图片预览页面
+ */
 public class PlusImageActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 
     @BindView(R.id.release_back_imageview)
@@ -67,6 +70,12 @@ public class PlusImageActivity extends BaseActivity implements ViewPager.OnPageC
     protected void initView(@Nullable Bundle savedInstanceState) {
         imgList = getIntent().getStringArrayListExtra(MainConstant.IMG_LIST);
         mPosition = getIntent().getIntExtra(MainConstant.POSITION, 0);
+
+        //是否显示删除按钮
+        boolean canDelete = getIntent().getBooleanExtra("canDelete", true);
+        if (!canDelete)
+            mDeleteImageview.setVisibility(View.INVISIBLE);
+
         initData();
         initBuckClick();
     }

@@ -2,6 +2,7 @@ package com.art.recruitment.artperformance.ui.dynamic.activity;
 
 import android.app.Activity;
 
+import com.art.recruitment.artperformance.utils.Constant;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.compress.Luban;
 import com.luck.picture.lib.config.PictureConfig;
@@ -15,20 +16,21 @@ public class PictureSelectorConfig {
      *
      * @param activity
      * @param maxTotal
+     * @param type     1 是视频  其他是 图片
      */
-    public static void initMultiConfig(Activity activity, int maxTotal) {
+    public static void initMultiConfig(Activity activity, int maxTotal, int type) {
         // 进入相册 以下是例子：用不到的api可以不写
         PictureSelector.create(activity)
-                .openGallery(PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()
+                .openGallery(type == Constant.CHOOSE_TYPE_VIDEO ? PictureMimeType.ofVideo() : PictureMimeType.ofImage())//全部.PictureMimeType.ofAll()、图片.ofImage()、视频.ofVideo()
                 .maxSelectNum(maxTotal)// 最大图片选择数量 int
                 .minSelectNum(0)// 最小选择数量 int
                 .imageSpanCount(3)// 每行显示个数 int
-                .selectionMode(PictureConfig.MULTIPLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
+                .selectionMode(type == Constant.CHOOSE_TYPE_VIDEO ? PictureConfig.SINGLE : PictureConfig.MULTIPLE)// 多选 or 单选 PictureConfig.MULTIPLE or PictureConfig.SINGLE
                 .previewImage(true)// 是否可预览图片 true or false
-                .previewVideo(false)// 是否可预览视频 true or false
-                .enablePreviewAudio(false) // 是否可播放音频 true or false
+                .previewVideo(true)// 是否可预览视频 true or false
+                .enablePreviewAudio(true) // 是否可播放音频 true or false
                 .isCamera(false)// 是否显示拍照按钮 true or false
-//                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
+                .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
 //                .sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效
 //                .setOutputCameraPath("/CustomPath")// 自定义拍照保存路径,可不填
                 .enableCrop(false)// 是否裁剪 true or false
@@ -55,7 +57,7 @@ public class PictureSelectorConfig {
 //                .videoQuality()// 视频录制质量 0 or 1 int
 //                .videoSecond()// 显示多少秒以内的视频or音频也可适用 int 
 //                .recordVideoSecond()//视频秒数录制 默认60s int
-                .forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
+                .forResult(type == Constant.CHOOSE_TYPE_VIDEO ? 0x22 : PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
     }
 
     /**

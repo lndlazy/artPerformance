@@ -92,6 +92,7 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
     @Override
     protected BaseRecyclerViewAdapter<DynamicListBean.ContentBean> getRecyclerViewAdapter() {
         dynamicAdapter = new DynamicAdapter(mContext, mDataList);
+        dynamicAdapter.setFragment(this);
 //        dynamicAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
 //        dynamicAdapter.openLoadAnimation();
         dynamicAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
@@ -208,6 +209,7 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
                 });
     }
 
+    //返回的数据
     @Override
     public void returnDynamicListBean(final DynamicListBean.DataBean bean, int page) {
 

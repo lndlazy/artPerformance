@@ -143,7 +143,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
     @Override
     protected void initView() {
 
-        if (getActivity() ==null)
+        if (getActivity() == null)
             return;
 
         dynamic_id = getActivity().getIntent().getIntExtra("dynamic_id", 0);
@@ -183,6 +183,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
                     }
                 });
 
+        //删除动态圈
         RxView.
                 clicks(mDeleteImageview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -252,7 +253,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
         mGiveTextview.setText(bean.getLikes() + "");
         mCommentTextview.setText(bean.getCommentNumber() + "");
 
-        mDeleteImageview.setVisibility(bean.isCanDelete()? View.VISIBLE : View.GONE);
+        mDeleteImageview.setVisibility(bean.isCanDelete() ? View.VISIBLE : View.GONE);
 //        bean.isCanDelete()
 
         if (bean.isIsLikes()) {
@@ -293,16 +294,19 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
         mPresenter.dynamicComments(dynamic_id, pageSize, 20, Constant.SORT_DESC);
     }
 
+    //删除动态圈成功
     @Override
     public void returnDeleteDynamicBean(DeleteDynamicBean.DataBean bean) {
-        Intent intent = new Intent();
-        intent.setAction("DELETE_DYNAMIC");
-        intent.putExtra("delete", 1);
-        getActivity().sendBroadcast(intent);
 
-        ToastUtils.showShort("删除成功");
-        getActivity().finish();
+        if (getActivity() != null) {
+            Intent intent = new Intent();
+            intent.setAction("DELETE_DYNAMIC");
+            intent.putExtra("delete", 1);
+            getActivity().sendBroadcast(intent);
 
+            ToastUtils.showShort("删除成功");
+            getActivity().finish();
+        }
 
     }
 

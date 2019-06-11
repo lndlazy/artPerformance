@@ -44,4 +44,12 @@
     <color name="color_9da6af">#9da6af</color>
     <color name="color_fffffe6c">#fffffe6c</color>
 
+
+    <color name="alertdialog_line">#c6c6c6</color>
+    <color name="actionsheet_blue">#037BFF</color>
+    <color name="actionsheet_red">#FD4A2E</color>
+    <color name="actionsheet_gray">#8F8F8F</color>
+
+
+
 </resources>

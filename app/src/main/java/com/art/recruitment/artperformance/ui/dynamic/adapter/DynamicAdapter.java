@@ -1,7 +1,9 @@
 package com.art.recruitment.artperformance.ui.dynamic.adapter;
 
 import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -27,7 +29,13 @@ public class DynamicAdapter extends BaseRecyclerViewAdapter<DynamicListBean.Cont
         addItemType(BaseConfig.SINGLE_ITEM_TYPE, R.layout.item_dynamic_list);
     }
 
-//    public void setList(List<NineGridTestModel> list) {
+    private Fragment fragment;
+
+    public void setFragment(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
+    //    public void setList(List<NineGridTestModel> list) {
 //        mList = list;
 //    }
 
@@ -42,12 +50,26 @@ public class DynamicAdapter extends BaseRecyclerViewAdapter<DynamicListBean.Cont
         view.setIsShowAll(false);
 
         view.setUrlList(new ArrayList<String>());
+        view.setFragment(fragment);
 
-        if (item.getImagePath() == null) {
-            view.setVisibility(View.GONE);
-        } else {
+        String videoPreview = item.getVideoPreview();
+
+        if (!TextUtils.isEmpty(videoPreview)) {
+            //视频
             view.setVisibility(View.VISIBLE);
-            view.setUrlList(item.getImagePath());
+            ArrayList<String> videoList = new ArrayList<>();
+            videoList.add(item.getVideoPreview());
+            view.setUrlList(videoList);
+            view.setVideoUrl(item.getVideoPath());
+        }else {
+            //图片
+            if (item.getImagePath() == null) {
+                view.setVisibility(View.GONE);
+            } else {
+                view.setVisibility(View.VISIBLE);
+                view.setUrlList(item.getImagePath());
+            }
+
         }
 
         helper.setImageDrawable(R.id.dynamic_give_imageview, UIUtils.getDrawable(

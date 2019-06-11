@@ -1,52 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/y16">
-        
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/dynamic_my_head_imageview"
             android:layout_width="@dimen/x58"
             android:layout_height="@dimen/y58"
-            android:layout_marginTop="@dimen/y56"
             android:layout_marginLeft="@dimen/x30"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            android:layout_marginTop="@dimen/y56"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/main_rb_status"
-            android:textSize="18sp"
             android:textColor="@color/color_33353a"
-            app:layout_constraintRight_toLeftOf="@+id/dynamic_release_textview"
-            app:layout_constraintTop_toTopOf="@+id/dynamic_my_head_imageview"
+            android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/dynamic_my_head_imageview"
-            app:layout_constraintLeft_toRightOf="@+id/dynamic_my_head_imageview"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dynamic_my_head_imageview" />
 
         <TextView
             android:id="@+id/dynamic_release_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/x150"
             android:layout_height="wrap_content"
-            android:text="@string/main_rb_release"
-            android:textSize="13sp"
-            android:textColor="@color/color_fd7b25"
             android:layout_marginRight="@dimen/x20"
+            android:background="@drawable/shape_mine_sign_up_message_background"
+            android:gravity="center"
             android:paddingBottom="@dimen/y16"
-            android:paddingTop="@dimen/y16"
             android:paddingLeft="@dimen/x34"
             android:paddingRight="@dimen/x32"
-            android:background="@drawable/shape_mine_sign_up_message_background"
+            android:paddingTop="@dimen/y16"
+            android:text="@string/main_rb_release"
+            android:textColor="@color/color_fd7b25"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"/>
-        
+            app:layout_constraintRight_toRightOf="parent" />
+
     </android.support.constraint.ConstraintLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -57,7 +57,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dynamic_recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

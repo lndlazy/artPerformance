@@ -103,6 +103,14 @@ public abstract class NineGridLayout extends ViewGroup {
         }
     }
 
+
+    protected String videoUrl;
+
+    public void setVideoUrl(String url) {
+        videoUrl = url;
+    }
+
+
     public void notifyDataSetChanged() {
         post(new TimerTask() {
             @Override

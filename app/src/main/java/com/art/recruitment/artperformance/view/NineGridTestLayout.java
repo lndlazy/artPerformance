@@ -1,17 +1,27 @@
 package com.art.recruitment.artperformance.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Toast;
 
+import com.art.recruitment.artperformance.ui.MainActivity;
+import com.art.recruitment.artperformance.ui.dynamic.activity.PlusImageActivity;
+import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActivity;
+import com.art.recruitment.artperformance.ui.dynamic.contract.MainConstant;
 import com.art.recruitment.artperformance.utils.ImageLoaderUtil;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.entity.LocalMedia;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,12 +29,22 @@ public class NineGridTestLayout extends NineGridLayout {
 
     protected static final int MAX_W_H_RATIO = 3;
 
+    private Context context;
+
+    private Fragment fragment;
+
+    public void setFragment(Fragment fragment) {
+        this.fragment = fragment;
+    }
+
     public NineGridTestLayout(Context context) {
         super(context);
+        this.context = context;
     }
 
     public NineGridTestLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = context;
     }
 
     @Override
@@ -78,5 +98,25 @@ public class NineGridTestLayout extends NineGridLayout {
     @Override
     protected void onClickImage(int i, String url, List<String> urlList) {
 //        Toast.makeText(mContext, "点击了图片" + url, Toast.LENGTH_SHORT).show();
+
+        if (!TextUtils.isEmpty(videoUrl)) {
+            PictureSelector.create(fragment).externalPictureVideo(videoUrl);
+        }else {
+
+            Intent intent = new Intent(mContext, PlusImageActivity.class);
+            intent.putStringArrayListExtra(MainConstant.IMG_LIST, (ArrayList<String>) urlList);
+            intent.putExtra(MainConstant.POSITION, i);
+            intent.putExtra("canDelete", false);
+            mContext.startActivity(intent);
+
+//           List<LocalMedia> localMedia = new ArrayList<>();
+//            localMedia.add()
+//            PictureSelector.create(fragment).externalPicturePreview(i, selectList);
+
+        }
+
+
+//        videoUrl
+
     }
 }
