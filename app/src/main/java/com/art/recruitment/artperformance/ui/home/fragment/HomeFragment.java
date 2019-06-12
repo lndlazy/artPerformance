@@ -69,6 +69,9 @@ import java.util.logging.Logger;
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
 
+/**
+ * 首页 招募列表
+ */
 public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.ContentBean> implements HomeContract {
 
     @BindView(R.id.home_recyclerView)
@@ -290,7 +293,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
                         mSortConstraintLayout.setVisibility(View.VISIBLE);
                         rlSortView.setVisibility(View.GONE);
-                        mSort = Constant.SORT_DESC;
+                        mSort = Constant.SALARY_DESC;
                         autoRefresh();
                     }
                 });
@@ -307,7 +310,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                         mSortConstraintLayout.setVisibility(View.VISIBLE);
                         rlSortView.setVisibility(View.GONE);
 //                        mSort = "esc";
-                        mSort = Constant.SORT_ASC;
+                        mSort = Constant.SALARY_ASC;
 
                         autoRefresh();
                     }

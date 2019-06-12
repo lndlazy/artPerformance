@@ -44,6 +44,7 @@ public class DynamicAdapter extends BaseRecyclerViewAdapter<DynamicListBean.Cont
         ImageView headImageView = helper.getView(R.id.dynamic_head_imageview);
         Glide.with(mContext).load(item.getPublisherAvatar()).into(headImageView);
         helper.addOnClickListener(R.id.dynamic_comment_imageview);
+        helper.addOnClickListener(R.id.dynamic_share_constraintLayout);//分享
 
         //9宫格图片
         NineGridTestLayout view = helper.getView(R.id.dynamic_nineGridTestLayout);

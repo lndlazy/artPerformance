@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.Window;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,18 +24,24 @@ import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.Defaultcontent;
 import com.art.recruitment.artperformance.utils.SaveUtils;
+import com.art.recruitment.artperformance.utils.ShareUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.TagCloudView;
 import com.art.recruitment.common.base.callback.IToolbar;
+import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
+import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.orhanobut.logger.Logger;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +101,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     private Dialog dialog;
     private String recruitmentId;
     private String home_name;
+    private Dialog shareDialog;
+    private String shareTitle;
 
     @Override
     protected IToolbar getIToolbar() {
@@ -148,9 +157,11 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
                 subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        Intent intent = new Intent(RecruitmentInformationActivity.this, UserAgreementActivity.class);
-                        intent.putExtra("web", "recruitment/" + recruitmentId + "/share");
-                        startActivity(intent);
+
+                        startShare("recruitment/" + recruitmentId + "/share");
+//                        Intent intent = new Intent(RecruitmentInformationActivity.this, UserAgreementActivity.class);
+//                        intent.putExtra("web", "recruitment/" + recruitmentId + "/share");
+//                        startActivity(intent);
                     }
                 });
 
@@ -178,7 +189,90 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
                     }
                 });
 
+    }
 
+
+    /**
+     * 分享
+     * @param subUrl
+     */
+    private void startShare(String subUrl) {
+
+            View inflate = View.inflate(this, R.layout.dialog_mine_share, null);
+            TextView mCleanTextview = inflate.findViewById(R.id.mine_share_clean_textview);
+            ConstraintLayout mWechatConstraintLayout = inflate.findViewById(R.id.share_wechat_constraintLayout);
+            ConstraintLayout mCircleFriendsConstraintLayout = inflate.findViewById(R.id.share_circle_of_friends_constraintLayout);
+            ConstraintLayout mQQZoneConstraintLayout = inflate.findViewById(R.id.share_qq_zone_constraintLayout);
+            ConstraintLayout mQQConstraintLayout = inflate.findViewById(R.id.share_qq_constraintLayout);
+
+            shareDialog = DialogWrapper.
+                    customViewDialog().
+                    context(this).
+                    contentView(inflate).
+                    cancelable(false, false).
+                    build();
+
+            Window window = shareDialog.getWindow();
+            window.setWindowAnimations(R.style.mystyle);
+
+        shareDialog.show();
+
+            mCleanTextview.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    hideDialog();
+                }
+            });
+
+            final String shareUrl = Api.HTTP_URL + subUrl;
+
+            mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl,shareTitle
+                            , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
+                    );
+                    hideDialog();
+                }
+            });
+
+            mCircleFriendsConstraintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl, shareTitle
+                            , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
+                    );
+                    hideDialog();
+                }
+            });
+
+            mQQZoneConstraintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl,shareTitle
+                            , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
+                    );
+                    hideDialog();
+                }
+            });
+
+            mQQConstraintLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl, shareTitle
+                            , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
+                    );
+                    hideDialog();
+                }
+            });
+
+
+    }
+
+    private void hideDialog() {
+        if (shareDialog != null)
+            shareDialog.cancel();
     }
 
     @Override
@@ -207,6 +301,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     }
 
     private void listSuccess(RecruitmentInforBean.DataBean bean) {
+        shareTitle = bean.getTitle();
         mTitleTextview.setText(bean.getTitle());
 
         mPriceTextview.setText((Constant.TYPE_PRICE_FACE.equals(bean.getSalaryType())) ? "面议" : "￥" + bean.getSalary());

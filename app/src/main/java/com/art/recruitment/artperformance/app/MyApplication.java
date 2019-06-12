@@ -37,6 +37,7 @@ import static com.hyphenate.chat.EMClient.TAG;
  * APPLICATION
  */
 public class MyApplication extends BaseApplication {
+
     //文件夹目录
     private static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/art-debug/crash_log/";
     //文件名
@@ -92,9 +93,10 @@ public class MyApplication extends BaseApplication {
     //各个平台的配置
     {
         //微信
-        PlatformConfig.setWeixin("wxdc1e388c3822c80b", "3baf1193c85774b3fd9d18447d76cab0");
+        PlatformConfig.setWeixin("wx133b5a31ac26c802", "2f7181d2615fd54af5034b9e16152321");
         //QQ
-        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
+        PlatformConfig.setQQZone("1108808045", "x7QBGpxSYpMH2xCr");
+//        PlatformConfig.setQQZone("100424468", "c7394704798a158208a74ab60104f0ba");
     }
 
     /**

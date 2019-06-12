@@ -1,40 +1,28 @@
 package com.art.recruitment.artperformance.ui.mine.fragment;
 
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.mine.MineDynamicBean;
-import com.art.recruitment.artperformance.bean.model.NineGridTestModel;
+import com.art.recruitment.artperformance.ui.dynamic.activity.DynamicDetailActivity;
 import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActivity;
-import com.art.recruitment.artperformance.ui.group.adapter.GroupAdapter;
-import com.art.recruitment.artperformance.ui.mine.activity.MineDynamicActivity;
 import com.art.recruitment.artperformance.ui.mine.adapter.MineDynamicAdapter;
 import com.art.recruitment.artperformance.ui.mine.contract.MineDynamicContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MineDynamicPresenter;
-import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
-import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -51,7 +39,7 @@ public class MineDynamicFragment extends BaseFragment<MineDynamicPresenter, Mine
 
     @BindView(R.id.mine_diynamic_smartRefreshLayout)
     SmartRefreshLayout mSmartRefreshLayout;
-    private MineDynamicAdapter adapter;
+    private MineDynamicAdapter mAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -70,17 +58,28 @@ public class MineDynamicFragment extends BaseFragment<MineDynamicPresenter, Mine
 
 //    @Override
 //    protected BaseRecyclerViewAdapter<MineDynamicBean.ContentBean> getRecyclerViewAdapter() {
-//        adapter = new MineDynamicAdapter(mContext, mDataList);
-//        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-//        return adapter;
+//        mAdapter = new MineDynamicAdapter(mContext, mDataList);
+//        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+//        return mAdapter;
 //    }
 
 
     @Override
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
-        adapter = new MineDynamicAdapter(mContext, mDataList);
-        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        return adapter;
+        mAdapter = new MineDynamicAdapter(mContext, mDataList);
+        mAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        mAdapter.setFragment(this);
+        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+                Intent intent = new Intent(getContext(), DynamicDetailActivity.class);
+                intent.putExtra("dynamic_id", mAdapter.getData().get(position).getId());
+                startActivity(intent);
+
+            }
+        });
+        return mAdapter;
     }
 
     @Override
@@ -137,6 +136,8 @@ public class MineDynamicFragment extends BaseFragment<MineDynamicPresenter, Mine
 
     @Override
     public void returnMineDynamicBean(MineDynamicBean.DataBean bean) {
+
+//        mAdapter.loadMoreComplete();
         if (bean.getContent() == null || bean.getContent().size() == 0) {
             setEmptyErrorViewData(R.mipmap.img_show_empty, "暂时没有数据");
         } else {

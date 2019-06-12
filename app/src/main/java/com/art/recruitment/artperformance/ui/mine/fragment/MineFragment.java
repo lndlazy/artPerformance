@@ -37,6 +37,7 @@ import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
+import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.utils.UIUtils;
 import com.blankj.utilcode.util.SPUtils;
@@ -109,6 +110,12 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     TextView mWechatServiceTextview;
     private Dialog dialog;
 
+    //普通分享
+    private int SHARE_TYPE_COMMON = 1;
+    //名片分享
+    private int SHARE_TYPE_BUSINESS_CARD = 2;
+
+
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_mine;
@@ -147,6 +154,19 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     }
 
     private void initButtonClick() {
+
+        RxView.
+                clicks(mShareCardsTextview).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+
+                        //分享名片
+                        shareDialog(SHARE_TYPE_BUSINESS_CARD);
+
+                    }
+                });
 
         RxView.
                 clicks(mAboutUsConstranintLayout).
@@ -211,13 +231,14 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                     }
                 });
 
+        //分享
         RxView.
                 clicks(mShareConstranintLayout).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        shareDialog();
+                        shareDialog(SHARE_TYPE_COMMON);
                     }
                 });
 
@@ -250,7 +271,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                 });
     }
 
-    private void shareDialog() {
+    private void shareDialog(int type) {
         View inflate = View.inflate(getContext(), R.layout.dialog_mine_share, null);
         TextView mCleanTextview = inflate.findViewById(R.id.mine_share_clean_textview);
         ConstraintLayout mWechatConstraintLayout = inflate.findViewById(R.id.share_wechat_constraintLayout);
@@ -273,45 +294,58 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mCleanTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.cancel();
+
+                hideDialog();
             }
         });
+
+        //TODO 修改url
+        final String shareUrl = Api.HTTP_URL + "actors/" + (SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.ID)) + "/share";
 
         mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), Defaultcontent.url, Defaultcontent.title
-                        , Defaultcontent.text, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
                 );
+                hideDialog();
             }
         });
 
         mCircleFriendsConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), Defaultcontent.url, Defaultcontent.title
-                        , Defaultcontent.text, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
                 );
+                hideDialog();
             }
         });
 
         mQQZoneConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), Defaultcontent.url, Defaultcontent.title
-                        , Defaultcontent.text, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
                 );
+                hideDialog();
             }
         });
 
         mQQConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), Defaultcontent.url, Defaultcontent.title
-                        , Defaultcontent.text, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
                 );
+                hideDialog();
             }
         });
+    }
+
+    private void hideDialog() {
+        if (dialog != null)
+            dialog.cancel();
     }
 
     @Override

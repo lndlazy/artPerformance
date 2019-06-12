@@ -1,12 +1,15 @@
 package com.art.recruitment.artperformance.ui.dynamic.fragment;
 
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SimpleItemAnimator;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
@@ -17,12 +20,17 @@ import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActi
 import com.art.recruitment.artperformance.ui.dynamic.adapter.DynamicAdapter;
 import com.art.recruitment.artperformance.ui.dynamic.contract.DynamicFagmentContract;
 import com.art.recruitment.artperformance.ui.dynamic.presenter.DynamicFagmentPresenter;
+import com.art.recruitment.artperformance.ui.home.activity.RecruitmentInformationActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDynamicActivity;
 import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.Defaultcontent;
+import com.art.recruitment.artperformance.utils.ShareUtils;
+import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
+import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -31,6 +39,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,6 +68,7 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
     private int itemPosition;
     //    private DynamicListBean.DataBean dataBeans;
     private int deletePosition;
+    private Dialog shareDialog;
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -112,19 +122,16 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
                         itemPosition = position;
                         mPresenter.dynamicLikes(dynamicAdapter.getData().get(position).getId());
                         break;
-//                    case R.id.ll_content://进入详情页面
-//                        Logger.d("条目点击事件？？？？？");
-//                        break;
+                    case R.id.dynamic_share_constraintLayout://分享
+
+                        String subUrl = "/dynamiccircle/" + dynamicAdapter.getData().get(position).getId() + "/share";
+                        startShare(subUrl);
+
+                        break;
                 }
 
             }
         });
-//        dynamicAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-//                Logger.d("条目点击事件？？？？？");
-//            }
-//        });
         return dynamicAdapter;
     }
 
@@ -230,5 +237,90 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
         if (message != null) {
             ToastUtils.showShort(message);
         }
+    }
+
+
+    /**
+     * 分享
+     *
+     * @param subUrl
+     */
+    private void startShare(String subUrl) {
+
+        View inflate = View.inflate(getContext(), R.layout.dialog_mine_share, null);
+        TextView mCleanTextview = inflate.findViewById(R.id.mine_share_clean_textview);
+        ConstraintLayout mWechatConstraintLayout = inflate.findViewById(R.id.share_wechat_constraintLayout);
+        ConstraintLayout mCircleFriendsConstraintLayout = inflate.findViewById(R.id.share_circle_of_friends_constraintLayout);
+        ConstraintLayout mQQZoneConstraintLayout = inflate.findViewById(R.id.share_qq_zone_constraintLayout);
+        ConstraintLayout mQQConstraintLayout = inflate.findViewById(R.id.share_qq_constraintLayout);
+
+        shareDialog = DialogWrapper.
+                customViewDialog().
+                context(getContext()).
+                contentView(inflate).
+                cancelable(false, false).
+                build();
+
+        Window window = shareDialog.getWindow();
+        window.setWindowAnimations(R.style.mystyle);
+
+        shareDialog.show();
+
+        mCleanTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                hideDialog();
+            }
+        });
+
+        final String shareUrl = Api.HTTP_URL + subUrl;
+
+        mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE_DYNAMIC
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
+                );
+                hideDialog();
+            }
+        });
+
+        mCircleFriendsConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE_DYNAMIC
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
+                );
+                hideDialog();
+            }
+        });
+
+        mQQZoneConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE_DYNAMIC
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
+                );
+                hideDialog();
+            }
+        });
+
+        mQQConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE_DYNAMIC
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
+                );
+                hideDialog();
+            }
+        });
+
+
+    }
+
+    private void hideDialog() {
+        if (shareDialog != null)
+            shareDialog.cancel();
     }
 }

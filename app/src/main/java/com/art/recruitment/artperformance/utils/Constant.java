@@ -33,6 +33,9 @@ public interface Constant {
     String SORT_DESC = "desc";//降序
     String SORT_ASC = "asc";//升序
 
+    //首页价格排序
+    String SALARY_DESC = "salary,desc";
+    String SALARY_ASC = "salary,asc";
 
 
     String SELECT_DATE_START = "2010.01.01 00:00";//选择日期 的开始时间

@@ -18,6 +18,12 @@ import com.umeng.socialize.media.UMWeb;
  */
 public class ShareUtils {
 
+    //分享的title
+    public static final String SHARE_TITLE = "艺站，为您提供一站式服务";
+    public static final String SHARE_TITLE_DYNAMIC = "艺站朋友圈发来一条消息";
+    //分享的描述
+    public static final String SHARE_DESC = "更多信息，尽在艺站";
+
     /**
      * 分享链接
      */
