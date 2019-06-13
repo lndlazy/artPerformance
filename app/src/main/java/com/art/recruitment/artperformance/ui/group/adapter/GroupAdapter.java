@@ -14,10 +14,12 @@ import android.widget.ImageView;
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.group.GroupListBean;
 import com.art.recruitment.artperformance.ui.home.adapter.HomeAdapter;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.utils.UIUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseViewHolder;
 
 import java.util.List;
@@ -34,22 +36,29 @@ public class GroupAdapter extends BaseRecyclerViewAdapter<GroupListBean.ContentB
         helper.setText(R.id.group_name_textview, item.getName())
                 .setText(R.id.group_number_textview, item.getLikes() + "");
         ImageView s = helper.getView(R.id.group_photo_imageview);
-        Glide.with(mContext).load(item.getPrimaryPhotoView().get(0)).into(s);
+
+        RequestOptions options = new RequestOptions();
+        options.centerCrop();
+        options.error(item.getGender() == Constant.GENDER_MALE ? R.mipmap.ic_male_error : R.mipmap.ic_female_error);
+        Glide.with(mContext).load(item.getPrimaryPhotoView().get(0)).apply(options).into(s);
+
         helper.addOnClickListener(R.id.group_photo_imageview);
-        helper.addOnClickListener(R.id.group_like_imageview);
+        helper.addOnClickListener(R.id.constrainLike);
 
-        if (item.isIsLikes()){
-            helper.setImageDrawable(R.id.group_like_imageview, UIUtils.getDrawable(R.mipmap.icon_circle_like_p));
-        } else {
-            helper.setImageDrawable(R.id.group_like_imageview, UIUtils.getDrawable(R.mipmap.icon_circle_like));
-        }
+        helper.setImageDrawable(R.id.group_like_imageview, UIUtils.getDrawable(
+                item.isIsLikes() ? R.mipmap.icon_circle_like_p : R.mipmap.icon_circle_like));
 
-        if (item.getGender() == 1){
-            helper.setBackgroundColor(R.id.group_woman_constraintlayout, R.drawable.shape_group_man_background);
-            helper.setText(R.id.group_woman_age_textview, item.getAge() + "");
-        } else if (item.getGender() == 2) {
-            helper.setBackgroundColor(R.id.group_woman_constraintlayout, R.drawable.shape_group_woman_background);
-            helper.setText(R.id.group_woman_age_textview, item.getAge() + "");
-        }
+//        if (item.isIsLikes()) {
+//            helper.setImageDrawable(R.id.group_like_imageview, UIUtils.getDrawable(
+//                    item.isIsLikes()? R.mipmap.icon_circle_like_p: R.mipmap.icon_circle_like));
+//        } else {
+//            helper.setImageDrawable(R.id.group_like_imageview, UIUtils.getDrawable(R.mipmap.icon_circle_like));
+//        }
+        helper.setText(R.id.group_woman_age_textview, item.getAge() + "");
+
+        helper.setBackgroundRes(R.id.group_woman_constraintlayout,
+                item.getGender() == Constant.GENDER_MALE ? R.drawable.shape_group_man_background
+                        : R.drawable.shape_group_woman_background);
+
     }
 }

@@ -398,8 +398,9 @@
 
     <ImageView
         android:id="@+id/group_detail_message_imageview"
-        android:layout_width="@dimen/x40"
-        android:layout_height="@dimen/y40"
+        android:layout_width="@dimen/x60"
+        android:layout_height="@dimen/y60"
+        android:padding="@dimen/x10"
         android:src="@mipmap/nav_share_w"
         android:layout_marginRight="@dimen/x30"
         app:layout_constraintTop_toTopOf="@+id/group_detail_return_imageview"

@@ -1,16 +1,15 @@
 package com.art.recruitment.artperformance.ui.group.fragment;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,39 +24,33 @@ import com.art.recruitment.artperformance.ui.group.activity.SearchActivity;
 import com.art.recruitment.artperformance.ui.group.adapter.GroupAdapter;
 import com.art.recruitment.artperformance.ui.group.contract.GroupFragmentContract;
 import com.art.recruitment.artperformance.ui.group.presenter.GroupFragmentPresenter;
-import com.art.recruitment.artperformance.ui.home.activity.RecruitmentInformationActivity;
 import com.art.recruitment.artperformance.ui.home.adapter.ContactAdapter;
-import com.art.recruitment.artperformance.ui.home.adapter.HomeAdapter;
 import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
+import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.utils.UIUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.entity.MultiItemEntity;
-import com.facebook.stetho.common.LogUtil;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.functions.Consumer;
 import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
 
+/**
+ * 演员展示
+ */
 public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupListBean.ContentBean> implements GroupFragmentContract {
+
     @BindView(R.id.group_search_imageview)
     ImageView mSearchImageview;
     @BindView(R.id.group_city_textview)
@@ -130,6 +123,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
     @Override
     protected RecyclerView getRecyclerView() {
         GridLayoutManager manager = new GridLayoutManager(getContext(), 2);
+        mRecyclerView.addItemDecoration(new GridSpacingItemDecoration(2, 3, false));
         mRecyclerView.setLayoutManager(manager);
         return mRecyclerView;
     }
@@ -138,6 +132,23 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
         groupAdapter = new GroupAdapter(mContext, mDataList);
         groupAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        groupAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+            @Override
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                switch (view.getId()) {
+                    case R.id.group_photo_imageview:
+                        Intent intent = new Intent(getContext(), GruopDetailActivity.class);
+                        intent.putExtra("group_id", groupAdapter.getData().get(position).getId());
+                        startActivity(intent);
+                        break;
+                    case R.id.constrainLike:
+                        mPresenter.actorsLikes(groupAdapter.getData().get(position).getId());
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
         return groupAdapter;
     }
 
@@ -165,15 +176,17 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
         initButtonClick();
 
         initAdapter();
+        mCityTextview.setText("城市");
     }
 
     @Override
     protected void initListRequest(int page) {
         super.initListRequest(page);
-        mPresenter.actorsList(maxAge, minAge, cityId, gender, page, 20, Constant.SORT_DESC);
+        mPresenter.actorsList(maxAge, minAge, cityId, gender, page, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
     }
 
     private void initButtonClick() {
+
 
         RxView.
                 clicks(mAgeDetermineTextview).
@@ -191,6 +204,10 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                                     ageColor(true);
                                     maxAge = Integer.parseInt(mHighAge);
                                     minAge = Integer.parseInt(mLowAge);
+                                    hideAgeChooseView();
+
+
+                                    closeInoutDecorView(getActivity());
                                     autoRefresh();
                                 } else {
                                     mLowAgeEdittext.setText("");
@@ -209,6 +226,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                     }
                 });
 
+        //选择城市
         RxView.
                 clicks(mCityConstraintLayout).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -217,8 +235,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                     public void accept(Object o) throws Exception {
                         if (mIndexableLayout.getVisibility() == View.GONE) {
                             mIndexableLayout.setVisibility(View.VISIBLE);
-                            mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                            mAgeChoiceView.setVisibility(View.GONE);
+                            hideAgeChooseView();
                             mGenderSelectedConstraintLayout.setVisibility(View.GONE);
                             mGrnderChoiceView.setVisibility(View.GONE);
                             mPresenter.cityList();
@@ -228,6 +245,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                     }
                 });
 
+        //弹出年龄选择框
         RxView.
                 clicks(mAgeConstraintLayout).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -235,14 +253,9 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                     @Override
                     public void accept(Object o) throws Exception {
                         if (mAgeChoiceConstranintLayout.getVisibility() == View.GONE) {
-                            mAgeChoiceConstranintLayout.setVisibility(View.VISIBLE);
-                            mAgeChoiceView.setVisibility(View.VISIBLE);
-                            mGenderSelectedConstraintLayout.setVisibility(View.GONE);
-                            mGrnderChoiceView.setVisibility(View.GONE);
-                            mIndexableLayout.setVisibility(View.GONE);
+                            showAgeChooseView();
                         } else {
-                            mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                            mAgeChoiceView.setVisibility(View.GONE);
+                            hideAgeChooseView();
                             autoRefresh();
                         }
                     }
@@ -257,8 +270,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                         if (mGenderSelectedConstraintLayout.getVisibility() == View.GONE) {
                             mGenderSelectedConstraintLayout.setVisibility(View.VISIBLE);
                             mGrnderChoiceView.setVisibility(View.VISIBLE);
-                            mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                            mAgeChoiceView.setVisibility(View.GONE);
+                            hideAgeChooseView();
                             mIndexableLayout.setVisibility(View.GONE);
                         } else {
                             mGenderSelectedConstraintLayout.setVisibility(View.GONE);
@@ -280,8 +292,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
 
                             mGenderSelectedConstraintLayout.setVisibility(View.GONE);
                             mGrnderChoiceView.setVisibility(View.GONE);
-                            mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                            mAgeChoiceView.setVisibility(View.GONE);
+                            hideAgeChooseView();
                             mIndexableLayout.setVisibility(View.GONE);
                             genderColor(true);
                             gender = 1;
@@ -308,8 +319,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
 
                             mGenderSelectedConstraintLayout.setVisibility(View.GONE);
                             mGrnderChoiceView.setVisibility(View.GONE);
-                            mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                            mAgeChoiceView.setVisibility(View.GONE);
+                            hideAgeChooseView();
                             mIndexableLayout.setVisibility(View.GONE);
                             genderColor(true);
                             gender = 2;
@@ -332,8 +342,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                     public void accept(Object o) throws Exception {
                         mGenderSelectedConstraintLayout.setVisibility(View.GONE);
                         mGrnderChoiceView.setVisibility(View.GONE);
-                        mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                        mAgeChoiceView.setVisibility(View.GONE);
+                        hideAgeChooseView();
                         mIndexableLayout.setVisibility(View.GONE);
                     }
                 });
@@ -346,8 +355,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                     public void accept(Object o) throws Exception {
                         mGenderSelectedConstraintLayout.setVisibility(View.GONE);
                         mGrnderChoiceView.setVisibility(View.GONE);
-                        mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                        mAgeChoiceView.setVisibility(View.GONE);
+                        hideAgeChooseView();
                         mIndexableLayout.setVisibility(View.GONE);
                         autoRefresh();
                     }
@@ -362,6 +370,19 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                         startActivity(new Intent(getContext(), SearchActivity.class));
                     }
                 });
+    }
+
+    private void hideAgeChooseView() {
+        mAgeChoiceConstranintLayout.setVisibility(View.GONE);
+        mAgeChoiceView.setVisibility(View.GONE);
+    }
+
+    private void showAgeChooseView() {
+        mAgeChoiceConstranintLayout.setVisibility(View.VISIBLE);
+        mAgeChoiceView.setVisibility(View.VISIBLE);
+        mGenderSelectedConstraintLayout.setVisibility(View.GONE);
+        mGrnderChoiceView.setVisibility(View.GONE);
+        mIndexableLayout.setVisibility(View.GONE);
     }
 
     /**
@@ -406,44 +427,71 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
 
         mIndexableLayout.setCompareMode(IndexableLayout.MODE_FAST);
 
-
         mAdapter.setOnItemContentClickListener(new IndexableAdapter.OnItemContentClickListener<UserEntity>() {
             @Override
             public void onItemClick(View v, int originalPosition, int currentPosition, UserEntity entity) {
-                mAdapter.notifyDataSetChanged();
 
-                for (int i = 0; i < list.size(); i++) {
-                    list.get(i).setSelect(false);
-                }
+//                Logger.d("originalPosition::" + originalPosition + ",currentPosition::" + currentPosition);
+//
+//                Logger.d("nick" + entity.getNick() + ",::" + entity.getCityCode()
+//                        + ",," + list.get(originalPosition).getNick()
+//                        + ",,," + list.get(currentPosition).getNick());
 
-                list.get(originalPosition).setSelect(true);
-
-                for (int i = 0; i <list.size(); i++) {
-                    if (list.get(originalPosition).isSelect()){
-                        cityColor(true);
-                        cityId = list.get(i).getCityCode();
-                        autoRefresh();
-
-                        mIndexableLayout.setVisibility(View.GONE);
-                        mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                        mAgeChoiceView.setVisibility(View.GONE);
-                        mGenderSelectedConstraintLayout.setVisibility(View.GONE);
-                        mGrnderChoiceView.setVisibility(View.GONE);
-                    } else {
-                        cityColor(false);
-                    }
-                }
+//                for (int i = 0; i < list.size(); i++) {
+//                    list.get(i).setSelect(false);
+//                }
+//                list.get(currentPosition).setSelect(true);
+//                list.get(originalPosition).setSelect(true);
+                mCityTextview.setText(entity.getNick());
+                cityId = entity.getCityCode();
+                cityColor(true);
+                autoRefresh();
+                mIndexableLayout.setVisibility(View.GONE);
+                hideAgeChooseView();
+                mGenderSelectedConstraintLayout.setVisibility(View.GONE);
+                mGrnderChoiceView.setVisibility(View.GONE);
+//                mAdapter.notifyDataSetChanged();
+//
+//                for (int i = 0; i < list.size(); i++) {
+//                    list.get(i).setSelect(false);
+//                }
+//
+//                list.get(originalPosition).setSelect(true);
+//
+//                for (int i = 0; i < list.size(); i++) {
+//                    if (list.get(originalPosition).isSelect()) {
+//                        cityColor(true);
+//                        cityId = list.get(i).getCityCode();
+//
+//                        autoRefresh();
+//                        String nick = list.get(i).getNick();
+//
+//                        mCityTextview.setText(nick);
+//                        Logger.d("选择的城市code::" + cityId + ",城市名称::" + nick);
+//
+//                        mIndexableLayout.setVisibility(View.GONE);
+//                        mAgeChoiceConstranintLayout.setVisibility(View.GONE);
+//                        mAgeChoiceView.setVisibility(View.GONE);
+//                        mGenderSelectedConstraintLayout.setVisibility(View.GONE);
+//                        mGrnderChoiceView.setVisibility(View.GONE);
+//                    } else {
+//                        cityColor(false);
+//                    }
+//                }
 
             }
         });
     }
 
+    //城市数据
     @Override
     public void returbCityListBean(List<CityBean.DataBean> bean) {
+
         list = new ArrayList<>();
 
         for (int i = 0; i < bean.size(); i++) {
             UserEntity contactEntity = new UserEntity(bean.get(i).getCityName(), bean.get(i).getCityCode());
+//            contactEntity.setCityName();
             list.add(contactEntity);
         }
         mAdapter.setDatas(list);
@@ -451,24 +499,6 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
 
     @Override
     public void returbGroupListBean(final GroupListBean.DataBean bean) {
-
-        groupAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-            @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                switch (view.getId()){
-                    case R.id.group_photo_imageview:
-                        Intent intent = new Intent(getContext(), GruopDetailActivity.class);
-                        intent.putExtra("group_id", bean.getContent().get(position).getId());
-                        startActivity(intent);
-                        break;
-                    case R.id.group_like_imageview:
-                        mPresenter.actorsLikes(bean.getContent().get(position).getId());
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
 
         resetStateWhenLoadDataSuccess(bean.getContent());
 
@@ -484,5 +514,14 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
         if (message != null) {
             resetStateWhenLoadDataFailed(errorCode, message);
         }
+    }
+
+    /**
+     * 关闭软件盘
+     */
+    public static void closeInoutDecorView(Activity activity) {
+        View view = activity.getWindow().peekDecorView();
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

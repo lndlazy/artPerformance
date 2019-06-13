@@ -136,7 +136,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

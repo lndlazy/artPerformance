@@ -217,21 +217,21 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
                     mDataList = null;
 
                     try { //此处没有申请运行时权限readphonestate
-                        if (!NetworkUtils.isConnected()){
-                            if (mRecyclerViewAdapter.getData().size() > 0){
+                        if (!NetworkUtils.isConnected()) {
+                            if (mRecyclerViewAdapter.getData().size() > 0) {
                                 Alerter.create(mActivity)
                                         .setTitle("当前无网络，请检查网络")
                                         .setBackgroundColorInt(Color.parseColor("ff5640"))
                                         .enableSwipeToDismiss()
                                         .setDuration(1000)
                                         .show();
-                            }else {
-                                showEmptyErrorView(CODE_LIST_NO_NETWORK,mEmptyErrorViewTipMessage);
+                            } else {
+                                showEmptyErrorView(CODE_LIST_NO_NETWORK, mEmptyErrorViewTipMessage);
                             }
                             getSmartRefreshLayout().finishRefresh();
                             return;
                         }
-                    }catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
 
@@ -375,12 +375,12 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
                     mRecyclerViewAdapter.setNewData(dataList);
 //                    getRecyclerView().smoothScrollToPosition(0);
                     mRecyclerViewAdapter.disableLoadMoreIfNotFullPage();
-                    if ( mRecyclerViewAdapter.getData().size() == 0) {
+                    if (mRecyclerViewAdapter.getData().size() == 0) {
                         showEmptyErrorView(CODE_EMPTY_LIST_DATA, mEmptyErrorViewTipMessage);
-                    }else {
+                    } else {
                         //以下一行代码是为了避免发布按键遮挡“没有更多数据”提示，此处进行了全局处理
-                        if (getRecyclerView().getPaddingBottom() == 0){
-                            getRecyclerView().setPadding(0,0,0,50);
+                        if (getRecyclerView().getPaddingBottom() == 0) {
+                            getRecyclerView().setPadding(0, 0, 0, 50);
                             getRecyclerView().setClipToPadding(false);
                         }
                     }
@@ -404,6 +404,7 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
 
     /**
      * 加载列表数据失败时重置状态
+     *
      * @param errorCode
      * @param message
      */
@@ -411,12 +412,12 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
         if (getSmartRefreshLayout() != null) {
             if (isRefreshMode) {
                 getSmartRefreshLayout().finishRefresh(false);
-                if (mRecyclerViewAdapter.getData().size() > 0){
+                if (mRecyclerViewAdapter.getData().size() > 0) {
                     //刷新时列表有数据
                     if (!"9107".equals(message)) {
                         ToastUtils.showShort(message);
                     }
-                }else {
+                } else {
                     showEmptyErrorView(CODE_REFRESH_FAILED, message);
                 }
             }
@@ -454,7 +455,7 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
      */
     public void showEmptyErrorView(int errorCode, String message) {
         mRecyclerViewAdapter.setHeaderAndEmpty(true); //这样设置，避免显示空界面时下标越界崩溃
-        if (mEmptyErrorViewImageResource == -1){
+        if (mEmptyErrorViewImageResource == -1) {
             throw new IllegalArgumentException("使用空界面视图，请调用setEmptyErrorViewData()设置界面图片等数据");
         }
 
@@ -468,9 +469,9 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
         mEmptyErrorImage.setImageResource(mEmptyErrorViewImageResource);
         mEmptyErrorTipText.setText(message);
 
-        if (errorCode == CODE_LIST_NO_NETWORK || errorCode == CODE_REFRESH_FAILED){
+        if (errorCode == CODE_LIST_NO_NETWORK || errorCode == CODE_REFRESH_FAILED) {
             mEmptyErrorTipText.setBackground(getResources().getDrawable(com.art.recruitment.common.R.drawable.shape_round_corner_stroke_e4e4e4));
-        }else {
+        } else {
             mEmptyErrorTipText.setBackground(null);
         }
         switch (errorCode) {
@@ -483,8 +484,8 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
                 }
 
                 //有数据时为了避免发布按键遮挡“没有更多数据”，设置了padding，此处重置0，防止界面视图和底部有间隔
-                if (getRecyclerView().getPaddingBottom() > 0){
-                    getRecyclerView().setPadding(0,0,0,0);
+                if (getRecyclerView().getPaddingBottom() > 0) {
+                    getRecyclerView().setPadding(0, 0, 0, 0);
                 }
 
                 if (errorCode == CODE_LIST_NO_NETWORK) {
@@ -501,7 +502,7 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
                                 }
                             });
 
-                }else if (errorCode == CODE_REFRESH_FAILED){
+                } else if (errorCode == CODE_REFRESH_FAILED) {
 //                    mEmptyErrorImage.setImageResource(com.art.recruitment.common.R.drawable.empty_error_view_no_transaction);
                     mEmptyErrorTipText.setText("数据获取失败，请点击重试");
                     RxView.
@@ -523,6 +524,12 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
                     }
                 }
 
+
+                //防止瀑布流页面只显示半边
+                if (getRecyclerView() != null)
+                    getRecyclerView().setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
+//                getRecyclerView().setLayoutManager();
                 mRecyclerViewAdapter.setEmptyView(mEmptyView);
 
                 break;

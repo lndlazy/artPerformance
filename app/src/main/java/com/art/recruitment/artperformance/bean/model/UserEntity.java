@@ -10,6 +10,15 @@ import me.yokeyword.indexablerv.IndexableEntity;
 public class UserEntity implements IndexableEntity {
     private String nick;
     private int cityCode;
+//    private int cityName;
+//
+//    public int getCityName() {
+//        return cityName;
+//    }
+//
+//    public void setCityName(int cityName) {
+//        this.cityName = cityName;
+//    }
 
     public int getCityCode() {
         return cityCode;

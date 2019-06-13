@@ -61,7 +61,7 @@
     <string name="group_man">男</string>
     <string name="group_detail_gender">性别：</string>
     <string name="group_detail_age">年龄：</string>
-    <string name="group_detail_city">城市</string>
+    <string name="group_detail_city">城市：</string>
     <string name="group_detail_height">身高：</string>
     <string name="group_detail_weight">体重：</string>
     <string name="group_detail_three_circles">三围：</string>

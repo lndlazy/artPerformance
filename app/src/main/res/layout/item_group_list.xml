@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
+    android:layout_marginLeft="@dimen/x5"
+    android:layout_marginRight="@dimen/x5"
     android:layout_height="wrap_content"
-    android:paddingBottom="@dimen/x30"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_marginBottom="@dimen/x30">
 
-    <ImageView
+
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/group_photo_imageview"
         android:layout_width="@dimen/x372"
-        android:layout_height="@dimen/y208" />
+        fresco:failureImage="@mipmap/ic_male_error"
+        fresco:placeholderImage="@mipmap/ic_male_error"
+        android:layout_height="@dimen/y208"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/group_photo_imageview"-->
+        <!--android:layout_width="@dimen/x372"-->
+        <!--android:layout_height="@dimen/y208" />-->
 
     <TextView
         android:id="@+id/group_name_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
-        android:textColor="@color/color_33353a"
         android:layout_marginLeft="@dimen/x24"
         android:layout_marginTop="@dimen/y24"
+        android:maxWidth="@dimen/x160"
+
+        android:singleLine="true"
+        android:textColor="@color/color_33353a"
+        android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="@+id/group_photo_imageview"
-        app:layout_constraintTop_toBottomOf="@+id/group_photo_imageview"/>
+        app:layout_constraintTop_toBottomOf="@+id/group_photo_imageview" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/group_woman_constraintlayout"
-        android:layout_width="@dimen/x60"
+        android:layout_width="wrap_content"
         android:layout_height="@dimen/y24"
         android:layout_marginLeft="@dimen/x12"
+        android:paddingLeft="@dimen/x5"
+        android:paddingRight="@dimen/x5"
         android:background="@drawable/shape_group_woman_background"
         app:layout_constraintBottom_toBottomOf="@+id/group_name_textview"
         app:layout_constraintLeft_toRightOf="@+id/group_name_textview"
@@ -35,52 +51,58 @@
             android:id="@+id/group_woman_imageview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:padding="@dimen/x3"
             android:src="@mipmap/icon_women"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/group_woman_age_textview"/>
+            app:layout_constraintRight_toLeftOf="@+id/group_woman_age_textview"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/group_woman_age_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
+            android:ellipsize="end"
+            android:maxLength="3"
+            android:paddingBottom="@dimen/x1"
+            android:gravity="center"
             android:textColor="@color/color_ffffff"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textSize="10sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/group_woman_imageview"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/group_woman_imageview"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constrainLike"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="@dimen/x10"
+        app:layout_constraintBottom_toBottomOf="@+id/group_name_textview"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/group_name_textview"
-        app:layout_constraintBottom_toBottomOf="@+id/group_name_textview">
+        app:layout_constraintTop_toTopOf="@+id/group_name_textview">
 
         <ImageView
             android:id="@+id/group_like_imageview"
-            android:layout_width="@dimen/x20"
-            android:layout_height="@dimen/y20"
+            android:layout_width="@dimen/x25"
+            android:layout_height="@dimen/y25"
             android:src="@mipmap/icon_zan"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/group_number_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/color_c7ccd0"
             android:layout_marginLeft="@dimen/x8"
-            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@color/color_c7ccd0"
+            android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/group_like_imageview"/>
+            app:layout_constraintLeft_toRightOf="@+id/group_like_imageview"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
