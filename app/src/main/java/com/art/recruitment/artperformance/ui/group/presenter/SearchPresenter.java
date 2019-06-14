@@ -1,6 +1,7 @@
 package com.art.recruitment.artperformance.ui.group.presenter;
 
 import com.art.recruitment.artperformance.api.GroupService;
+import com.art.recruitment.artperformance.bean.group.ActorLikesBean;
 import com.art.recruitment.artperformance.bean.group.GroupListBean;
 import com.art.recruitment.artperformance.ui.group.contract.SearchContract;
 import com.art.recruitment.common.base.BasePresenter;
@@ -32,4 +33,28 @@ public class SearchPresenter extends BasePresenter<SearchContract> {
                     }
                 });
     }
+
+    /**
+     * 点赞
+     */
+    public void actorsLikes(int actorId) {
+        Api.
+                observable(Api.getService(GroupService.class).actorsLikes(actorId)).
+                presenter(this).
+                requestMode(RequestMode.SINGLE).
+                showLoading(true).
+                doRequest(new RxSubscriber<ActorLikesBean.DataBean, ActorLikesBean>() {
+                    @Override
+                    protected void _onSuccess(ActorLikesBean.DataBean bean, String successMessage) {
+                        mView.returbActorLikesBean(bean);
+                    }
+
+                    @Override
+                    protected void _onError(ErrorType errorType, int errorCode, String message, ActorLikesBean.DataBean bean) {
+                        mView.showErrorTip(errorType, errorCode, message);
+                    }
+                });
+    }
+
+
 }

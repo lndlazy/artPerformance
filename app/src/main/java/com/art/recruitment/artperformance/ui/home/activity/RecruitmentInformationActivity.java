@@ -103,6 +103,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     private String home_name;
     private Dialog shareDialog;
     private String shareTitle;
+    private String chat_username;
+    //    private int home_id;
 
     @Override
     protected IToolbar getIToolbar() {
@@ -129,6 +131,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
         recruitmentId = getIntent().getStringExtra("recruitmentId");
         home_name = getIntent().getStringExtra("home_name");
+//        home_id = getIntent().getIntExtra("home_id", -1);
 
         Logger.d("recruitmentId::" + recruitmentId + ",home_name::" + home_name);
         mPresenter.recuitDetail(recruitmentId);
@@ -176,6 +179,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
                     }
                 });
 
+        //发起聊天  沟通
         RxView.
                 clicks(mCommunicateConstraintLayout).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -183,8 +187,10 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
                     @Override
                     public void accept(Object o) throws Exception {
                         Intent chat = new Intent(RecruitmentInformationActivity.this, ChatActivity.class);
-                        chat.putExtra(EaseConstant.EXTRA_USER_ID, home_name);  //对方账号
-                        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
+                        Logger.d("对方账户id::" + chat_username + "，home_name:" + home_name);
+                        chat.putExtra(EaseConstant.EXTRA_USER_ID, chat_username);  //对方账号
+//                        chat.putExtra(EaseConstant.EXTRA_USER_NAME, home_name);  //对方账号
+                        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
                         startActivity(chat);
                     }
                 });
@@ -303,6 +309,12 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     private void listSuccess(RecruitmentInforBean.DataBean bean) {
         shareTitle = bean.getTitle();
         mTitleTextview.setText(bean.getTitle());
+
+        RecruitmentInforBean.DataBean.SimpleImInfo simpleImInfo = bean.getSimpleImInfo();
+
+        if (simpleImInfo!=null)
+            chat_username = simpleImInfo.getUsername();
+
 
         mPriceTextview.setText((Constant.TYPE_PRICE_FACE.equals(bean.getSalaryType())) ? "面议" : "￥" + bean.getSalary());
         mReleaseTimeTextview.setText("发布时间：" + bean.getReleaseTime());

@@ -1,8 +1,11 @@
 package com.art.recruitment.artperformance.ui.login.presenter;
 
+import android.view.View;
+
 import com.art.recruitment.artperformance.api.LoginService;
 import com.art.recruitment.artperformance.bean.im.ImUserBean;
 import com.art.recruitment.artperformance.bean.login.TokenBean;
+import com.art.recruitment.artperformance.ui.login.ThirdLoginEntry;
 import com.art.recruitment.artperformance.ui.login.contract.LoginContract;
 import com.art.recruitment.common.base.BaseBean;
 import com.art.recruitment.common.base.BasePresenter;
@@ -19,7 +22,6 @@ public class LoginPresenter extends BasePresenter<LoginContract> {
 
     /**
      * 获取Token
-     *
      */
     public void getToken(String token) {
 
@@ -32,7 +34,7 @@ public class LoginPresenter extends BasePresenter<LoginContract> {
                 doRequest(new RxSubscriber<TokenBean.DataBean, TokenBean>() {
                     @Override
                     protected void _onSuccess(TokenBean.DataBean tokenBean, String successMessage) {
-                        if (tokenBean != null){
+                        if (tokenBean != null) {
                             mView.returnTokenBean(tokenBean);
                         }
                     }
@@ -45,7 +47,7 @@ public class LoginPresenter extends BasePresenter<LoginContract> {
     }
 
     /**
-     *获取用户信息
+     * 获取用户信息
      */
     public void imUser() {
 
@@ -68,5 +70,31 @@ public class LoginPresenter extends BasePresenter<LoginContract> {
                     }
                 });
     }
+
+
+    /**
+     * 第三方登录
+     */
+    public void authenticationLogin(String socialType, String str) {
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), str);
+        Api.
+                observable(Api.getService(LoginService.class).authenticationLogin(socialType, body)).
+                presenter(this).
+                requestMode(RequestMode.SINGLE).
+                showLoading(true).
+                doRequest(new RxSubscriber<ThirdLoginEntry.DataBean, ThirdLoginEntry>() {
+                    @Override
+                    protected void _onSuccess(ThirdLoginEntry.DataBean thirdLoginBean, String successMessage) {
+
+                        mView.returnThirdLogin(thirdLoginBean);
+                    }
+
+                    @Override
+                    protected void _onError(ErrorType errorType, int errorCode, String message, ThirdLoginEntry.DataBean tokenBean) {
+                        mView.showErrorTip(errorType, errorCode, message);
+                    }
+                });
+    }
+
 
 }

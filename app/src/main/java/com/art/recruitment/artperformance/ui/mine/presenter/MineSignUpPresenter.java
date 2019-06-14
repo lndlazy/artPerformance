@@ -1,7 +1,9 @@
 package com.art.recruitment.artperformance.ui.mine.presenter;
 
+import com.art.recruitment.artperformance.api.GroupService;
 import com.art.recruitment.artperformance.api.MineService;
 import com.art.recruitment.artperformance.bean.mine.CancelRecruitmentBean;
+import com.art.recruitment.artperformance.bean.mine.MineRecruitBean;
 import com.art.recruitment.artperformance.bean.mine.MineSignUpBean;
 import com.art.recruitment.artperformance.ui.mine.contract.MineSignUpContract;
 import com.art.recruitment.common.base.BasePresenter;
@@ -60,4 +62,30 @@ public class MineSignUpPresenter extends BasePresenter<MineSignUpContract> {
                     }
                 });
     }
+
+
+    /**
+     *根据群演ID获取影虎信息
+     */
+    public void chatGroups(String actorId) {
+
+        Api.
+                observable(Api.getService(GroupService.class).chatGroups(actorId)).
+                presenter(this).
+                requestMode(RequestMode.SINGLE).
+                showLoading(true).
+                doRequest(new RxSubscriber<MineRecruitBean.DataBean, MineRecruitBean>() {
+                    @Override
+                    protected void _onSuccess(MineRecruitBean.DataBean bean, String successMessage) {
+                        mView.returnChatGroupsBean(bean);
+                    }
+
+                    @Override
+                    protected void _onError(ErrorType errorType, int errorCode, String message, MineRecruitBean.DataBean bean) {
+                        mView.showErrorTip(errorType, errorCode, message);
+                    }
+                });
+    }
+
+
 }

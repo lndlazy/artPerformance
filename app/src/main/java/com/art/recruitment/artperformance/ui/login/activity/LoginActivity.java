@@ -22,8 +22,11 @@ import com.art.recruitment.artperformance.bean.im.ImUserBean;
 import com.art.recruitment.artperformance.bean.login.TokenBean;
 import com.art.recruitment.artperformance.bean.login.TokenRequest;
 import com.art.recruitment.artperformance.ui.MainActivity;
+import com.art.recruitment.artperformance.ui.login.SocialLoginRequestVO;
+import com.art.recruitment.artperformance.ui.login.ThirdLoginEntry;
 import com.art.recruitment.artperformance.ui.login.contract.LoginContract;
 import com.art.recruitment.artperformance.ui.login.presenter.LoginPresenter;
+import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
@@ -37,6 +40,7 @@ import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.orhanobut.logger.Logger;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -244,7 +248,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
         if (!TextUtils.isEmpty(mPhone) && !TextUtils.isEmpty(mPassword)) {
             if (FormatUtil.isMobileNO(mPhone)) {
-                if (mCheckbox.isChecked()){
+                if (mCheckbox.isChecked()) {
                     closeInoutDecorView(LoginActivity.this);
                     TokenRequest tokenRequest = new TokenRequest();
                     tokenRequest.setPassword(mPassword);
@@ -270,7 +274,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     public void returnImUserBean(ImUserBean.DataBean bean) {
-        EMClient.getInstance().login(bean.getUsername(),bean.getPassword(),new EMCallBack() {//回调
+        EMClient.getInstance().login(bean.getUsername(), bean.getPassword(), new EMCallBack() {//回调
             @Override
             public void onSuccess() {
                 EMClient.getInstance().groupManager().loadAllGroups();
@@ -289,14 +293,20 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             public void onError(int code, String message) {
                 startActivity(MainActivity.class);
                 finish();
-                ToastUtils.showShort( "登录聊天服务器失败！");
+                ToastUtils.showShort("登录聊天服务器失败！");
             }
         });
     }
 
+    //三方登录返回的数据
+    @Override
+    public void returnThirdLogin(ThirdLoginEntry.DataBean thirdLoginBean) {
+
+    }
+
     @Override
     public void showErrorTip(ErrorType errorType, int errorCode, String message) {
-        if (message != null){
+        if (message != null) {
             ToastUtils.showShort(message);
         }
     }
@@ -331,9 +341,27 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                 String gender = map.get("gender");
                 String iconurl = map.get("iconurl");
 
-                Toast.makeText(getApplicationContext(), "name=" + name + ",gender=" + gender, Toast.LENGTH_SHORT).show();
+                Logger.d("name=" + name + ",gender=" + gender);
+
+                String socialType = "";
+                switch (share_media) {
+
+                    case WEIXIN:
+                        socialType = Constant.THIRD_LOGIN_WX;
+                        break;
+                    case QQ:
+                        socialType = Constant.THIRD_LOGIN_QQ;
+                       break;
+
+                }
+                SocialLoginRequestVO socialLoginRequestVO = new SocialLoginRequestVO();
+                socialLoginRequestVO.setOpenId(openid);
+                Gson gson = new Gson();
+                String codeStr = gson.toJson(socialLoginRequestVO);
 
                 //拿到信息去请求登录接口。。。
+                mPresenter.authenticationLogin(socialType, codeStr);
+
             }
 
             @Override

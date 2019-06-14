@@ -11,6 +11,7 @@ import com.art.recruitment.common.baserx.RxSubscriber;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.http.mode.RequestMode;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -80,6 +81,10 @@ public class GroupFragmentPresenter extends BasePresenter<GroupFragmentContract>
 
                     @Override
                     protected void _onError(ErrorType errorType, int errorCode, String message, ActorLikesBean.DataBean bean) {
+
+                        Logger.d("errorType::" + errorType + ",errorCode::" + errorCode
+                                + ",message::" + message);
+
                         mView.showErrorTip(errorType, errorCode, message);
                     }
                 });

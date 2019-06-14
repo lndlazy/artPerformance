@@ -37,6 +37,7 @@ public class Api {
 
 
     public static final String HTTP_URL = "http://47.94.8.204:18080/";
+//    public static final String HTTP_URL = "http://47.94.8.204:8082/";
     public static final String OSS_SIGNATURE = "oss/signature?content=";
 
 

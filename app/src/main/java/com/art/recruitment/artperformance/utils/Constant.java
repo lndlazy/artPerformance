@@ -42,7 +42,6 @@ public interface Constant {
     String SELECT_DATE_END = "2090.12.30 00:00";//选择日期 的结束时间
 
 
-
     String TYPE_PRICE_SURE = "1";//确定好的价格
     String TYPE_PRICE_FACE = "2";//面议
 
@@ -65,5 +64,8 @@ public interface Constant {
     int CHOOSE_TYPE_VIDEO = 1;//选择的是视频
     int CHOOSE_TYPE_PICTURE = 0;//选择的是图片
 
+
+    String THIRD_LOGIN_WX = "weChat";//微信第三方登录
+    String THIRD_LOGIN_QQ = "qq";//qq第三方登录
 
 }

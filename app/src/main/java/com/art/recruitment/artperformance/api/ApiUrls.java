@@ -158,7 +158,7 @@ public class ApiUrls {
     public static final String ACCOUNTS_CONSUMMATE3 = "accounts/consummate3";
 
     /**
-     *OSS签名
+     * OSS签名
      */
     public static final String SIGNATURE = "oss/signature";
 
@@ -213,5 +213,13 @@ public class ApiUrls {
      * 获取环信用户信息
      */
     public static final String IM_USER = "im/user";
+
+
+    /**
+     * 第三方登录
+     */
+    public static final String AUTHENTICATION_LOGIN = "authentication/token/social/{socialType}";
+
+
 
 }

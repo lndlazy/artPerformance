@@ -76,10 +76,20 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                     case R.id.mine_recruit_clean_employment_textview://取消录用
                         mPresenter.cencelHiring(mAdapter.getData().get(position).getRecruitmentId(), mAdapter.getData().get(position).getId());
                         break;
+
+
                     case R.id.mine_recruit_chat_imageview:
+                        //已录用 聊天
+
+                        if (mAdapter.getData().get(position).getIm() == null) {
+                            ToastUtils.showShort("数据错误");
+                            return;
+                        }
+
                         Intent chat = new Intent(getContext(), ChatActivity.class);
-                        chat.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getApplyUserName());  //对方账号
-                        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
+                        chat.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getIm().getUsername());  //对方账号
+//                        chat.putExtra(EaseConstant.EXTRA_USER_NAME, mAdapter.getData().get(position).getApplyUserName());  //对方账号
+                        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
                         startActivity(chat);
                         break;
                     case R.id.mine_recruit_refuse_textview:
@@ -91,9 +101,17 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                                 , mAdapter.getData().get(position).getId(), true);
                         break;
                     case R.id.mine_recruit_employment_chat_imageview:
+                        //待录用 聊天
+
+                        if (mAdapter.getData().get(position).getIm() == null) {
+                            ToastUtils.showShort("数据错误");
+                            return;
+                        }
+
                         Intent chat2 = new Intent(getContext(), ChatActivity.class);
-                        chat2.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getApplyUserName());  //对方账号
-                        chat2.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
+                        chat2.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getIm().getUsername());  //对方账号
+//                        chat2.putExtra(EaseConstant.EXTRA_USER_NAME, mAdapter.getData().get(position).getApplyUserName());  //对方账号
+                        chat2.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
                         startActivity(chat2);
                         break;
                     default:
@@ -156,16 +174,6 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
         if (bean == null)
             return;
-
-//        if (bean!=null)
-
-
-
-//        if (bean == null) {
-//            bean = new ApplyListBean.DataBean();
-//        }
-
-//         bean.setContent(new ArrayList<ApplyListBean.ContentBean>());
         resetStateWhenLoadDataSuccess(bean.getContent());
 
     }

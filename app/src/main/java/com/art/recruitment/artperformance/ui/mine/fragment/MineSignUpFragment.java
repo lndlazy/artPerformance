@@ -8,8 +8,10 @@ import android.widget.ImageView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.mine.CancelRecruitmentBean;
+import com.art.recruitment.artperformance.bean.mine.MineRecruitBean;
 import com.art.recruitment.artperformance.bean.mine.MineSignUpBean;
 import com.art.recruitment.artperformance.ui.home.activity.RecruitmentInformationActivity;
+import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
 import com.art.recruitment.artperformance.ui.mine.adapter.MineSignUpMAdapter;
 import com.art.recruitment.artperformance.ui.mine.contract.MineSignUpContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MineSignUpPresenter;
@@ -21,6 +23,7 @@ import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.hyphenate.easeui.EaseConstant;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
@@ -68,6 +71,10 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
                         break;
                     case R.id.mine_sign_chat_imageview:
                         //聊天
+                        //通过recruitmentId获取groupId
+
+                        mPresenter.chatGroups(mAdapter.getData().get(position).getRecruitmentId());
+
                         break;
 
                     case R.id.enter_next:
@@ -157,6 +164,14 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
     public void returnCancelRecruitmentBean(CancelRecruitmentBean.DataBean bean) {
         ToastUtils.showShort("取消报名成功");
         autoRefresh();
+    }
+
+    @Override
+    public void returnChatGroupsBean(MineRecruitBean.DataBean bean) {
+        Intent chat = new Intent(getContext(), ChatActivity.class);
+        chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getChatGroupId());  //对方账号
+        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_GROUP); //群聊模式
+        startActivity(chat);
     }
 
     @Override

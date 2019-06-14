@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
+import com.art.recruitment.artperformance.bean.group.ActorLikesBean;
 import com.art.recruitment.artperformance.bean.group.GroupListBean;
 import com.art.recruitment.artperformance.ui.group.activity.GruopDetailActivity;
 import com.art.recruitment.artperformance.ui.group.adapter.GroupAdapter;
@@ -97,7 +98,7 @@ public class SearchFragment extends BaseFragment<SearchPresenter, GroupListBean.
                         startActivity(intent);
                         break;
                     case R.id.constrainLike://TODO 点赞
-//                        mPresenter.actorsLikes(groupAdapter.getData().get(position).getId());
+                        mPresenter.actorsLikes(groupAdapter.getData().get(position).getId());
                         break;
                     default:
                         break;
@@ -196,6 +197,12 @@ public class SearchFragment extends BaseFragment<SearchPresenter, GroupListBean.
     @Override
     public void returbGroupListBean(GroupListBean.DataBean bean) {
         resetStateWhenLoadDataSuccess(bean.getContent());
+    }
+
+    @Override
+    public void returbActorLikesBean(ActorLikesBean.DataBean bean) {
+
+        autoRefresh();
     }
 
     @Override

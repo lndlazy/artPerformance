@@ -11,6 +11,7 @@ import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.http.mode.RequestMode;
 
 public class MineRecruitPresenter extends BasePresenter<MineRecruitContract> {
+
     /**
      *根据群演ID获取影虎信息
      */

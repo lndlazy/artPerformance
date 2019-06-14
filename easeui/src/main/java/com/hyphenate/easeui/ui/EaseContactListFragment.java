@@ -97,7 +97,7 @@ public class EaseContactListFragment extends EaseBaseFragment {
 
     @Override
     protected void setUpView() {
-        EMClient.getInstance().addConnectionListener(connectionListener);
+//        EMClient.getInstance().addConnectionListener(connectionListener);
         
         contactList = new ArrayList<EaseUser>();
         getContactList();

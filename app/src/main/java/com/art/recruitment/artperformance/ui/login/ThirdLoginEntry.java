@@ -1,19 +1,33 @@
-package com.art.recruitment.artperformance.bean.home;
+package com.art.recruitment.artperformance.ui.login;
 
 import com.art.recruitment.common.base.BaseBean;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean> {
+/**
+ * Created by linaidao on 2019/6/14.
+ */
+
+public class ThirdLoginEntry extends BaseBean<ThirdLoginEntry.DataBean> {
+
 
     /**
-     * code : 0
-     * data : {"applyEndTime":"2019-05-13T03:14:07.967Z","applyNumber":0,"applyUsers":[{"applyTime":"2019-05-13T03:14:07.967Z","applyUserAvatar":"string","applyUserId":0,"applyUserImUserId":"string","hireState":0,"id":0,"recruitmentId":0}],"createTime":"2019-05-13T03:14:07.967Z","createUserId":0,"createUserName":"string","delFlag":0,"frontendFlag":0,"gatheringAddress":"string","gatheringTime":"2019-05-13T03:14:07.967Z","hireNumber":0,"id":0,"labels":"string","modifyTime":"2019-05-13T03:14:07.967Z","otherRequirement":"string","publisher":0,"publisherName":"string","recruitNumber":0,"releaseTime":"2019-05-13T03:14:07.967Z","salary":0,"salaryType":0,"title":"string","workingHours":0}
-     * fieldErrs : [{"error":"string","field":"string"}]
-     * message : string
+     * data : {"applyEndTime":"","applyNumber":0,"applyUsers":[{"applyTime":"","applyUserAvatar":"","applyUserId":0,"applyUserImUserId":"","hireState":0,"id":0,"recruitmentId":0}],"cityId":0,"cityName":"","createTime":"","createUserId":0,"createUserName":"","delFlag":0,"frontendFlag":0,"gatheringAddress":"","gatheringTime":"","hireNumber":0,"id":0,"labelList":[],"labels":"","modifyTime":"","otherRequirement":"","publisher":0,"publisherName":"","recruitNumber":0,"releaseTime":"","salary":0,"salaryType":0,"simpleImInfo":{"username":""},"title":"","workingHours":0}
+     * fieldErrs : [{"error":"","field":""}]
      */
 
+    @SerializedName("data")
+    private DataBean dataX;
     private List<FieldErrsBean> fieldErrs;
+
+    public DataBean getDataX() {
+        return dataX;
+    }
+
+    public void setDataX(DataBean dataX) {
+        this.dataX = dataX;
+    }
 
     public List<FieldErrsBean> getFieldErrs() {
         return fieldErrs;
@@ -25,33 +39,39 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
 
     public static class DataBean {
         /**
-         * applyEndTime : 2019-05-13T03:14:07.967Z
+         * applyEndTime :
          * applyNumber : 0
-         * applyUsers : [{"applyTime":"2019-05-13T03:14:07.967Z","applyUserAvatar":"string","applyUserId":0,"applyUserImUserId":"string","hireState":0,"id":0,"recruitmentId":0}]
-         * createTime : 2019-05-13T03:14:07.967Z
+         * applyUsers : [{"applyTime":"","applyUserAvatar":"","applyUserId":0,"applyUserImUserId":"","hireState":0,"id":0,"recruitmentId":0}]
+         * cityId : 0
+         * cityName :
+         * createTime :
          * createUserId : 0
-         * createUserName : string
+         * createUserName :
          * delFlag : 0
          * frontendFlag : 0
-         * gatheringAddress : string
-         * gatheringTime : 2019-05-13T03:14:07.967Z
+         * gatheringAddress :
+         * gatheringTime :
          * hireNumber : 0
          * id : 0
-         * labels : string
-         * modifyTime : 2019-05-13T03:14:07.967Z
-         * otherRequirement : string
+         * labelList : []
+         * labels :
+         * modifyTime :
+         * otherRequirement :
          * publisher : 0
-         * publisherName : string
+         * publisherName :
          * recruitNumber : 0
-         * releaseTime : 2019-05-13T03:14:07.967Z
+         * releaseTime :
          * salary : 0
          * salaryType : 0
-         * title : string
+         * simpleImInfo : {"username":""}
+         * title :
          * workingHours : 0
          */
 
         private String applyEndTime;
         private int applyNumber;
+        private int cityId;
+        private String cityName;
         private String createTime;
         private int createUserId;
         private String createUserName;
@@ -69,21 +89,27 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
         private int recruitNumber;
         private String releaseTime;
         private int salary;
-        private String salaryType;
+        private int salaryType;
+        private SimpleImInfoBean simpleImInfo;
         private String title;
         private int workingHours;
         private List<ApplyUsersBean> applyUsers;
-        private List<String> labelList;
-        private int cityId;
-        private String cityName;
-        private SimpleImInfo simpleImInfo;
+        private List<?> labelList;
 
-        public SimpleImInfo getSimpleImInfo() {
-            return simpleImInfo;
+        public String getApplyEndTime() {
+            return applyEndTime;
         }
 
-        public void setSimpleImInfo(SimpleImInfo simpleImInfo) {
-            this.simpleImInfo = simpleImInfo;
+        public void setApplyEndTime(String applyEndTime) {
+            this.applyEndTime = applyEndTime;
+        }
+
+        public int getApplyNumber() {
+            return applyNumber;
+        }
+
+        public void setApplyNumber(int applyNumber) {
+            this.applyNumber = applyNumber;
         }
 
         public int getCityId() {
@@ -100,30 +126,6 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
 
         public void setCityName(String cityName) {
             this.cityName = cityName;
-        }
-
-        public List<String> getLabelList() {
-            return labelList;
-        }
-
-        public void setLabelList(List<String> labelList) {
-            this.labelList = labelList;
-        }
-
-        public String getApplyEndTime() {
-            return applyEndTime;
-        }
-
-        public void setApplyEndTime(String applyEndTime) {
-            this.applyEndTime = applyEndTime;
-        }
-
-        public int getApplyNumber() {
-            return applyNumber;
-        }
-
-        public void setApplyNumber(int applyNumber) {
-            this.applyNumber = applyNumber;
         }
 
         public String getCreateTime() {
@@ -262,12 +264,20 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
             this.salary = salary;
         }
 
-        public String getSalaryType() {
+        public int getSalaryType() {
             return salaryType;
         }
 
-        public void setSalaryType(String salaryType) {
+        public void setSalaryType(int salaryType) {
             this.salaryType = salaryType;
+        }
+
+        public SimpleImInfoBean getSimpleImInfo() {
+            return simpleImInfo;
+        }
+
+        public void setSimpleImInfo(SimpleImInfoBean simpleImInfo) {
+            this.simpleImInfo = simpleImInfo;
         }
 
         public String getTitle() {
@@ -294,8 +304,18 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
             this.applyUsers = applyUsers;
         }
 
+        public List<?> getLabelList() {
+            return labelList;
+        }
 
-        public static class SimpleImInfo {
+        public void setLabelList(List<?> labelList) {
+            this.labelList = labelList;
+        }
+
+        public static class SimpleImInfoBean {
+            /**
+             * username :
+             */
 
             private String username;
 
@@ -308,88 +328,87 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
             }
         }
 
-    }
+        public static class ApplyUsersBean {
+            /**
+             * applyTime :
+             * applyUserAvatar :
+             * applyUserId : 0
+             * applyUserImUserId :
+             * hireState : 0
+             * id : 0
+             * recruitmentId : 0
+             */
 
-    public static class ApplyUsersBean {
-        /**
-         * applyTime : 2019-05-13T03:14:07.967Z
-         * applyUserAvatar : string
-         * applyUserId : 0
-         * applyUserImUserId : string
-         * hireState : 0
-         * id : 0
-         * recruitmentId : 0
-         */
+            private String applyTime;
+            private String applyUserAvatar;
+            private int applyUserId;
+            private String applyUserImUserId;
+            private int hireState;
+            private int id;
+            private int recruitmentId;
 
-        private String applyTime;
-        private String applyUserAvatar;
-        private int applyUserId;
-        private String applyUserImUserId;
-        private int hireState;
-        private int id;
-        private int recruitmentId;
+            public String getApplyTime() {
+                return applyTime;
+            }
 
-        public String getApplyTime() {
-            return applyTime;
-        }
+            public void setApplyTime(String applyTime) {
+                this.applyTime = applyTime;
+            }
 
-        public void setApplyTime(String applyTime) {
-            this.applyTime = applyTime;
-        }
+            public String getApplyUserAvatar() {
+                return applyUserAvatar;
+            }
 
-        public String getApplyUserAvatar() {
-            return applyUserAvatar;
-        }
+            public void setApplyUserAvatar(String applyUserAvatar) {
+                this.applyUserAvatar = applyUserAvatar;
+            }
 
-        public void setApplyUserAvatar(String applyUserAvatar) {
-            this.applyUserAvatar = applyUserAvatar;
-        }
+            public int getApplyUserId() {
+                return applyUserId;
+            }
 
-        public int getApplyUserId() {
-            return applyUserId;
-        }
+            public void setApplyUserId(int applyUserId) {
+                this.applyUserId = applyUserId;
+            }
 
-        public void setApplyUserId(int applyUserId) {
-            this.applyUserId = applyUserId;
-        }
+            public String getApplyUserImUserId() {
+                return applyUserImUserId;
+            }
 
-        public String getApplyUserImUserId() {
-            return applyUserImUserId;
-        }
+            public void setApplyUserImUserId(String applyUserImUserId) {
+                this.applyUserImUserId = applyUserImUserId;
+            }
 
-        public void setApplyUserImUserId(String applyUserImUserId) {
-            this.applyUserImUserId = applyUserImUserId;
-        }
+            public int getHireState() {
+                return hireState;
+            }
 
-        public int getHireState() {
-            return hireState;
-        }
+            public void setHireState(int hireState) {
+                this.hireState = hireState;
+            }
 
-        public void setHireState(int hireState) {
-            this.hireState = hireState;
-        }
+            public int getId() {
+                return id;
+            }
 
-        public int getId() {
-            return id;
-        }
+            public void setId(int id) {
+                this.id = id;
+            }
 
-        public void setId(int id) {
-            this.id = id;
-        }
+            public int getRecruitmentId() {
+                return recruitmentId;
+            }
 
-        public int getRecruitmentId() {
-            return recruitmentId;
-        }
-
-        public void setRecruitmentId(int recruitmentId) {
-            this.recruitmentId = recruitmentId;
+            public void setRecruitmentId(int recruitmentId) {
+                this.recruitmentId = recruitmentId;
+            }
         }
     }
 
     public static class FieldErrsBean {
         /**
-         * error : string
-         * field : string
+         * error :
+         * field :
          */
 
         private String error;

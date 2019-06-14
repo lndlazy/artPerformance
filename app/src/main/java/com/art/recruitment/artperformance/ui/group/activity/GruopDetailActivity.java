@@ -39,6 +39,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.luck.picture.lib.PictureSelector;
+import com.orhanobut.logger.Logger;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
@@ -162,6 +163,7 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
                     }
                 });
 
+        //聊天
         RxView.
                 clicks(mDetailButton).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -264,9 +266,11 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
 
     @Override
     public void returnActorIdBean(ActorIdBean.DataBean bean) {
+        Logger.d("username:::" + bean.getUsername());
         Intent chat = new Intent(this, ChatActivity.class);
         chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getUsername());  //对方账号
-        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.Chat); //单聊模式
+//        chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getuse());  //对方账号
+        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
         startActivity(chat);
     }
 

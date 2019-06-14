@@ -113,6 +113,7 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
 
     private void initButtonClick() {
 
+        //发起群聊
         RxView.
                 clicks(mGroupChatTextview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -187,7 +188,7 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
     public void returnChatGroupsBean(MineRecruitBean.DataBean bean) {
         Intent chat = new Intent(MineRecruitActivity.this, ChatActivity.class);
         chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getChatGroupId());  //对方账号
-        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EMMessage.ChatType.GroupChat); //单聊模式
+        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_GROUP); //群聊
         startActivity(chat);
     }
 

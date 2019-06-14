@@ -45,13 +45,20 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.easeui.EaseConstant;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,6 +73,9 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
 
     @BindView(R.id.mine_editing_personal_data_textview)
     TextView mEditingPersonalDataTextview;
+
+    @BindView(R.id.ivNewMsg)
+    ImageView ivNewMsg;
 
     @BindView(R.id.constraintView)
     ConstraintLayout constraintView;
@@ -115,7 +125,6 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     //名片分享
     private int SHARE_TYPE_BUSINESS_CARD = 2;
 
-
     @Override
     protected int getLayoutId() {
         return R.layout.fragment_mine;
@@ -151,7 +160,58 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mPresenter.getPersonalData();
 
         initButtonClick();
+
+        EventBus.getDefault().register(this);
+
     }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser)
+            setRedPoint();
+    }
+
+
+    private void setRedPoint() {
+        int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+        com.orhanobut.logger.Logger.d("未读消息个数：：" + unreadMessageCount);
+        ivNewMsg.setVisibility(unreadMessageCount > 0 ? View.VISIBLE : View.INVISIBLE);
+
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void messageEventBus(List<EMMessage> messages) {
+//        for (int i = 0; i < messages.size(); i++) {
+//
+//            EMMessage emMessage = messages.get(i);
+//
+//            String from = emMessage.getFrom();
+//
+//            EMMessageBody body = emMessage.getBody();
+//
+//            String s = body.toString();
+//
+//            com.orhanobut.logger.Logger.d("首页获取消息  消息内容::" + s + ",from:" + from + ",to:" + emMessage.getTo());
+//
+//        }
+
+//        if (messages.size() > 0) {
+        //提示消息到达
+        ivNewMsg.setVisibility(View.VISIBLE);
+//        }
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
 
     private void initButtonClick() {
 
@@ -269,6 +329,19 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                             getActivity().finish();
                     }
                 });
+
+
+        //聊天列表
+        RxView.
+                clicks(mMessageImageview).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        startActivity(new Intent(getContext(), ChatListActivity.class));
+                    }
+                });
+
     }
 
     private void shareDialog(int type) {
@@ -356,7 +429,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     @Override
     public void returnMineDataBean(MineBean.DataBean bean) {
 
-        mNameTextview.setText(bean.getUsername());
+        mNameTextview.setText(bean.getName());
         mWechatServiceTextview.setText(bean.getWechat());
         RequestOptions options = new RequestOptions();
         options.placeholder(R.mipmap.login_logo);

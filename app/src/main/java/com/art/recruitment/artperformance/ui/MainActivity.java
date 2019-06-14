@@ -1,5 +1,6 @@
 package com.art.recruitment.artperformance.ui;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -9,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.group.StatusBean;
+import com.art.recruitment.artperformance.bean.im.ImUserBean;
 import com.art.recruitment.artperformance.ui.dynamic.fragment.DynamicFragment;
 import com.art.recruitment.artperformance.ui.group.activity.RealNameActivity;
 import com.art.recruitment.artperformance.ui.group.activity.ReleaseRecruitmentActivity;
@@ -48,7 +51,17 @@ import com.bumptech.glide.request.RequestOptions;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
+import com.hyphenate.EMMessageListener;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageBody;
+import com.hyphenate.util.NetUtils;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.loc.ar;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
@@ -130,12 +143,18 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         initViewPager();
         initCommonTabLayout();
         initButtonClick();
+        getRecordPermisson();
+        mPresenter.loginToHx();
     }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+
+//        记得在不需要的时候移除listener，如在activity的onDestroy()时
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -155,6 +174,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                         mPresenter.status();
                     }
                 });
+
     }
 
     private void initViewPager() {
@@ -224,20 +244,92 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         } else if (bean.getRealNameFlag() == 1) {
             //已经实名认证， 判断是否填写过 基本三项信息
 
-            if (!TextUtils.isEmpty((String)SaveUtils.get(this, MyInfoSave.PHONE_NUM, ""))
-                    && !TextUtils.isEmpty((String)SaveUtils.get(this, MyInfoSave.USER_NAME, ""))
-                    && ((int)SaveUtils.get(this, MyInfoSave.SEX, -1) != -1)) {
+            if (!TextUtils.isEmpty((String) SaveUtils.get(this, MyInfoSave.PHONE_NUM, ""))
+                    && !TextUtils.isEmpty((String) SaveUtils.get(this, MyInfoSave.USER_NAME, ""))
+                    && ((int) SaveUtils.get(this, MyInfoSave.SEX, -1) != -1)) {
                 Intent intent = new Intent(MainActivity.this, ReleaseRecruitmentActivity.class);
                 intent.putExtra("release_id", 0);
                 Logger.d("head-===>" + head);
                 intent.putExtra("group_head", head);
                 startActivity(intent);
-            }else {
+            } else {
                 perfectInformation();
             }
 
         }
     }
+
+    //登录聊天服务器成功
+    @Override
+    public void returnImUserBean(ImUserBean.DataBean tokenBean) {
+
+        EMClient.getInstance().groupManager().loadAllGroups();
+        EMClient.getInstance().chatManager().loadAllConversations();
+
+        //注册一个监听连接状态的listener
+        EMClient.getInstance().addConnectionListener(new MyConnectionListener());
+
+        //注册消息监听
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+
+//        int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+//        Logger.d("未读消息个数：：" + unreadMessageCount);
+//        if (unreadMessageCount > 0)
+//            EventBus.getDefault().post(new ArrayList<EMMessage>());
+
+    }
+
+
+    EMMessageListener msgListener = new EMMessageListener() {
+
+        @Override
+        public void onMessageReceived(List<EMMessage> messages) {
+            //收到消息
+
+//            for (int i = 0; i < messages.size(); i++) {
+//
+//                EMMessage emMessage = messages.get(i);
+//
+//                String from = emMessage.getFrom();
+//
+//                EMMessageBody body = emMessage.getBody();
+//
+//                String s = body.toString();
+//
+//                Logger.d("消息内容::" + s + ",from:" + from + ",to:" + emMessage.getTo());
+//
+//            }
+
+            EventBus.getDefault().post(messages);
+
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> messages) {
+            //收到透传消息
+        }
+
+        @Override
+        public void onMessageRead(List<EMMessage> messages) {
+            //收到已读回执
+        }
+
+        @Override
+        public void onMessageDelivered(List<EMMessage> message) {
+            //收到已送达回执
+        }
+
+        @Override
+        public void onMessageRecalled(List<EMMessage> messages) {
+            //消息被撤回
+        }
+
+        @Override
+        public void onMessageChanged(EMMessage message, Object change) {
+            //消息状态变动
+        }
+    };
+
 
     @Override
     public void showErrorTip(ErrorType errorType, int errorCode, String message) {
@@ -270,7 +362,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 m.putExtra(Constant.EDITOR_TYPE, Constant.EDITOR_TYPE_RELEASE);
                 startActivity(m);
 
-                if (dialog!=null && dialog.isShowing())
+                if (dialog != null && dialog.isShowing())
                     dialog.dismiss();
             }
         });
@@ -284,11 +376,80 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 //            //exitAnim();
 //            super.onBackPressed();
 //        } else {
-            //两次点击才能finish掉activity
-            ActivityManager.getInstance().exitByDoubleClick(System.currentTimeMillis());
+        //两次点击才能finish掉activity
+        ActivityManager.getInstance().exitByDoubleClick(System.currentTimeMillis());
 //        }
     }
 
+
+    private static final int GET_RECODE_AUDIO = 0x911;
+    private static String[] PERMISSION_AUDIO = {
+            Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA
+    };
+
+    private void getRecordPermisson() {
+
+        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, PERMISSION_AUDIO, GET_RECODE_AUDIO);
+        }
+        int camer_permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+        if (camer_permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, PERMISSION_AUDIO, GET_RECODE_AUDIO);
+        }
+    }
+
+    //实现ConnectionListener接口
+    private class MyConnectionListener implements EMConnectionListener {
+        @Override
+        public void onConnected() {
+        }
+
+        @Override
+        public void onDisconnected(final int error) {
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (error == EMError.USER_REMOVED) {
+                        // 显示帐号已经被移除
+                    } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                        // 显示帐号在其他设备登录
+                        Logger.d("显示帐号在其他设备登录, 退出聊天账号登录");
+                        EMClient.getInstance().logout(true, new EMCallBack() {
+
+                            @Override
+                            public void onSuccess() {
+                                // TODO Auto-generated method stub
+
+                            }
+
+                            @Override
+                            public void onProgress(int progress, String status) {
+                                // TODO Auto-generated method stub
+
+                            }
+
+                            @Override
+                            public void onError(int code, String message) {
+                                // TODO Auto-generated method stub
+
+                            }
+                        });
+
+                    } else {
+                        if (NetUtils.hasNetwork(MainActivity.this)) {
+                            //连接不到聊天服务器
+                        } else {
+                            //当前网络不可用，请检查网络设置
+
+                        }
+
+                    }
+                }
+            });
+        }
+    }
 
 
 }

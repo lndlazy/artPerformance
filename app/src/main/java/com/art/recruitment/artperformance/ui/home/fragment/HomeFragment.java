@@ -49,7 +49,11 @@ import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMMessageBody;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.yanzhenjie.permission.Action;
@@ -61,6 +65,10 @@ import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +127,9 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     @BindView(R.id.r2)
     RelativeLayout r2;
 
+    @BindView(R.id.ivNewMsg)
+    ImageView ivNewMsg;
+
     @BindView(R.id.home_search_edittext)
     EditText mSearchEdittext;
 
@@ -151,7 +162,6 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
         homeAdapter = new HomeAdapter(mContext, mDataList);
         homeAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-
         homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -160,6 +170,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                 Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
                 intent.putExtra("recruitmentId", homeAdapter.getData().get(position).getId());
                 intent.putExtra("home_name", homeAdapter.getData().get(position).getPublisherName());
+//                intent.putExtra("home_id", homeAdapter.getData().get(position).getPublisher());
                 startActivity(intent);
 
             }
@@ -184,6 +195,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
         mCityCode = (int) SaveUtils.get(getContext(), SaveUtils.CITY_CODE, -1);
 
+        com.orhanobut.logger.Logger.d("缓存中的CITY_CODE:" + mCityCode);
         String cityName = (String) SaveUtils.get(getContext(), SaveUtils.CITY_NAME, "");
 
         if (!TextUtils.isEmpty(cityName) && mCityCode != -1)
@@ -197,6 +209,45 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
         initEditTextLisnter();
 
+        EventBus.getDefault().register(this);
+
+    }
+
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+
+        if (isVisibleToUser)
+            setRedPoint();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void messageEventBus(List<EMMessage> messages) {
+        //消息到达
+//        for (int i = 0; i < messages.size(); i++) {
+//
+//            EMMessage emMessage = messages.get(i);
+//
+//            String from = emMessage.getFrom();
+//
+//            EMMessageBody body = emMessage.getBody();
+//
+//            String s = body.toString();
+//
+//            com.orhanobut.logger.Logger.d("首页获取消息  消息内容::" + s + ",from:" + from + ",to:" + emMessage.getTo());
+//
+//        }
+
+        ivNewMsg.setVisibility(View.VISIBLE);
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -250,6 +301,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                     }
                 });
 
+        //聊天列表
         RxView.
                 clicks(mMessageImageview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -369,6 +421,17 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
         }
 
         resetStateWhenLoadDataSuccess(bean.getContent());
+
+        setRedPoint();
+
+    }
+
+    private void setRedPoint() {
+        int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
+        com.orhanobut.logger.Logger.d("未读消息个数：：" + unreadMessageCount);
+
+        if (ivNewMsg != null)
+            ivNewMsg.setVisibility(unreadMessageCount > 0 ? View.VISIBLE : View.INVISIBLE);
 
     }
 

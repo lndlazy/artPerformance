@@ -85,7 +85,7 @@ public class MyApplication extends BaseApplication {
     }
 
     private void initUM() {
-         UMShareAPI.get(this);//初始化sdk
+        UMShareAPI.get(this);//初始化sdk
         //开启debug模式，方便定位错误，具体错误检查方式可以查看http://dev.umeng.com/social/android/quick-integration的报错必看，正式发布，请关闭该模式
         Config.DEBUG = true;
     }
@@ -104,52 +104,61 @@ public class MyApplication extends BaseApplication {
      */
     private void initEaseMob() {
         appContext = this;
-        int pid = android.os.Process.myPid();
-        String processAppName = getAppName(pid);
-
-        if (processAppName == null ||!processAppName.equalsIgnoreCase(appContext.getPackageName())) {
-            Log.e(TAG, "enter the service process!");
-
-            // 则此application::onCreate 是被service 调用的，直接返回
-            return;
-        }
-
-        if(isInit){
-            return ;
-        }
 
         EMOptions options = new EMOptions();
-        // 设置Appkey，如果配置文件已经配置，这里可以不用设置
-        // options.setAppKey("lzan13#hxsdkdemo");
-        // 设置自动登录
-        options.setAutoLogin(true);
-        // 设置是否需要发送已读回执
-        options.setRequireAck(true);
-        // 设置是否需要发送回执，TODO 这个暂时有bug，上层收不到发送回执
-        options.setRequireDeliveryAck(true);
-        // 设置是否需要服务器收到消息确认
-        options.setAutoTransferMessageAttachments(true);
-        // 收到好友申请是否自动同意，如果是自动同意就不会收到好友请求的回调，因为sdk会自动处理，默认为true
-        options.setAcceptInvitationAlways(false);
-        // 设置是否自动接收加群邀请，如果设置了当收到群邀请会自动同意加入
-        options.setAutoAcceptGroupInvitation(false);
-        // 设置（主动或被动）退出群组时，是否删除群聊聊天记录
-        options.setDeleteMessagesAsExitGroup(false);
-        // 设置是否允许聊天室的Owner 离开并删除聊天室的会话
-        options.allowChatroomOwnerLeave(true);
-
-        // 调用初始化方法初始化sdk
+//        // 默认添加好友时，是不需要验证的，改成需要验证
+//        options.setAcceptInvitationAlways(false);
         EaseUI.getInstance().init(this, options);
-
         // 设置开启debug模式
         EMClient.getInstance().setDebugMode(true);
 
-        // 设置初始化已经完成
-        isInit = true;
+
+//        int pid = android.os.Process.myPid();
+//        String processAppName = getAppName(pid);
+//
+//        if (processAppName == null ||!processAppName.equalsIgnoreCase(appContext.getPackageName())) {
+//            Log.e(TAG, "enter the service process!");
+//
+//            // 则此application::onCreate 是被service 调用的，直接返回
+//            return;
+//        }
+//
+//        if(isInit){
+//            return ;
+//        }
+//
+//        EMOptions options = new EMOptions();
+//        // 设置Appkey，如果配置文件已经配置，这里可以不用设置
+//        // options.setAppKey("lzan13#hxsdkdemo");
+//        // 设置自动登录
+//        options.setAutoLogin(true);
+//        // 设置是否需要发送已读回执
+//        options.setRequireAck(true);
+//        // 设置是否需要发送回执，TODO 这个暂时有bug，上层收不到发送回执
+//        options.setRequireDeliveryAck(true);
+//        // 设置是否需要服务器收到消息确认
+//        options.setAutoTransferMessageAttachments(true);
+//        // 收到好友申请是否自动同意，如果是自动同意就不会收到好友请求的回调，因为sdk会自动处理，默认为true
+//        options.setAcceptInvitationAlways(false);
+//        // 设置是否自动接收加群邀请，如果设置了当收到群邀请会自动同意加入
+//        options.setAutoAcceptGroupInvitation(false);
+//        // 设置（主动或被动）退出群组时，是否删除群聊聊天记录
+//        options.setDeleteMessagesAsExitGroup(false);
+//        // 设置是否允许聊天室的Owner 离开并删除聊天室的会话
+//        options.allowChatroomOwnerLeave(true);
+//
+//        // 调用初始化方法初始化sdk
+//        EaseUI.getInstance().init(this, options);
+//
+//        // 设置开启debug模式
+//        EMClient.getInstance().setDebugMode(true);
+//
+//        // 设置初始化已经完成
+//        isInit = true;
 
     }
 
-    private void initApiConfig(){
+    private void initApiConfig() {
         ApiConfig mApiConfig = new ApiConfig();
 //        mApiConfig.setHostServer(BuildConfig.HOST_SERVER);
 //        mApiConfig.setShopHostServer(BuildConfig.SHOP_HOST_SERVER);
@@ -190,10 +199,12 @@ public class MyApplication extends BaseApplication {
 
     /**
      * 判定是否需要处理小红点
-     * 说明：1.5.2版本已经添加了小红点处理逻辑的扩展字段  但是App端未处理小红点逻辑，App端1.6版本才开始上小红点，不做版本判断，1.5.2被1.6版本覆盖安装，则小红点显示会出现异常的情况，订单列表没红点
+     * 说明：1.5.2版本已经添加了小红点处理逻辑的扩展字段  但是App端未处理小红点逻辑，App端1.6版本才开始上小红点，不做版本判断
+     * ，1.5.2被1.6版本覆盖安装，则小红点显示会出现异常的情况，订单列表没红点
+     *
      * @return true：需要处理小红点   false：不需要处理小红点
      */
-    private boolean needHandleRedDot(){
+    private boolean needHandleRedDot() {
 
         String mAppVersion = AppUtils.getAppVersionName();
         String mFixedVersion = "1.5.2"; //该版本服务端上了小红点逻辑需要的扩展字段，但是App端未处理
@@ -203,36 +214,36 @@ public class MyApplication extends BaseApplication {
         boolean needCheckNext = false;
         boolean needHandle = false;
 
-        if (Integer.parseInt(mAppVersionArray[0]) > Integer.parseInt(mFixedVersionArray[0])){
+        if (Integer.parseInt(mAppVersionArray[0]) > Integer.parseInt(mFixedVersionArray[0])) {
             needCheckNext = false; //第一位发现新版本，不再检查下一位
             needHandle = true; //标志有新版本
-        }else if (Integer.parseInt(mAppVersionArray[0]) == Integer.parseInt(mFixedVersionArray[0])){
+        } else if (Integer.parseInt(mAppVersionArray[0]) == Integer.parseInt(mFixedVersionArray[0])) {
             needCheckNext = true; //第一位相等，需要检查下一位
             needHandle = false; //标志没有新版本
-        }else {
+        } else {
             needCheckNext = false; //手机第一位比服务器都高，不再检查以后位数
             needHandle = false; //标志没有新版本
         }
 
-        if (needCheckNext){
-            if (Integer.parseInt(mAppVersionArray[1]) > Integer.parseInt(mFixedVersionArray[1])){
+        if (needCheckNext) {
+            if (Integer.parseInt(mAppVersionArray[1]) > Integer.parseInt(mFixedVersionArray[1])) {
                 needCheckNext = false;
                 needHandle = true;
-            }else if (Integer.parseInt(mAppVersionArray[1]) == Integer.parseInt(mFixedVersionArray[1])){
+            } else if (Integer.parseInt(mAppVersionArray[1]) == Integer.parseInt(mFixedVersionArray[1])) {
                 needCheckNext = true;
                 needHandle = false;
-            }else {
+            } else {
                 needCheckNext = false;
                 needHandle = false;
             }
         }
 
-        if (needCheckNext){
-            if (Integer.parseInt(mAppVersionArray[2]) > Integer.parseInt(mFixedVersionArray[2])){
+        if (needCheckNext) {
+            if (Integer.parseInt(mAppVersionArray[2]) > Integer.parseInt(mFixedVersionArray[2])) {
                 needHandle = true;
-            }else if (Integer.parseInt(mAppVersionArray[2]) == Integer.parseInt(mFixedVersionArray[2])){
+            } else if (Integer.parseInt(mAppVersionArray[2]) == Integer.parseInt(mFixedVersionArray[2])) {
                 needHandle = false;
-            }else {
+            } else {
                 needHandle = false;
             }
         }

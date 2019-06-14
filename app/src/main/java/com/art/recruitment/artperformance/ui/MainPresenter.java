@@ -1,13 +1,17 @@
 package com.art.recruitment.artperformance.ui;
 
 import com.art.recruitment.artperformance.api.GroupService;
+import com.art.recruitment.artperformance.api.LoginService;
 import com.art.recruitment.artperformance.bean.group.CityBean;
 import com.art.recruitment.artperformance.bean.group.StatusBean;
+import com.art.recruitment.artperformance.bean.im.ImUserBean;
 import com.art.recruitment.common.base.BasePresenter;
 import com.art.recruitment.common.baserx.RxSubscriber;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.http.mode.RequestMode;
+import com.hyphenate.chat.EMClient;
+import com.orhanobut.logger.Logger;
 
 import java.util.List;
 
@@ -32,5 +36,34 @@ public class MainPresenter extends BasePresenter<MainContract> {
                         mView.showErrorTip(errorType, errorCode, message);
                     }
                 });
+    }
+
+    public void loginToHx() {
+
+//        if (EMClient.getInstance().isLoggedInBefore()) {
+//            Logger.d("已经登录过环信");
+//            return;
+//        }
+
+        Api.
+                observable(Api.getService(LoginService.class).imUser()).
+                presenter(this).
+                requestMode(RequestMode.SINGLE).
+                showLoading(true).
+                doRequest(new RxSubscriber<ImUserBean.DataBean, ImUserBean>() {
+                    @Override
+                    protected void _onSuccess(ImUserBean.DataBean tokenBean, String successMessage) {
+
+                        mView.returnImUserBean(tokenBean);
+
+                    }
+
+                    @Override
+                    protected void _onError(ErrorType errorType, int errorCode, String message, ImUserBean.DataBean tokenBean) {
+                        mView.showErrorTip(errorType, errorCode, message);
+                        Logger.d("登录聊天服务器失败？:" + message);
+                    }
+                });
+
     }
 }

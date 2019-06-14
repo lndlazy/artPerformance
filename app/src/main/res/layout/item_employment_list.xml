@@ -28,7 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/y14"
-        android:text="2323"
+        android:text=""
         android:textColor="@color/color_9aa0a2"
         android:textSize="12sp"
         app:layout_constraintLeft_toLeftOf="@id/mine_recruit_nme_textview"
@@ -38,7 +38,7 @@
         android:id="@+id/release_employment_wait_constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/mine_age"
         app:layout_constraintRight_toRightOf="parent"
@@ -79,7 +79,7 @@
         android:id="@+id/release_employment_already_constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/mine_age"
         app:layout_constraintRight_toRightOf="parent"

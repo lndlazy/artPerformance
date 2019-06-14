@@ -150,6 +150,8 @@ public final class EaseUI {
             
             @Override
             public void onMessageReceived(List<EMMessage> messages) {
+
+//                Log.e("TAG", "接受到了消息:::" + messages.get());
                 EaseAtMessageHelper.get().parseMessages(messages);
             }
             @Override
@@ -198,7 +200,7 @@ public final class EaseUI {
     
     /**
      * set user profile provider
-     * @param provider
+     * @param
      */
     public void setUserProfileProvider(EaseUserProfileProvider userProvider){
         this.userProvider = userProvider;

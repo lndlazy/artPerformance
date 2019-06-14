@@ -119,13 +119,14 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
         this.mContext = context;
     }
 
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         this.isVisibleToUser = isVisibleToUser;
         //重新进入Fragment
         if (mRootView != null && isVisibleToUser) {
-            lazyLoad();
+//            lazyLoad();
         }
     }
 

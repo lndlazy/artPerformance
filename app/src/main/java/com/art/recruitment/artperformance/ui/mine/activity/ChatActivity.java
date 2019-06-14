@@ -17,5 +17,8 @@ public class ChatActivity extends FragmentActivity {
         EaseChatFragment easeChatFragment = new EaseChatFragment();  //环信聊天界面
         easeChatFragment.setArguments(getIntent().getExtras()); //需要的参数
         getSupportFragmentManager().beginTransaction().add(R.id.layout_chat,easeChatFragment).commit();
+
     }
+
+
 }

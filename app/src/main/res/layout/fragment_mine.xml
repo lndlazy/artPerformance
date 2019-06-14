@@ -13,13 +13,24 @@
 
         <ImageView
             android:id="@+id/mine_message_imageview"
-            android:layout_width="@dimen/x40"
-            android:layout_height="@dimen/y40"
+            android:padding="@dimen/x10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@mipmap/nav_my_message"
             android:layout_marginTop="@dimen/y64"
             android:layout_marginRight="@dimen/x40"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+
+        <ImageView
+            android:id="@+id/ivNewMsg"
+            android:layout_width="@dimen/x15"
+            app:layout_constraintRight_toRightOf="@id/mine_message_imageview"
+            app:layout_constraintTop_toTopOf="@id/mine_message_imageview"
+            android:background="@drawable/shape_circle_red"
+            android:layout_height="@dimen/x15" />
+
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/mine_head_portrait_imageview"
