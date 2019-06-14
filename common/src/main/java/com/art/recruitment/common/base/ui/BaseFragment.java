@@ -261,7 +261,6 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
 
             if (enableAdapterLoadMore()) {
 
-//                LogUtil.d("设置 可以上拉 加载更多 ✅✅✅✅✅✅✅ ");
                 mRecyclerViewAdapter.setEnableLoadMore(true);
                 mRecyclerViewAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
                     @Override
@@ -389,9 +388,10 @@ public abstract class BaseFragment<T extends BasePresenter, R extends MultiItemE
         }
 
         if (mRecyclerViewAdapter != null && enableAdapterLoadMore()) {
-            if (!isRefreshMode) {
+            if (!isRefreshMode && dataList != null) {
                 mRecyclerViewAdapter.addData(dataList);
                 if (dataList.size() < 15 || dataList.isEmpty()) {
+//                    mRecyclerViewAdapter.setloadmor
                     mRecyclerViewAdapter.loadMoreEnd();
                 } else {
                     mRecyclerViewAdapter.loadMoreComplete();

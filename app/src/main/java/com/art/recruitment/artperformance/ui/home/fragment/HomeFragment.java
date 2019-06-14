@@ -213,8 +213,8 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {//搜索按键action
-                    String trim = mSearchEdittext.getText().toString().trim();
-                    mSearch = trim;
+                    mSearch = mSearchEdittext.getText().toString().trim();
+//                    mSearch = trim;
                     autoRefresh();
                     closeInoutDecorView(getActivity());
                     return true;
@@ -323,7 +323,8 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     public static void closeInoutDecorView(Activity activity) {
         View view = activity.getWindow().peekDecorView();
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (inputMethodManager != null)
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     @Override

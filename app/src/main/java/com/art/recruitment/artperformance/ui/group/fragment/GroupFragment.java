@@ -154,7 +154,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
 
     @Override
     protected boolean enableAdapterLoadMore() {
-        return false;
+        return true;
     }
 
     @Override
@@ -522,6 +522,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
     public static void closeInoutDecorView(Activity activity) {
         View view = activity.getWindow().peekDecorView();
         InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        if (inputMethodManager != null)
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 }

@@ -61,4 +61,6 @@ public class GroupAdapter extends BaseRecyclerViewAdapter<GroupListBean.ContentB
                         : R.drawable.shape_group_woman_background);
 
     }
+
+
 }
