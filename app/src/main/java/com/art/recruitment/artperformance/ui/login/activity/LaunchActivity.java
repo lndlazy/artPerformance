@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -83,18 +84,28 @@ public class LaunchActivity extends BaseActivity<LaunchPresenter> implements Lau
                         skipTextView.setText("跳过" + time);
                         skipTextView.setBackground(ResourceUtils.getDrawable(R.drawable.shape_launch_textview_background));
                         if (time == 0) {
-                            if (SPUtils.getInstance().getString(BaseConfig.BaseSPKey.LOGIN_TIME).equals("2")) {
-                                startActivity(MainActivity.class);
-                                finish();
 
-                            } else {
-                                SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
-                                startActivity(LoginActivity.class);
-                                finish();
-                            }
+                            nextActivity();
+
+//                            if (.equals("2")) {
+//                                startActivity(MainActivity.class);
+//                                finish();
+//
+//                            } else {
+//                                SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
+//
+//                            }
                         }
                     }
                 }).start();
+    }
+
+    private void nextActivity() {
+
+        startActivity(TextUtils.isEmpty(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.TOKEN)) ?
+                LoginActivity.class : MainActivity.class);
+
+        finish();
     }
 
     public void initButton() {
@@ -106,24 +117,17 @@ public class LaunchActivity extends BaseActivity<LaunchPresenter> implements Lau
                     public void accept(Object o) throws Exception {
                         mTimeCountDownHelper.release();
 
-                        if (SPUtils.getInstance().getString(BaseConfig.BaseSPKey.LOGIN_TIME).equals("2")) {
-                            startActivity(MainActivity.class);
-                            finish();
-
-                        } else {
-                            startActivity(LoginActivity.class);
-                            finish();
-                        }
+                        nextActivity();
                     }
                 });
     }
 
-//    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
+    //    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public void returnStartUpBean(StartUpBean.DataBean bean) {
         try {
 //            if (isDestroyed())
-                Glide.with(this).load(bean.getImageUrl()).into(launchImageview);
+            Glide.with(this).load(bean.getImageUrl()).into(launchImageview);
 
         } catch (Exception e) {
             e.printStackTrace();

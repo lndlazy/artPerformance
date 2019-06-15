@@ -31,5 +31,7 @@ public class ErrorCode {
 
     public static final int CODE_NOT_FOUND=404;
 
+    public static final int CODE_UNBIND=-501;//三方登录未绑定手机号
+
 
 }

@@ -39,7 +39,6 @@ import com.art.recruitment.artperformance.ui.mine.activity.ChatListActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.PermissionTipUtils;
-import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.PermissionRationalDialog;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
@@ -47,6 +46,7 @@ import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -193,10 +193,10 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
         setEmptyErrorViewData(R.mipmap.img_show_empty, "暂时没有数据");
 
-        mCityCode = (int) SaveUtils.get(getContext(), SaveUtils.CITY_CODE, -1);
+        mCityCode = SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.CITY_CODE);
 
         com.orhanobut.logger.Logger.d("缓存中的CITY_CODE:" + mCityCode);
-        String cityName = (String) SaveUtils.get(getContext(), SaveUtils.CITY_NAME, "");
+        String cityName = SPUtils.getInstance().getString(BaseConfig.BaseSPKey.CITY_NAME);
 
         if (!TextUtils.isEmpty(cityName) && mCityCode != -1)
             mCityTextview.setText(cityName);
@@ -428,7 +428,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
     private void setRedPoint() {
         int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
-        com.orhanobut.logger.Logger.d("未读消息个数：：" + unreadMessageCount);
+//        com.orhanobut.logger.Logger.d("未读消息个数：：" + unreadMessageCount);
 
         if (ivNewMsg != null)
             ivNewMsg.setVisibility(unreadMessageCount > 0 ? View.VISIBLE : View.INVISIBLE);
@@ -476,7 +476,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
         autoRefresh();
 
         //保存城市code
-        SaveUtils.put(getContext(), SaveUtils.CITY_CODE, bean.getCityCode());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_CODE, bean.getCityCode());
 
     }
 
@@ -516,7 +516,8 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
             String city = data.getExtras().getString("city");
 
             //保存城市名称
-            SaveUtils.put(getContext(), SaveUtils.CITY_NAME, city);
+            if (!TextUtils.isEmpty(city))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_NAME, city);
 
             mCityTextview.setText(city);
             mPresenter.citiSearch(city);

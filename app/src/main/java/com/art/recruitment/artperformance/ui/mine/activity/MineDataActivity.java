@@ -47,7 +47,6 @@ import com.art.recruitment.artperformance.bean.mine.SignaTureBean;
 import com.art.recruitment.artperformance.ui.home.activity.CityActivity;
 import com.art.recruitment.artperformance.ui.mine.FileType;
 import com.art.recruitment.artperformance.ui.mine.ImageModel;
-import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
 import com.art.recruitment.artperformance.ui.mine.adapter.MinePhotoAdapter;
 import com.art.recruitment.artperformance.ui.mine.contract.MineDataContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MineDataPresenter;
@@ -55,7 +54,6 @@ import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.ImageUtils;
 import com.art.recruitment.artperformance.utils.MatisseGlideEngine;
 import com.art.recruitment.artperformance.utils.PermissionTipUtils;
-import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.utils.StringsUtils;
 import com.art.recruitment.artperformance.utils.UriUtil;
 import com.art.recruitment.artperformance.view.DialogWrapper;
@@ -885,14 +883,19 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         ToastUtils.showShort("资料已保存");
 
         if (!TextUtils.isEmpty(mWeChat)) {
-            Logger.d("保存微信::" + mWeChat);
-            SaveUtils.put(this, MyInfoSave.WECHAT, "");
+
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.WECHAT, mWeChat);
         }
 
 //        SaveUtils.put(this, MyInfoSave.HEAD_PIC_URL, bean.getAvatar());
-        SaveUtils.put(this, MyInfoSave.PHONE_NUM, bean.getTelephone());
-        SaveUtils.put(this, MyInfoSave.SEX, bean.getGender());
-        SaveUtils.put(this, MyInfoSave.USER_NAME, bean.getUsername());
+
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bean.getGender());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.NAME, bean.getName());
+
+//        SaveUtils.put(this, MyInfoSave.PHONE_NUM, bean.getTelephone());
+//        SaveUtils.put(this, MyInfoSave.SEX, bean.getGender());
+//        SaveUtils.put(this, MyInfoSave.USER_NAME, bean.getUsername());
 //        SaveUtils.put(this, MyInfoSave.AGE, bean.getAge());
 //        SaveUtils.put(this, MyInfoSave.WECHAT, bean.getWechat());
 

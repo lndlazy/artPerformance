@@ -59,6 +59,11 @@ public class ExceptionConverter {
                     errorType=ErrorType.ERROR_HTTP;
                     errorCode= ErrorCode.CODE_FORBIDDEN;
                     break;
+
+                case ErrorCode.CODE_UNBIND:
+
+                    errorCode= ErrorCode.CODE_UNBIND;
+
                 default:
                     errorMessage="未知网络错误";
                     errorType=ErrorType.ERROR_UNKNOWN_HTTP;

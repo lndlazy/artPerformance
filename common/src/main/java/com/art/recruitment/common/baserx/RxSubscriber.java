@@ -186,7 +186,13 @@ public abstract class RxSubscriber<R, T extends BaseBean<R>> implements Observer
 
         doDispose();
 
-        _onError(ErrorType.ERROR_UNKNOWN, ErrorCode.CODE_UNKNOWN, e.getMessage(), null);
+        ApiException apiException;
+        if (e instanceof ApiException) {
+            apiException = (ApiException) e;
+            _onError(apiException.getErrorType(), apiException.getCode(), e.getMessage(), null);
+        } else
+
+            _onError(ErrorType.ERROR_UNKNOWN, ErrorCode.CODE_UNKNOWN, e.getMessage(), null);
     }
 
     @Override

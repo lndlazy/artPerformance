@@ -39,6 +39,16 @@ public class BaseConfig {
      * SharePreference的key
      */
     public static class BaseSPKey {
+
+        //城市名称
+        public static final String CITY_NAME = "CITY_NAME";
+        //城市编码
+        public static final String CITY_CODE = "CITY_CODE";
+
+
+        public static String CONFIG = "art_performance";//sp配置文件名称
+
+
         /**
          * 用户token
          */
@@ -67,5 +77,13 @@ public class BaseConfig {
          * 外网ip key值
          */
         public static final String EXTRANET_IP = "extranetIp";
+
+
+        public static final String HEAD_PIC_URL = "head_pic_url";
+        //        public static final    String USER_NAME = "user_name";
+        public static final String PHONE_NUM = "phone_num";
+        public static final String SEX = "sex";
+        public static final String AGE = "age";
+        public static final String WECHAT = "wechat";
     }
 }

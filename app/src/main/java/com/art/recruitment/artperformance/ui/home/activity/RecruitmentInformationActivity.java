@@ -20,12 +20,11 @@ import com.art.recruitment.artperformance.ui.home.adapter.ImageAdapter;
 import com.art.recruitment.artperformance.ui.home.contract.RecruitmentInformaContract;
 import com.art.recruitment.artperformance.ui.home.presenter.RecruitmentInformaPresenter;
 import com.art.recruitment.artperformance.ui.login.activity.UserAgreementActivity;
-import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
+
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.Defaultcontent;
-import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.utils.ShareUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.TagCloudView;

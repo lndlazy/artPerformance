@@ -179,8 +179,14 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
     public void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        if (getActivity() != null)
-            getActivity().unregisterReceiver(receiver);
+
+        try {
+            if (getActivity() != null)
+                getActivity().unregisterReceiver(receiver);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

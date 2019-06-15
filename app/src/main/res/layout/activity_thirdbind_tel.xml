@@ -8,178 +8,153 @@
 
     <ImageView
         android:id="@+id/register_return_imageview"
-        android:layout_width="@dimen/x40"
-        android:layout_height="@dimen/y40"
-        android:src="@mipmap/nav_arrow"
-        android:layout_marginTop="@dimen/y64"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/x30"
+        android:layout_marginTop="@dimen/y64"
+        android:padding="@dimen/x15"
+        android:src="@mipmap/nav_arrow"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/register_logo_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="22sp"
-        android:textColor="@color/color_33353a"
-        android:textStyle="bold"
-        android:layout_marginTop="@dimen/y96"
         android:layout_marginLeft="@dimen/x80"
-        app:layout_constraintTop_toBottomOf="@+id/register_return_imageview"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        android:layout_marginTop="@dimen/y70"
+        android:text="绑定手机"
+        android:textColor="@color/color_33353a"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/register_return_imageview" />
 
     <EditText
         android:id="@+id/register_phone_edittext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="@string/login_phone_hint"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginTop="@dimen/y138"
+        android:background="@null"
+        android:hint="@string/bind_phone_hint"
+        android:inputType="number"
+        android:maxLength="11"
+        android:minWidth="@dimen/x400"
+        android:singleLine="true"
+        android:textColor="@color/color_33353a"
         android:textColorHint="@color/color_9aa0a2"
         android:textSize="14sp"
-        android:textColor="@color/color_33353a"
-        android:background="@null"
-        android:inputType="number"
-        android:singleLine="true"
-        android:digits="1234567890"
-        android:layout_marginTop="@dimen/y138"
-        android:minWidth="@dimen/x400"
-        android:layout_marginLeft="@dimen/x80"
         android:theme="@style/TextInputLayoutLineColor"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_logo_textview"/>
+        app:layout_constraintTop_toBottomOf="@+id/register_logo_textview" />
 
     <View
         android:id="@+id/register_phone_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x2"
-        android:background="@color/color_e1e4e6"
         android:layout_marginLeft="@dimen/x80"
         android:layout_marginRight="@dimen/x80"
         android:layout_marginTop="@dimen/y40"
+        android:background="@color/color_e1e4e6"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_phone_edittext"/>
+        app:layout_constraintTop_toBottomOf="@+id/register_phone_edittext" />
 
     <EditText
         android:id="@+id/register_verification_code_editext"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintHorizontal_weight="1"
+        android:layout_marginLeft="@dimen/x80"
+        android:layout_marginTop="@dimen/y54"
+        android:background="@null"
+        android:digits="1234567890"
         android:hint="@string/register_verification_code_hint"
+        android:inputType="number"
+        android:maxEms="4"
+        android:minWidth="@dimen/x400"
+        android:singleLine="true"
+        android:textColor="@color/color_33353a"
         android:textColorHint="@color/color_9aa0a2"
         android:textSize="14sp"
-        android:textColor="@color/color_33353a"
-        android:inputType="number"
-        android:singleLine="true"
-        android:minWidth="@dimen/x400"
-        android:digits="1234567890"
-        android:maxEms="4"
-        android:background="@null"
-        android:layout_marginTop="@dimen/y54"
-        android:layout_marginLeft="@dimen/x80"
         android:theme="@style/TextInputLayoutLineColor"
+        app:layout_constraintHorizontal_weight="1"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/register_verification_code_textview"
-        app:layout_constraintTop_toBottomOf="@+id/register_phone_view"/>
+        app:layout_constraintTop_toBottomOf="@+id/register_phone_view" />
 
     <TextView
         android:id="@+id/register_verification_code_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginRight="@dimen/x80"
         android:text="@string/register_get_verification_code"
         android:textColor="@color/color_fd7b25"
         android:textSize="14sp"
-        android:layout_marginRight="@dimen/x80"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/register_verification_code_editext"/>
+        app:layout_constraintTop_toTopOf="@id/register_verification_code_editext" />
 
     <View
         android:id="@+id/register_code_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/x2"
-        android:background="@color/color_e1e4e6"
         android:layout_marginLeft="@dimen/x80"
         android:layout_marginRight="@dimen/x80"
         android:layout_marginTop="@dimen/y40"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_verification_code_editext"/>
-
-    <EditText
-        android:id="@+id/register_password_edittext"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:minWidth="@dimen/x400"
-        app:layout_constraintHorizontal_weight="1"
-        android:textColorHint="@color/color_9aa0a2"
-        android:textSize="14sp"
-        android:textColor="@color/color_33353a"
-        android:background="@null"
-        android:inputType="textPassword"
-        android:layout_marginTop="@dimen/y54"
-        android:layout_marginLeft="@dimen/x80"
-        android:theme="@style/TextInputLayoutLineColor"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_code_view"/>
-
-    <View
-        android:id="@+id/register_password_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/x2"
         android:background="@color/color_e1e4e6"
-        android:layout_marginLeft="@dimen/x80"
-        android:layout_marginRight="@dimen/x80"
-        android:layout_marginTop="@dimen/y40"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/register_password_edittext"/>
+        app:layout_constraintTop_toBottomOf="@+id/register_verification_code_editext" />
+
 
     <CheckBox
         android:id="@+id/register_checkbox"
-        android:layout_width="@dimen/x26"
-        android:layout_height="@dimen/y26"
-        android:button="@drawable/selector_user_agreement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/y30"
-        app:layout_constraintLeft_toLeftOf="@+id/register_password_view"
-        app:layout_constraintTop_toBottomOf="@+id/register_password_view"/>
+        android:button="@drawable/selector_user_agreement"
+        android:padding="@dimen/x15"
+        app:layout_constraintLeft_toLeftOf="@+id/register_code_view"
+        app:layout_constraintTop_toBottomOf="@+id/register_code_view" />
 
     <TextView
         android:id="@+id/register_agreement"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x8"
         android:text="@string/login_agreement_textview"
         android:textColor="@color/color_9aa0a2"
         android:textSize="11sp"
-        android:layout_marginLeft="@dimen/x8"
+        app:layout_constraintBottom_toBottomOf="@+id/register_checkbox"
         app:layout_constraintLeft_toRightOf="@+id/register_checkbox"
-        app:layout_constraintTop_toTopOf="@+id/register_checkbox"
-        app:layout_constraintBottom_toBottomOf="@+id/register_checkbox"/>
+        app:layout_constraintTop_toTopOf="@+id/register_checkbox" />
 
     <TextView
         android:id="@+id/register_agreement_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x8"
         android:text="@string/login_agreement"
         android:textColor="@color/color_33353a"
         android:textSize="11sp"
-        android:layout_marginLeft="@dimen/x8"
+        app:layout_constraintBottom_toBottomOf="@+id/register_checkbox"
         app:layout_constraintLeft_toRightOf="@+id/register_agreement"
-        app:layout_constraintTop_toTopOf="@+id/register_checkbox"
-        app:layout_constraintBottom_toBottomOf="@+id/register_checkbox"/>
+        app:layout_constraintTop_toTopOf="@+id/register_checkbox" />
 
     <TextView
         android:id="@+id/register_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:textColor="@color/color_ffffff"
-        android:gravity="center"
-        android:paddingTop="@dimen/y30"
-        android:paddingBottom="@dimen/y30"
-        android:layout_marginTop="@dimen/y48"
         android:layout_marginLeft="@dimen/x80"
         android:layout_marginRight="@dimen/x80"
-        android:enabled="false"
+        android:layout_marginTop="@dimen/y48"
         android:background="@drawable/login_selector_home_button_nomal_fd7b25_unenable_febd92"
+        android:gravity="center"
+        android:paddingBottom="@dimen/y30"
+        android:paddingTop="@dimen/y30"
+        android:text="确定"
+        android:textColor="@color/color_ffffff"
+        android:textSize="16sp"
         app:layout_constraintTop_toBottomOf="@+id/register_agreement_textview" />
 
 </android.support.constraint.ConstraintLayout>

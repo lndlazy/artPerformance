@@ -201,5 +201,6 @@
     <string name="input_sex">请选择性别</string>
     <string name="input_tel">请输入电话号码</string>
     <string name="apply_input_all">应聘需填写所有内容</string>
+    <string name="bind_phone_hint">请输入要绑定的手机号码</string>
 
 </resources>

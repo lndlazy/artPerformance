@@ -31,20 +31,20 @@ import com.art.recruitment.artperformance.ui.group.activity.RealNameActivity;
 import com.art.recruitment.artperformance.ui.group.activity.ReleaseRecruitmentActivity;
 import com.art.recruitment.artperformance.ui.group.fragment.GroupFragment;
 import com.art.recruitment.artperformance.ui.home.fragment.HomeFragment;
-import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.ui.mine.fragment.MineFragment;
 import com.art.recruitment.artperformance.utils.Constant;
-import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.view.CustomViewPager;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.TabEntity;
 import com.art.recruitment.common.ActivityManager;
 import com.art.recruitment.common.base.callback.IToolbar;
+import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.request.RequestOptions;
@@ -244,9 +244,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         } else if (bean.getRealNameFlag() == 1) {
             //已经实名认证， 判断是否填写过 基本三项信息
 
-            if (!TextUtils.isEmpty((String) SaveUtils.get(this, MyInfoSave.PHONE_NUM, ""))
-                    && !TextUtils.isEmpty((String) SaveUtils.get(this, MyInfoSave.USER_NAME, ""))
-                    && ((int) SaveUtils.get(this, MyInfoSave.SEX, -1) != -1)) {
+
+            SPUtils.getInstance().getString(BaseConfig.BaseSPKey.PHONE_NUM);
+
+            if (!TextUtils.isEmpty(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.PHONE_NUM))
+                    && !TextUtils.isEmpty(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.NAME))
+                    && ((SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.SEX)) != -1)) {
                 Intent intent = new Intent(MainActivity.this, ReleaseRecruitmentActivity.class);
                 intent.putExtra("release_id", 0);
                 Logger.d("head-===>" + head);

@@ -73,6 +73,10 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     private boolean mIsPhoneOk = false;
     private boolean mIsPasswordOk = false;
     private int mIsThatPage;
+    private String thirdLoginName;//三方登录的name
+    private String thirdLoginGender;//三方登录的性别
+    String socialType = "";//三方登录的类型  wx or qq
+    private String openId;
 
     @Override
     protected IToolbar getIToolbar() {
@@ -167,6 +171,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
      * 按钮的点击事件
      */
     private void initButtonClick() {
+        //用户协议
         RxView.
                 clicks(mUserAgreementTextview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -293,7 +298,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             public void onError(int code, String message) {
                 startActivity(MainActivity.class);
                 finish();
-                ToastUtils.showShort("登录聊天服务器失败！");
+                ToastUtils.showShort("登录聊天服务器失败！" );
+
+                Logger.d("登录聊天服务器失败:::" + message);
             }
         });
     }
@@ -302,11 +309,27 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     @Override
     public void returnThirdLogin(ThirdLoginEntry.DataBean thirdLoginBean) {
 
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, thirdLoginBean.getToken());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, thirdLoginBean.getId());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, thirdLoginBean.getUsername());
+//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
+        mPresenter.imUser();
+
     }
 
     @Override
     public void showErrorTip(ErrorType errorType, int errorCode, String message) {
         if (message != null) {
+
+            if (errorCode == -501) {
+                //未绑定  进行绑定
+                Intent bindIntent = new Intent(LoginActivity.this, ThirdBindTelActivity.class);
+                bindIntent.putExtra("openId", openId);
+                bindIntent.putExtra("socialAccount", thirdLoginName);
+                bindIntent.putExtra("socialType", socialType);
+                startActivity(bindIntent);
+            }else
+
             ToastUtils.showShort(message);
         }
     }
@@ -315,7 +338,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, tokenBean.getToken());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, tokenBean.getId());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, tokenBean.getUsername());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
+//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
     }
 
     //授权
@@ -332,18 +355,18 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
                 //sdk是6.4.4的,但是获取值的时候用的是6.2以前的(access_token)才能获取到值,未知原因
                 String uid = map.get("uid");
-                String openid = map.get("openid");//微博没有
+                //微博没有
+                openId = map.get("openid");
                 String unionid = map.get("unionid");//微博没有
                 String access_token = map.get("access_token");
                 String refresh_token = map.get("refresh_token");//微信,qq,微博都没有获取到
                 String expires_in = map.get("expires_in");
-                String name = map.get("name");
-                String gender = map.get("gender");
+                thirdLoginName = map.get("name");
+                thirdLoginGender = map.get("gender");
                 String iconurl = map.get("iconurl");
 
-                Logger.d("name=" + name + ",gender=" + gender);
+                Logger.d("name=" + thirdLoginName + ",gender=" + thirdLoginGender);
 
-                String socialType = "";
                 switch (share_media) {
 
                     case WEIXIN:
@@ -354,8 +377,10 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                        break;
 
                 }
+
+
                 SocialLoginRequestVO socialLoginRequestVO = new SocialLoginRequestVO();
-                socialLoginRequestVO.setOpenId(openid);
+                socialLoginRequestVO.setOpenId(openId);
                 Gson gson = new Gson();
                 String codeStr = gson.toJson(socialLoginRequestVO);
 

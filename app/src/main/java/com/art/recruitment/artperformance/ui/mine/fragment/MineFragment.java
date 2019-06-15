@@ -18,7 +18,6 @@ import com.art.recruitment.artperformance.bean.mine.MineBean;
 import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActivity;
 import com.art.recruitment.artperformance.ui.group.activity.MineRecruitActivity;
 import com.art.recruitment.artperformance.ui.login.activity.LoginActivity;
-import com.art.recruitment.artperformance.ui.mine.MyInfoSave;
 import com.art.recruitment.artperformance.ui.mine.activity.AboutUsActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatListActivity;
@@ -30,7 +29,6 @@ import com.art.recruitment.artperformance.ui.mine.activity.MineSignUpActivity;
 import com.art.recruitment.artperformance.ui.mine.contract.MineContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MinePresenter;
 import com.art.recruitment.artperformance.utils.Defaultcontent;
-import com.art.recruitment.artperformance.utils.SaveUtils;
 import com.art.recruitment.artperformance.utils.ShareUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
@@ -177,7 +175,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
 
     private void setRedPoint() {
         int unreadMessageCount = EMClient.getInstance().chatManager().getUnreadMessageCount();
-        com.orhanobut.logger.Logger.d("未读消息个数：：" + unreadMessageCount);
+//        com.orhanobut.logger.Logger.d("未读消息个数：：" + unreadMessageCount);
         ivNewMsg.setVisibility(unreadMessageCount > 0 ? View.VISIBLE : View.INVISIBLE);
 
     }
@@ -313,20 +311,14 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                     }
                 });
 
+        //退出登录
         RxView.
                 clicks(mLogot).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, "");
-                        SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, "");
-                        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, "");
-                        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "");
-
-                        startActivity(new Intent(getContext(), LoginActivity.class));
-                        if (getActivity() != null)
-                            getActivity().finish();
+                        logout();
                     }
                 });
 
@@ -341,6 +333,23 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                         startActivity(new Intent(getContext(), ChatListActivity.class));
                     }
                 });
+
+    }
+
+    private void logout() {
+//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, "");
+//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, "");
+//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, "");
+//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "");
+
+        SPUtils.getInstance().clear();
+
+        //退出环信
+        EMClient.getInstance().logout(true);
+
+        startActivity(new Intent(getContext(), LoginActivity.class));
+        if (getActivity() != null)
+            getActivity().finish();
 
     }
 
@@ -439,14 +448,15 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
             EventBus.getDefault().post(bean.getAvatarView());
 
         //保存个人资料
-        SaveUtils.put(getContext(), MyInfoSave.HEAD_PIC_URL, bean.getAvatar());
-        SaveUtils.put(getContext(), MyInfoSave.PHONE_NUM, bean.getTelephone());
-        SaveUtils.put(getContext(), MyInfoSave.SEX, bean.getGender());
-        SaveUtils.put(getContext(), MyInfoSave.USER_NAME, bean.getUsername());
-        SaveUtils.put(getContext(), MyInfoSave.AGE, bean.getAge());
+
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bean.getAvatar());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bean.getGender());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getUsername());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.AGE, bean.getAge());
 
         if (!TextUtils.isEmpty(bean.getWechat()))
-            SaveUtils.put(getContext(), MyInfoSave.WECHAT, bean.getWechat());
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.WECHAT, bean.getWechat());
 
     }
 

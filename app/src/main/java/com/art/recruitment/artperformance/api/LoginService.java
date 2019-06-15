@@ -7,6 +7,7 @@ import com.art.recruitment.artperformance.bean.login.ResetPasswordBean;
 import com.art.recruitment.artperformance.bean.login.StartUpBean;
 import com.art.recruitment.artperformance.bean.login.TokenBean;
 import com.art.recruitment.artperformance.bean.login.VerificationCodeBean;
+import com.art.recruitment.artperformance.ui.login.ThirdBindResultEntry;
 import com.art.recruitment.artperformance.ui.login.ThirdLoginEntry;
 import com.art.recruitment.common.base.BaseBean;
 
@@ -64,6 +65,13 @@ public interface LoginService {
      */
     @POST(ApiUrls.AUTHENTICATION_LOGIN)
     Observable<ThirdLoginEntry> authenticationLogin(@Path("socialType") String socialType, @Body RequestBody body);
+
+
+    /**
+     * 第三方账号绑定
+     */
+    @POST(ApiUrls.AUTHENTICATION_BIND)
+    Observable<ThirdBindResultEntry> authenticationBind(@Path("socialType") String socialType, @Body RequestBody body);
 
 
 }

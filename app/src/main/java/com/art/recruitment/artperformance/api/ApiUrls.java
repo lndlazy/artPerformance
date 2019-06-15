@@ -222,4 +222,11 @@ public class ApiUrls {
 
 
 
+    /**
+     * 第三方账号绑定
+     */
+    public static final String AUTHENTICATION_BIND = "/authentication/token/social/{socialType}/bind";
+
+
+
 }

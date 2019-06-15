@@ -3,10 +3,7 @@ package com.art.recruitment.artperformance.ui.login.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,11 +18,11 @@ import com.art.recruitment.artperformance.bean.login.ResetPasswordRequest;
 import com.art.recruitment.artperformance.bean.login.VerificationCodeBean;
 import com.art.recruitment.artperformance.bean.login.VerificationCodeRequest;
 import com.art.recruitment.artperformance.ui.MainActivity;
-import com.art.recruitment.artperformance.ui.login.contract.RegisterContract;
+import com.art.recruitment.artperformance.ui.login.ThirdBindRequestEntry;
+import com.art.recruitment.artperformance.ui.login.ThirdBindResultEntry;
 import com.art.recruitment.artperformance.ui.login.contract.ThirdBindContract;
-import com.art.recruitment.artperformance.ui.login.presenter.RegisterPresenter;
+import com.art.recruitment.artperformance.ui.login.presenter.ThirdBindPresenter;
 import com.art.recruitment.artperformance.utils.TimeCountDownHelper;
-import com.art.recruitment.common.base.BasePresenter;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
@@ -38,44 +35,51 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
-public class RegisterActivity extends BaseActivity<RegisterPresenter> implements RegisterContract {
+/**
+ * 第三方账号 绑定手机号页面
+ * Created by linaidao on 2019/6/15.
+ */
+
+public class ThirdBindTelActivity extends BaseActivity<ThirdBindPresenter> implements ThirdBindContract {
+
 
     @BindView(R.id.register_return_imageview)
     ImageView mReturnImageview;
-    @BindView(R.id.register_logo_textview)
-    TextView mLogoTextview;
+
     @BindView(R.id.register_phone_edittext)
     EditText mPhoneEdittext;
-    @BindView(R.id.register_password_edittext)
-    EditText mPasswordEdittext;
+
+    //验证码
     @BindView(R.id.register_verification_code_editext)
     EditText mVerificationCodeEditext;
+
     @BindView(R.id.register_checkbox)
     CheckBox mCheckbox;
+
+    //用户协议
     @BindView(R.id.register_agreement_textview)
     TextView mAgreementTextview;
+
     @BindView(R.id.register_textview)
     TextView mRegisterTextview;
-    @BindView(R.id.register_password_view)
-    View mPasswordView;
+
+    //验证码
     @BindView(R.id.register_verification_code_textview)
     TextView mVerificationCodeTextview;
 
-    private int mIsThatPage;
     private TimeCountDownHelper mTimeCountDownHelper;
     private long mCountDown;
-    private boolean mIsPhoneOk;
-    private boolean mIsPasswordOk;
-    private boolean mIsVerificationOk;
+    private String openId;
+    private String socialAccount;
+    private String socialType;
+
 
     @Override
     protected IToolbar getIToolbar() {
@@ -84,7 +88,7 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
 
     @Override
     protected int getLayoutId() {
-        return R.layout.activity_register;
+        return R.layout.activity_thirdbind_tel;
     }
 
     @Override
@@ -99,105 +103,34 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
-        mIsThatPage = getIntent().getIntExtra("mIsThatPage", 0);
 
-        initRegisterOrForget();
-        initEditTextLister();
         initButtonClick();
 
-    }
-
-    private void initEditTextLister() {
-
-        mPhoneEdittext.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == Global.PHONE_NUMBER_SIZE) {
-                    mIsPhoneOk = true;
-                } else {
-                    mIsPhoneOk = false;
-                }
-                setButtonStatus();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        mPasswordEdittext.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    mIsPasswordOk = true;
-                } else {
-                    mIsPasswordOk = false;
-                }
-                setButtonStatus();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-
-        mVerificationCodeEditext.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 4) {
-                    mIsVerificationOk = true;
-                } else {
-                    mIsVerificationOk = false;
-                }
-                setButtonStatus();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
+        //第三方openId
+        openId = getIntent().getStringExtra("openId");
+        //第三方账号 微信号或者qq号
+        socialAccount = getIntent().getStringExtra("socialAccount");
+        //第三方类型 wechat  or   qq
+        socialType = getIntent().getStringExtra("socialType");
 
     }
 
-    /**
-     * 按钮的点击状态
-     */
-    private void setButtonStatus() {
-
-        if (mIsThatPage == 3) {
-            if (mIsPhoneOk && mIsVerificationOk) {
-                mRegisterTextview.setEnabled(true);
-            } else {
-                mRegisterTextview.setEnabled(false);
-            }
-        } else {
-            if (mIsPhoneOk && mIsPasswordOk && mIsVerificationOk) {
-                mRegisterTextview.setEnabled(true);
-            } else {
-                mRegisterTextview.setEnabled(false);
-            }
-        }
-    }
 
     private void initButtonClick() {
+
+        //协议
+        RxView.
+                clicks(mAgreementTextview).
+                compose(RxClickTransformer.getClickTransformer()).
+                subscribe(new Consumer<Object>() {
+                    @Override
+                    public void accept(Object o) throws Exception {
+                        Intent intent = new Intent(mContext, UserAgreementActivity.class);
+                        intent.putExtra("web", "register/agreement");
+                        startActivity(intent);
+                    }
+                });
+
 
         RxView.
                 clicks(mReturnImageview).
@@ -209,6 +142,7 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
                     }
                 });
 
+        //点击获取验证码
         RxView.
                 clicks(mVerificationCodeTextview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -221,17 +155,10 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
                                 VerificationCodeRequest verificationCodeRequest = new VerificationCodeRequest();
                                 verificationCodeRequest.setMobilePhone(mPhoneEdittext.getText().toString().trim());
 
-                                if (mIsThatPage == 1) {
-                                    verificationCodeRequest.setType("1");
-                                    Gson gson = new Gson();
-                                    String codeStr = gson.toJson(verificationCodeRequest);
-                                    mPresenter.getVerificationCode(codeStr);
-                                } else if (mIsThatPage == 2) {
-                                    verificationCodeRequest.setType("2");
-                                    Gson gson = new Gson();
-                                    String codeStr = gson.toJson(verificationCodeRequest);
-                                    mPresenter.getVerificationCode(codeStr);
-                                }
+                                verificationCodeRequest.setType("3");
+                                Gson gson = new Gson();
+                                String codeStr = gson.toJson(verificationCodeRequest);
+                                mPresenter.getVerificationCode(codeStr);
 
                                 countDown();
                             } else {
@@ -244,47 +171,37 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
                     }
                 });
 
+        //确认绑定
         RxView.
                 clicks(mRegisterTextview).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-                        initRegister();
+                        initBind();
                     }
                 });
 
     }
 
-    private void initRegister() {
+    private void initBind() {
         String mPhone = mPhoneEdittext.getText().toString().trim();
         String mVerification = mVerificationCodeEditext.getText().toString().trim();
-        String mPassword = mPasswordEdittext.getText().toString().trim();
 
         if (!TextUtils.isEmpty(mPhone) && mPhone.length() == Global.PHONE_NUMBER_SIZE && FormatUtil.isMobileNO(mPhone)) {
             if (!TextUtils.isEmpty(mVerification)) {
                 if (mCheckbox.isChecked()) {
-                    if (mIsThatPage == 1) {
-                        RegisterRequest registerRequest = new RegisterRequest();
-                        registerRequest.setMobileNo(mPhone);
-                        registerRequest.setPassword(mPassword);
-                        registerRequest.setVerificationCode(mVerification);
-                        Gson gson = new Gson();
-                        String registerStr = gson.toJson(registerRequest);
-                        mPresenter.registerAccount(registerStr);
-                    } else if (mIsThatPage == 2) {
-                        ResetPasswordRequest resetPasswordRequest = new ResetPasswordRequest();
-                        resetPasswordRequest.setMobilePhone(mPhone);
-                        resetPasswordRequest.setNewPassword(mPassword);
-                        resetPasswordRequest.setVerificationCode(mVerification);
-                        Gson gson = new Gson();
-                        String registerStr = gson.toJson(resetPasswordRequest);
 
-                        mPresenter.resetPassword(registerStr);
-                    } else if (mIsThatPage == 3) {
-                        ToastUtils.showShort("绑定手机");
+                    ThirdBindRequestEntry requestEntry = new ThirdBindRequestEntry();
+                    requestEntry.setMobileNo(mPhone);
+                    requestEntry.setOpenId(openId);
+                    //第三方账号， 微信或者qq号
+                    requestEntry.setSocialAccount(socialAccount);
+                    requestEntry.setVerificationCode(mVerification);
+                    Gson gson = new Gson();
+                    String bindStr = gson.toJson(requestEntry);
+                    mPresenter.thirdBind(socialType, bindStr);
 
-                    }
                 } else {
                     ToastUtils.showShort("请勾选协议");
                 }
@@ -297,29 +214,6 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
         }
     }
 
-    private void initRegisterOrForget() {
-        if (mIsThatPage == 1) {
-            mLogoTextview.setText(getString(R.string.register_new_user_register));
-            mPhoneEdittext.setHint(getString(R.string.login_phone_hint));
-            mPasswordEdittext.setHint(R.string.login_password_hint);
-            mRegisterTextview.setText(R.string.register_register);
-            mPasswordEdittext.setVisibility(View.VISIBLE);
-            mPasswordView.setVisibility(View.VISIBLE);
-        } else if (mIsThatPage == 2) {
-            mLogoTextview.setText(getString(R.string.forget_reset_password));
-            mPhoneEdittext.setHint(getString(R.string.login_phone_hint));
-            mPasswordEdittext.setHint(R.string.forget_new_password_hint);
-            mRegisterTextview.setText(R.string.forget_complete);
-            mPasswordEdittext.setVisibility(View.VISIBLE);
-            mPasswordView.setVisibility(View.VISIBLE);
-        } else if (mIsThatPage == 3) {
-            mLogoTextview.setText(getString(R.string.bind_phone));
-            mPhoneEdittext.setHint(getString(R.string.enter_mobile_phone_number));
-            mRegisterTextview.setText(R.string.determine);
-            mPasswordEdittext.setVisibility(View.GONE);
-            mPasswordView.setVisibility(View.GONE);
-        }
-    }
 
     private void countDown() {
         if (mTimeCountDownHelper == null) {
@@ -350,18 +244,18 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
     @Override
     public void returnVerificationCodeBean(VerificationCodeBean.DataBean verificationCodeBean) {
         ToastUtils.showShort("验证码发送成功");
-
     }
 
+    //绑定成功返回的数据
     @Override
-    public void returnRegisterBean(RegisterBean.DataBean registerBean) {
-        setLoginValue(registerBean);
+    public void returnBindInfo(ThirdBindResultEntry.DataBean bindResult) {
+
+//        String token = bindResult.getTokenInfo().getToken();
+
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, bindResult.getTokenInfo().getToken());
+        setLoginValue(bindResult);
         mPresenter.imUser();
-    }
 
-    @Override
-    public void returnResetPasswordBean(ResetPasswordBean.DataBean resetPasswordBean) {
-        finish();
     }
 
     @Override
@@ -393,18 +287,19 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
     @Override
     public void showErrorTip(ErrorType errorType, int errorCode, String message) {
         if (message != null) {
-
             ToastUtils.showShort(message);
         }
     }
 
-    private void setLoginValue(RegisterBean.DataBean registerBean) {
+    private void setLoginValue(ThirdBindResultEntry.DataBean bindResult) {
 //        SPUtils.getInstance().put(BaseConfig.BaseSPKey.NAME, registerBean.getData().getName());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, registerBean.getToken());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, registerBean.getId());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, registerBean.getUsername());
+//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, registerBean.getToken());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, bindResult.getTokenInfo().getId());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bindResult.getTokenInfo().getUsername());
 //        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TELE_PHONE, registerBean.getData().getTelephone());
 //        SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHOTO, registerBean.getData().getPhoto());
 
     }
+
+
 }
