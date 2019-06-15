@@ -16,7 +16,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -28,7 +27,6 @@ import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.home.BannerBean;
 import com.art.recruitment.artperformance.bean.home.CitiSearch;
 import com.art.recruitment.artperformance.bean.home.RecruitListBean;
-import com.art.recruitment.artperformance.ui.group.activity.GruopDetailActivity;
 import com.art.recruitment.artperformance.ui.home.activity.CityActivity;
 import com.art.recruitment.artperformance.ui.home.activity.RecruitmentInformationActivity;
 import com.art.recruitment.artperformance.ui.home.adapter.HomeAdapter;
@@ -36,7 +34,6 @@ import com.art.recruitment.artperformance.ui.home.contract.HomeContract;
 import com.art.recruitment.artperformance.ui.home.presenter.HomePresenter;
 import com.art.recruitment.artperformance.ui.login.activity.UserAgreementActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatListActivity;
-import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.PermissionTipUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
@@ -47,13 +44,10 @@ import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.SPUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMMessageBody;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.yanzhenjie.permission.Action;
@@ -72,7 +66,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
@@ -201,7 +194,9 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
         if (!TextUtils.isEmpty(cityName) && mCityCode != -1)
             mCityTextview.setText(cityName);
 
-        initMap();
+        requestPermissionAndSelectImage();
+
+//        initMap();
 
         autoRefresh();
 
@@ -280,7 +275,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
         mLocationClient.setLocationListener(mLocationListener);
 
         mLocationOption = new AMapLocationClientOption();
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Battery_Saving);
         mLocationOption.setNeedAddress(true);
         mLocationOption.setOnceLocation(true);
         mLocationOption.setMockEnable(false);
@@ -401,23 +396,8 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
         if (page == 0) {
             mPresenter.getBanner();
-
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             homeAdapter.setHeaderView(mBanner);
-//            homeAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-//                @Override
-//                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-//                    switch (view.getId()) {
-//                        case R.id.home_arrow_imageview:
-//                            Intent intent = new Intent(getContext(), RecruitmentInformationActivity.class);
-//                            intent.putExtra("position", bean.getContent().get(position).getId());
-//                            intent.putExtra("home_name", bean.getContent().get(position).getPublisherName());
-//                            startActivity(intent);
-//                            break;
-//                    }
-//                }
-//            });
-
         }
 
         resetStateWhenLoadDataSuccess(bean.getContent());
@@ -471,12 +451,22 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     }
 
     @Override
-    public void returnCitiSearchBean(CitiSearch.DataBean bean) {
-        mCityCode = bean.getCityCode();
-        autoRefresh();
+    public void returnCitiSearchBean(CitiSearch.DataBean bean, boolean isAutoLocation) {
 
-        //保存城市code
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_CODE, bean.getCityCode());
+        if (isAutoLocation) {
+            //主动定位，询问是否切换地址
+
+            //缓存的位置跟上次不一致
+            if (SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.CITY_CODE) != bean.getCityCode())
+                initCity(bean);
+
+        } else {
+            mCityCode = bean.getCityCode();
+            autoRefresh();
+
+            //保存城市code
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_CODE, bean.getCityCode());
+        }
 
     }
 
@@ -517,10 +507,10 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
             //保存城市名称
             if (!TextUtils.isEmpty(city))
-            SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_NAME, city);
+                SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_NAME, city);
 
             mCityTextview.setText(city);
-            mPresenter.citiSearch(city);
+            mPresenter.citiSearch(city, false);
 
         }
     }
@@ -531,9 +521,15 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
         public void onLocationChanged(AMapLocation amapLocation) {
             if (amapLocation != null) {
                 if (amapLocation.getErrorCode() == 0) {
-                    mCityTextview.setText(amapLocation.getCity());
 
-                    mPresenter.citiSearch(amapLocation.getCity());
+                    com.orhanobut.logger.Logger.d("定位成功::" + amapLocation.getCity());
+//                    mCityTextview.setText(amapLocation.getCity());
+//                    mPresenter.citiSearch(amapLocation.getCity());
+
+                    if (!TextUtils.isEmpty(amapLocation.getCity())) {
+                        mPresenter.citiSearch(amapLocation.getCity(), true);
+                    }
+
 
                 } else {
                     if (amapLocation.getErrorCode() == 12) {
@@ -548,7 +544,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
         }
     };
 
-    private void initCity(final AMapLocation amapLocation) {
+    private void initCity(final CitiSearch.DataBean bean) {
         View inflate = View.inflate(getContext(), R.layout.dialog_cancel_or_ok, null);
         TextView mDialogTitle = inflate.findViewById(R.id.dialog_title_tv);
         TextView mCleanImageView = inflate.findViewById(R.id.release_dialogcancel_textview);
@@ -561,7 +557,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                 build();
 
         dialog.show();
-        mDialogTitle.setText("系统定位到您在 " + amapLocation.getCity() + "，需要切换城市吗？");
+        mDialogTitle.setText("系统定位到您在 " + bean.getCityName() + "，需要切换城市吗？");
         mCleanImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -572,7 +568,13 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
         mDetermineTextview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCityTextview.setText(amapLocation.getCity());
+                mCityTextview.setText(bean.getCityName());
+
+                mCityCode = bean.getCityCode();
+                SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_CODE, bean.getCityCode());
+                SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_NAME, bean.getCityName());
+                autoRefresh();
+
                 dialog.cancel();
 
             }
@@ -676,7 +678,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                     @Override
                     public void onAction(List<String> permissions) {
                         initMap();
-                        autoRefresh();
+//                        autoRefresh();
                     }
                 }).
                 start();

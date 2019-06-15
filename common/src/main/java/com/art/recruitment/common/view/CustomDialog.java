@@ -82,10 +82,10 @@ public class CustomDialog extends AppCompatDialog {
     @Override
     public void onBackPressed() {
 
-        if (flag_double_exit){
-            ActivityManager.getInstance().exitByDoubleClick(System.currentTimeMillis());
-            return;
-        }
+//        if (flag_double_exit){
+//            ActivityManager.getInstance().exitByDoubleClick(System.currentTimeMillis());
+//            return;
+//        }
         super.onBackPressed();
     }
 }

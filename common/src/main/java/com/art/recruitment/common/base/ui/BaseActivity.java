@@ -250,14 +250,14 @@ public abstract class BaseActivity<T extends BasePresenter> extends SwipeBackAct
 
     @Override
     public void onBackPressed() {
-        if (!isDoubleClickExit) {
-            //说明可以回退,直接调用super，系统finish掉Activity，在onPause方法中从AppMananger中移除
-            //exitAnim();
+//        if (!isDoubleClickExit) {
+//            //说明可以回退,直接调用super，系统finish掉Activity，在onPause方法中从AppMananger中移除
+//            //exitAnim();
             super.onBackPressed();
-        } else {
-            //两次点击才能finish掉activity
-            ActivityManager.getInstance().exitByDoubleClick(System.currentTimeMillis());
-        }
+//        } else {
+//            //两次点击才能finish掉activity
+//            ActivityManager.getInstance().exitByDoubleClick(System.currentTimeMillis());
+//        }
     }
 
     private void registerNetworkChangeReceiver() {

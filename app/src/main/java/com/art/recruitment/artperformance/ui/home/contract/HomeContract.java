@@ -29,6 +29,7 @@ public interface HomeContract extends BaseView {
      * 城市搜索 bean
      *
      * @param bean BannerBean bean
+     * @param isAutoLocation
      */
-    void returnCitiSearchBean(CitiSearch.DataBean bean);
+    void returnCitiSearchBean(CitiSearch.DataBean bean, boolean isAutoLocation);
 }

@@ -2,27 +2,17 @@ package com.art.recruitment.artperformance.ui;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.group.StatusBean;
 import com.art.recruitment.artperformance.bean.im.ImUserBean;
@@ -46,7 +36,6 @@ import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.bumptech.glide.load.engine.Resource;
 import com.bumptech.glide.request.RequestOptions;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
@@ -56,28 +45,20 @@ import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMMessageBody;
 import com.hyphenate.util.NetUtils;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.loc.ar;
 import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
-
-import static com.art.recruitment.common.utils.UIUtils.getActivity;
 
 /**
  * main页面
@@ -144,6 +125,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         initCommonTabLayout();
         initButtonClick();
         getRecordPermisson();
+
         mPresenter.loginToHx();
     }
 
@@ -372,15 +354,20 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     }
 
+
+
     @Override
     public void onBackPressed() {
+
+//        Logger.d("=====onBackPressed=====");
+        ActivityManager.getInstance().exitByDoubleClick();
 //        if (!isDoubleClickExit) {
 //            //说明可以回退,直接调用super，系统finish掉Activity，在onPause方法中从AppMananger中移除
 //            //exitAnim();
 //            super.onBackPressed();
 //        } else {
         //两次点击才能finish掉activity
-        ActivityManager.getInstance().exitByDoubleClick(System.currentTimeMillis());
+
 //        }
     }
 

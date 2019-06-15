@@ -73,7 +73,7 @@ public class HomePresenter extends BasePresenter<HomeContract> {
      * 搜索城市
      *
      */
-    public void citiSearch(String cityName) {
+    public void citiSearch(String cityName, final boolean isAutoLocation) {
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), cityName);
         Api.
@@ -84,7 +84,7 @@ public class HomePresenter extends BasePresenter<HomeContract> {
                 doRequest(new RxSubscriber<CitiSearch.DataBean, CitiSearch>() {
                     @Override
                     protected void _onSuccess(CitiSearch.DataBean bean, String successMessage) {
-                        mView.returnCitiSearchBean(bean);
+                        mView.returnCitiSearchBean(bean, isAutoLocation);
                     }
 
                     @Override

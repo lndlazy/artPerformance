@@ -1,7 +1,9 @@
 package com.art.recruitment.common;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.art.recruitment.common.base.BaseApplication;
 import com.blankj.utilcode.util.ToastUtils;
@@ -120,7 +122,8 @@ public class ActivityManager {
 
         for (Activity activity : activityStack) {
             if (activity != null) {
-                finishSpecificActivity(activity);
+//                finishSpecificActivity(activity);
+                activity.finish();
             }
         }
         activityStack.clear();
@@ -223,7 +226,7 @@ public class ActivityManager {
                     @Override
                     public void onComplete() {
                         finishSpecificNameActivity(name);
-                        if (mDelayDisposable != null && !mDelayDisposable.isDisposed()){
+                        if (mDelayDisposable != null && !mDelayDisposable.isDisposed()) {
                             mDelayDisposable.dispose();
                         }
                     }
@@ -231,7 +234,6 @@ public class ActivityManager {
     }
 
     /**
-     *
      * @param name
      */
     public void delayFinishAllExceptSpecificNameActivity(final String name) {
@@ -261,7 +263,7 @@ public class ActivityManager {
                     @Override
                     public void onComplete() {
                         finishAllExceptSpecificNameActivity(name);
-                        if (mDelayDisposable != null && !mDelayDisposable.isDisposed()){
+                        if (mDelayDisposable != null && !mDelayDisposable.isDisposed()) {
                             mDelayDisposable.dispose();
                         }
                     }
@@ -289,7 +291,7 @@ public class ActivityManager {
         mActivity = null;
     }
 
-    public void returnToSpecificNameActivity(String name){
+    public void returnToSpecificNameActivity(String name) {
         for (Activity activity : activityStack) {
             if (activity != null && !activity.getClass().getSimpleName().equals(name)) {
                 finishSpecificActivity(activity);
@@ -326,13 +328,14 @@ public class ActivityManager {
     /**
      * 退出应用程序
      */
-    public void AppExit() {
+    public void appExit() {
         try {
             finishAllActivity();
-            android.os.Process.killProcess(android.os.Process.myPid());
+//            android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
         } catch (Exception e) {
             e.printStackTrace();
+//            Log.e("TAG", "退出报错");
         }
     }
 
@@ -363,14 +366,33 @@ public class ActivityManager {
         }
     }
 
-    public void exitByDoubleClick(long time) {
 
-        if (time - mLastClickTime < 2000) {
-            AppExit();
-        } else {
-            mLastClickTime = time;
+    private long mPressedTime = 0;
+
+
+    public void exitByDoubleClick() {
+
+        long mNowTime = System.currentTimeMillis();//获取第一次按键时间
+
+        if ((mNowTime - mPressedTime) > 2000) {//比较两次按键时间差
+
+//            Toast.makeText(context, BaseApplication.getAppContext().getResources().getString(R.string.app_exit), Toast.LENGTH_SHORT).show();
             ToastUtils.showShort(BaseApplication.getAppContext().getResources().getString(R.string.app_exit));
+//            Log.e("TAG", "===== > 2000=====");
+
+            mPressedTime = mNowTime;
+
+        } else {//退出程序
+            appExit();
+//            Log.e("TAG", "===== 退出程序 ====");
+
         }
+//        if (time - mLastClickTime < 2000) {
+//            appExit();
+//        } else {
+//            mLastClickTime = time;
+//            ToastUtils.showShort(BaseApplication.getAppContext().getResources().getString(R.string.app_exit));
+//        }
     }
 
 }

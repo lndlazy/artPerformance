@@ -6,7 +6,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
 import android.support.multidex.MultiDex;
-import android.util.Log;
 
 import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.art.recruitment.artperformance.utils.ResourceUtils;
@@ -31,8 +30,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-
-import static com.hyphenate.chat.EMClient.TAG;
 
 //import com.alibaba.wireless.security.jaq.JAQException;
 //import com.alibaba.wireless.security.jaq.SecurityInit;
@@ -86,9 +83,7 @@ public class MyApplication extends BaseApplication {
         Fresco.initialize(this);
         initEaseMob();
 
-
-        Logger.d("SHA1值:::" + sHA1(this));
-//       Config
+//        Logger.d("SHA1值:::" + sHA1(this));
     }
 
     public String sHA1(Context context) {

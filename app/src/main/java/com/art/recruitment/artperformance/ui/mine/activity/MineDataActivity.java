@@ -420,15 +420,17 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             }
         });
 
-        videoDeleteView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //删除封面
-                videoObjectKey = "";
-                videoPicView.setImageURI(Uri.parse("res://" + getPackageName() + "/" + R.mipmap.icon_my_add));
-                videoDeleteView.setVisibility(View.INVISIBLE);
-            }
-        });
+//        videoDeleteView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                //删除封面
+//                videoObjectKey = "";
+//                videoPicView.setImageURI(Uri.parse("res://" + getPackageName() + "/" + R.mipmap.icon_my_add));
+//                videoDeleteView.setVisibility(View.INVISIBLE);
+//
+//
+//            }
+//        });
 
         mOtherEdittext.addTextChangedListener(new TextWatcher() {
             @Override
