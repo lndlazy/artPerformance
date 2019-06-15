@@ -453,12 +453,18 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     @Override
     public void returnCitiSearchBean(CitiSearch.DataBean bean, boolean isAutoLocation) {
 
+
         if (isAutoLocation) {
             //主动定位，询问是否切换地址
 
             //缓存的位置跟上次不一致
-            if (SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.CITY_CODE) != bean.getCityCode())
+            if (SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.CITY_CODE) != bean.getCityCode()) {
                 initCity(bean);
+            }
+
+            //保存定位的城市信息
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOCATION_CITY_CODE, bean.getCityCode());
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOCATION_CITY_NAME, bean.getCityName());
 
         } else {
             mCityCode = bean.getCityCode();
@@ -529,7 +535,6 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                     if (!TextUtils.isEmpty(amapLocation.getCity())) {
                         mPresenter.citiSearch(amapLocation.getCity(), true);
                     }
-
 
                 } else {
                     if (amapLocation.getErrorCode() == 12) {

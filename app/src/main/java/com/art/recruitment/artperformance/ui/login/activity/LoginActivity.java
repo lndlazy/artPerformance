@@ -77,6 +77,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     private String thirdLoginGender;//三方登录的性别
     String socialType = "";//三方登录的类型  wx or qq
     private String openId;
+    private String thirdLoginIcon;
 
     @Override
     protected IToolbar getIToolbar() {
@@ -311,7 +312,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, thirdLoginBean.getToken());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, thirdLoginBean.getId());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, thirdLoginBean.getUsername());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, thirdLoginBean.getName());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, thirdLoginBean.getAvatar());
+
 //        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
         mPresenter.imUser();
 
@@ -363,9 +366,10 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                 String expires_in = map.get("expires_in");
                 thirdLoginName = map.get("name");
                 thirdLoginGender = map.get("gender");
-                String iconurl = map.get("iconurl");
+                //头像
+                thirdLoginIcon = map.get("iconurl");
 
-                Logger.d("name=" + thirdLoginName + ",gender=" + thirdLoginGender);
+//                Logger.d("name=" + thirdLoginName + ",gender=" + thirdLoginGender);
 
                 switch (share_media) {
 
@@ -377,7 +381,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                        break;
 
                 }
-
 
                 SocialLoginRequestVO socialLoginRequestVO = new SocialLoginRequestVO();
                 socialLoginRequestVO.setOpenId(openId);

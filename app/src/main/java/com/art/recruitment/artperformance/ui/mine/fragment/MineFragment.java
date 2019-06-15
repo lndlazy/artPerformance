@@ -448,8 +448,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
             EventBus.getDefault().post(bean.getAvatarView());
 
         //保存个人资料
-
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bean.getAvatar());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bean.getAvatarView());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bean.getGender());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getUsername());

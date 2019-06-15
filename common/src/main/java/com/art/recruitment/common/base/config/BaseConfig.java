@@ -46,6 +46,12 @@ public class BaseConfig {
         public static final String CITY_CODE = "CITY_CODE";
 
 
+        //定位的城市名称
+        public static final String LOCATION_CITY_NAME = "LOCATION_CITY_NAME";
+        //定位的城市编码
+        public static final String LOCATION_CITY_CODE = "LOCATION_CITY_CODE";
+
+
         public static String CONFIG = "art_performance";//sp配置文件名称
 
 

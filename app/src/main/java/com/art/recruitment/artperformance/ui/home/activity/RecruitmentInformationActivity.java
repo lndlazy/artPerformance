@@ -103,6 +103,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     private Dialog shareDialog;
     private String shareTitle;
     private String chat_username;
+    private ImageAdapter adapter;
+    private List<String> list = new ArrayList<>();
     //    private int home_id;
 
     @Override
@@ -199,78 +201,79 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
     /**
      * 分享
+     *
      * @param subUrl
      */
     private void startShare(String subUrl) {
 
-            View inflate = View.inflate(this, R.layout.dialog_mine_share, null);
-            TextView mCleanTextview = inflate.findViewById(R.id.mine_share_clean_textview);
-            ConstraintLayout mWechatConstraintLayout = inflate.findViewById(R.id.share_wechat_constraintLayout);
-            ConstraintLayout mCircleFriendsConstraintLayout = inflate.findViewById(R.id.share_circle_of_friends_constraintLayout);
-            ConstraintLayout mQQZoneConstraintLayout = inflate.findViewById(R.id.share_qq_zone_constraintLayout);
-            ConstraintLayout mQQConstraintLayout = inflate.findViewById(R.id.share_qq_constraintLayout);
+        View inflate = View.inflate(this, R.layout.dialog_mine_share, null);
+        TextView mCleanTextview = inflate.findViewById(R.id.mine_share_clean_textview);
+        ConstraintLayout mWechatConstraintLayout = inflate.findViewById(R.id.share_wechat_constraintLayout);
+        ConstraintLayout mCircleFriendsConstraintLayout = inflate.findViewById(R.id.share_circle_of_friends_constraintLayout);
+        ConstraintLayout mQQZoneConstraintLayout = inflate.findViewById(R.id.share_qq_zone_constraintLayout);
+        ConstraintLayout mQQConstraintLayout = inflate.findViewById(R.id.share_qq_constraintLayout);
 
-            shareDialog = DialogWrapper.
-                    customViewDialog().
-                    context(this).
-                    contentView(inflate).
-                    cancelable(false, false).
-                    build();
+        shareDialog = DialogWrapper.
+                customViewDialog().
+                context(this).
+                contentView(inflate).
+                cancelable(false, false).
+                build();
 
-            Window window = shareDialog.getWindow();
-            window.setWindowAnimations(R.style.mystyle);
+        Window window = shareDialog.getWindow();
+        window.setWindowAnimations(R.style.mystyle);
 
         shareDialog.show();
 
-            mCleanTextview.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        mCleanTextview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-                    hideDialog();
-                }
-            });
+                hideDialog();
+            }
+        });
 
-            final String shareUrl = Api.HTTP_URL + subUrl;
+        final String shareUrl = Api.HTTP_URL + subUrl;
 
-            mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl,shareTitle
-                            , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
-                    );
-                    hideDialog();
-                }
-            });
+        mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl, shareTitle
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
+                );
+                hideDialog();
+            }
+        });
 
-            mCircleFriendsConstraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl, shareTitle
-                            , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
-                    );
-                    hideDialog();
-                }
-            });
+        mCircleFriendsConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl, shareTitle
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
+                );
+                hideDialog();
+            }
+        });
 
-            mQQZoneConstraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl,shareTitle
-                            , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
-                    );
-                    hideDialog();
-                }
-            });
+        mQQZoneConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl, shareTitle
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
+                );
+                hideDialog();
+            }
+        });
 
-            mQQConstraintLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl, shareTitle
-                            , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
-                    );
-                    hideDialog();
-                }
-            });
+        mQQConstraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ShareUtils.shareWeb(RecruitmentInformationActivity.this, shareUrl, shareTitle
+                        , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
+                );
+                hideDialog();
+            }
+        });
 
 
     }
@@ -292,17 +295,26 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
         listSuccess(bean);
 
-        List<String> list = new ArrayList<>();
+
         for (int i = 0; i < bean.getApplyUsers().size(); i++) {
             list.add(bean.getApplyUsers().get(i).getApplyUserAvatar());
         }
-        ImageAdapter adapter = new ImageAdapter(this, list);
+        adapter = new ImageAdapter(this, list);
         mGridview.setAdapter(adapter);
     }
 
     @Override
     public void returnApplyBean(ApplyBean.DataBean bean) {
         ToastUtils.showShort("报名成功");
+
+
+        //报名成功 添加头像
+        String headUrl = SPUtils.getInstance().getString(BaseConfig.BaseSPKey.HEAD_PIC_URL);
+        Logger.d("头像地址::" + headUrl);
+        list.add(headUrl);
+        if (adapter != null)
+            adapter.notifyDataSetChanged();
+
     }
 
     private void listSuccess(RecruitmentInforBean.DataBean bean) {
@@ -311,7 +323,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
         RecruitmentInforBean.DataBean.SimpleImInfo simpleImInfo = bean.getSimpleImInfo();
 
-        if (simpleImInfo!=null)
+        if (simpleImInfo != null)
             chat_username = simpleImInfo.getUsername();
 
 
@@ -332,6 +344,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
         if (bean.getLabelList() != null)
             tags.addAll(bean.getLabelList());
         mFlowlayout.setTags(tags);
+
+
     }
 
     private void signUpImmediately() {

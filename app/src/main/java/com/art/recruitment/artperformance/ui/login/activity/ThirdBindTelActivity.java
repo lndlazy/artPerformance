@@ -252,7 +252,16 @@ public class ThirdBindTelActivity extends BaseActivity<ThirdBindPresenter> imple
 
 //        String token = bindResult.getTokenInfo().getToken();
 
+        if (bindResult.getTokenInfo()==null)
+            return;
+
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, bindResult.getTokenInfo().getToken());
+
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bindResult.getTokenInfo().getAvatar());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bindResult.getTokenInfo().getGender());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, bindResult.getTokenInfo().getId());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bindResult.getTokenInfo().getName());
+
         setLoginValue(bindResult);
         mPresenter.imUser();
 

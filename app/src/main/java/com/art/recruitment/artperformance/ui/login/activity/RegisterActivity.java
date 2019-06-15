@@ -335,10 +335,13 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
                             if (mVerificationCodeTextview != null) {
                                 mVerificationCodeTextview.setText(time + " s" + "重新发送");
                                 mVerificationCodeTextview.setEnabled(false);
+                                mVerificationCodeTextview.setTextColor(getResources().getColor(R.color.tab_color_false));
                                 if (mCountDown == 0) {
                                     mVerificationCodeTextview.setText("重新发送");
                                     mCountDown = 60;
                                     mVerificationCodeTextview.setEnabled(true);
+                                    mVerificationCodeTextview.setTextColor(getResources().getColor(R.color.color_fd7b25));
+
                                 }
                             }
                         }

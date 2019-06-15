@@ -50,7 +50,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.art.recruitment.artperformance.fileprovider"
