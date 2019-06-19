@@ -44,6 +44,7 @@ import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
+import com.art.recruitment.common.utils.SystemUtil;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
@@ -329,7 +330,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                 mPicList.size() < 1)
             return;
 
-        closeInoutDecorView(ReleaseDynamicActivity.this);
+        SystemUtil.closeInoutDecorView(ReleaseDynamicActivity.this);
 
         //获取provider
         if (!TextUtils.isEmpty(videoPath) || mPicList.size() > 0) {
@@ -551,12 +552,4 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
         }
     }
 
-    /**
-     * 关闭软件盘
-     */
-    public static void closeInoutDecorView(Activity activity) {
-        View view = activity.getWindow().peekDecorView();
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
 }

@@ -33,6 +33,7 @@ import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.utils.FormatUtil;
+import com.art.recruitment.common.utils.SystemUtil;
 import com.art.recruitment.common.view.Global;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -255,7 +256,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         if (!TextUtils.isEmpty(mPhone) && !TextUtils.isEmpty(mPassword)) {
             if (FormatUtil.isMobileNO(mPhone)) {
                 if (mCheckbox.isChecked()) {
-                    closeInoutDecorView(LoginActivity.this);
+                    SystemUtil.closeInoutDecorView(LoginActivity.this);
                     TokenRequest tokenRequest = new TokenRequest();
                     tokenRequest.setPassword(mPassword);
                     tokenRequest.setUsername(mPhone);
@@ -410,12 +411,5 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
     }
 
-    /**
-     * 关闭软件盘
-     */
-    public static void closeInoutDecorView(Activity activity) {
-        View view = activity.getWindow().peekDecorView();
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+
 }

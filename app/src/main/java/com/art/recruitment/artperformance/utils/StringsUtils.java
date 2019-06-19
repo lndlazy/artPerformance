@@ -16,7 +16,7 @@ public class StringsUtils {
 
 
 
-    public static  final int PAGE_COUNT = 20;
+//    public static  final int PAGE_COUNT = 20;
 
 
     public static String getSecretNo(String no) {

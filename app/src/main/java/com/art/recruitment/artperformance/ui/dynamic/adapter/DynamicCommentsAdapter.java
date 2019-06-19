@@ -1,6 +1,7 @@
 package com.art.recruitment.artperformance.ui.dynamic.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -26,8 +27,14 @@ public class DynamicCommentsAdapter extends BaseRecyclerViewAdapter<DynamicComme
         ImageView view = helper.getView(R.id.dynamic_detail_head_imageview);
         Glide.with(mContext).load(item.getCommentUserAvatar()).into(view);
 
+        String commentTime = item.getCommentTime();
+
+        if (!TextUtils.isEmpty(commentTime)) {
+            commentTime = commentTime.replaceAll("T", " ");
+        }
+
         helper.setText(R.id.dynamic_detail_name_textview, item.getCommentUserName())
-                .setText(R.id.dynamic_detail_time_textview, item.getCommentTime())
+                .setText(R.id.dynamic_detail_time_textview, commentTime)
                 .setText(R.id.dynamic_detail_coutent_textview, item.getCommentContent());
 
 

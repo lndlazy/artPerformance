@@ -43,6 +43,7 @@ import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
+import com.art.recruitment.common.utils.SystemUtil;
 import com.blankj.utilcode.util.SPUtils;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -262,7 +263,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 //                    mSearch = mSearchEdittext.getText().toString().trim();
 //                    mSearch = trim;
                     autoRefresh();
-                    closeInoutDecorView(getActivity());
+                    SystemUtil.closeInoutDecorView(getActivity());
                     return true;
                 }
                 return false;
@@ -364,15 +365,6 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                 });
     }
 
-    /**
-     * 关闭软件盘
-     */
-    public static void closeInoutDecorView(Activity activity) {
-        View view = activity.getWindow().peekDecorView();
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null)
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
 
     @Override
     protected void lazyLoad() {

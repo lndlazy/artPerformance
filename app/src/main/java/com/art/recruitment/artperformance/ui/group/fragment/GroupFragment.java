@@ -31,6 +31,7 @@ import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
+import com.art.recruitment.common.utils.SystemUtil;
 import com.art.recruitment.common.utils.UIUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -211,7 +212,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
 //                                    minAge = Integer.parseInt(mLowAge);
                                 hideAgeChooseView();
 
-                                closeInoutDecorView(getActivity());
+                                SystemUtil.closeInoutDecorView(getActivity());
                                 autoRefresh();
                             } else {
                                 mLowAgeEdittext.setText("");
@@ -520,13 +521,5 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
         }
     }
 
-    /**
-     * 关闭软件盘
-     */
-    public static void closeInoutDecorView(Activity activity) {
-        View view = activity.getWindow().peekDecorView();
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null)
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+
 }

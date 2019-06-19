@@ -173,7 +173,7 @@ public class SearchFragment extends BaseFragment<SearchPresenter, GroupListBean.
 
     private void startSearch() {
         //隐藏软键盘
-        closeInoutDecorView(getActivity());
+        SystemUtil.closeInoutDecorView(getActivity());
         //开始搜索
         mSearch = mSearchEditText.getText().toString().trim();
         autoRefresh();
@@ -212,13 +212,5 @@ public class SearchFragment extends BaseFragment<SearchPresenter, GroupListBean.
         }
     }
 
-    /**
-     * 关闭软件盘
-     */
-    public static void closeInoutDecorView(Activity activity) {
-        View view = activity.getWindow().peekDecorView();
-        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (inputMethodManager != null)
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
+
 }

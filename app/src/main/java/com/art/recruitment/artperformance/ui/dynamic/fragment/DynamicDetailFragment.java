@@ -1,15 +1,16 @@
 package com.art.recruitment.artperformance.ui.dynamic.fragment;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
+import android.text.format.DateUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,8 +27,8 @@ import com.art.recruitment.artperformance.ui.dynamic.DynamicType;
 import com.art.recruitment.artperformance.ui.dynamic.adapter.DynamicCommentsAdapter;
 import com.art.recruitment.artperformance.ui.dynamic.contract.DynamicDataContract;
 import com.art.recruitment.artperformance.ui.dynamic.presenter.DynamicDataPresenter;
-import com.art.recruitment.artperformance.ui.mine.ImageModel;
 import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.DateFormatUtils;
 import com.art.recruitment.artperformance.utils.Defaultcontent;
 import com.art.recruitment.artperformance.utils.ShareUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
@@ -39,6 +40,7 @@ import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
+import com.art.recruitment.common.utils.SystemUtil;
 import com.art.recruitment.common.utils.UIUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -53,11 +55,10 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.functions.Consumer;
 
 /**
@@ -67,47 +68,69 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
 
     @BindView(R.id.dynamic_datail_return_imageview)
     ImageView mReturnImageview;
-    @BindView(R.id.dynamic_detail_head_imageview)
+
+    //    @BindView(R.id.dynamic_detail_head_imageview)
     ImageView mHeadImageview;
-    @BindView(R.id.dynamic_detail_name_textview)
+
+
+    //    @BindView(R.id.dynamic_detail_name_textview)
     TextView mNameTextview;
-    @BindView(R.id.dynamic_detail_time_textview)
+
+
+    //    @BindView(R.id.dynamic_detail_time_textview)
     TextView mTimeTextview;
-    @BindView(R.id.dynamic_detail_expandableTextView)
+
+    //    @BindView(R.id.dynamic_detail_expandableTextView)
     ExpandableTextView mExpandableTextView;
-    @BindView(R.id.dynamic_give_imageview)
+
+    //    @BindView(R.id.dynamic_give_imageview)
     ImageView mGiveImageview;
-    @BindView(R.id.dynamic_detail_give_constraintLayout)
+
+    //    @BindView(R.id.dynamic_detail_give_constraintLayout)
     ConstraintLayout mGiveConstraintLayout;
-    @BindView(R.id.dynamic_comment_imageview)
+
+    //    @BindView(R.id.dynamic_comment_imageview)
     ImageView mCommentImageview;
-    @BindView(R.id.dynamic_detail_comment_constraintLayout)
+
+    //    @BindView(R.id.dynamic_detail_comment_constraintLayout)
     ConstraintLayout mCommentConstraintLayout;
-    @BindView(R.id.dynamic_share_imageview)
+
+    //    @BindView(R.id.dynamic_share_imageview)
     ImageView mShareImageview;
-    @BindView(R.id.dynamic_detail_share_constraintLayout)
+
+    //    @BindView(R.id.dynamic_detail_share_constraintLayout)
     ConstraintLayout mShareConstraintLayout;
+
     @BindView(R.id.dynamic_detail_comment_recyclerView)
     RecyclerView mCommentRecyclerView;
+
     @BindView(R.id.dynamic_detail_send_edittext)
     EditText mSendEdittext;
     @BindView(R.id.dynamic_detail_send_textview)
     TextView mSendTextview;
-    @BindView(R.id.dynamic_give_textview)
+
+
+    //    @BindView(R.id.dynamic_give_textview)
     TextView mGiveTextview;
-    @BindView(R.id.dynamic_comment_textview)
+
+
+    //    @BindView(R.id.dynamic_comment_textview)
     TextView mCommentTextview;
-    @BindView(R.id.dynamic_detail_delete_imageview)
+
+
+    //    @BindView(R.id.dynamic_detail_delete_imageview)
     ImageView mDeleteImageview;
+
     @BindView(R.id.dynamic_detail_comment_smartRefreshLayout)
     SmartRefreshLayout mSmartRefreshLayout;
-    @BindView(R.id.dynamic_detail_nineGridTestLayout)
+
+    //    @BindView(R.id.dynamic_detail_nineGridTestLayout)
     NineGridTestLayout mNineGridTestLayout;
     private int dynamic_id;
     private Dialog dialog;
-    private int pageSize;
-    private DynamicCommentsAdapter adapter;
-    private List<NineGridTestModel> mList;
+    //    private int pageSize;
+    private DynamicCommentsAdapter commentAdapter;
+    //    private List<NineGridTestModel> mList;
     private Dialog shareDialog;
 
     @Override
@@ -127,9 +150,31 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
 
     @Override
     protected BaseRecyclerViewAdapter getRecyclerViewAdapter() {
-        adapter = new DynamicCommentsAdapter(mContext, mDataList);
-        adapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
-        return adapter;
+        commentAdapter = new DynamicCommentsAdapter(mContext, mDataList);
+        commentAdapter.openLoadAnimation(BaseQuickAdapter.ALPHAIN);
+        View headView = View.inflate(getContext(), R.layout.headview_dynamic_comment, null);
+        commentAdapter.addHeaderView(headView);
+        initHeadView(headView);
+        return commentAdapter;
+    }
+
+    private void initHeadView(View headView) {
+
+        mHeadImageview = headView.findViewById(R.id.dynamic_detail_head_imageview);
+        mNameTextview = headView.findViewById(R.id.dynamic_detail_name_textview);
+        mTimeTextview = headView.findViewById(R.id.dynamic_detail_time_textview);
+        mExpandableTextView = headView.findViewById(R.id.dynamic_detail_expandableTextView);
+        mGiveImageview = headView.findViewById(R.id.dynamic_give_imageview);
+        mGiveConstraintLayout = headView.findViewById(R.id.dynamic_detail_give_constraintLayout);
+        mCommentImageview = headView.findViewById(R.id.dynamic_comment_imageview);
+        mCommentConstraintLayout = headView.findViewById(R.id.dynamic_detail_comment_constraintLayout);
+        mShareImageview = headView.findViewById(R.id.dynamic_share_imageview);
+        mShareConstraintLayout = headView.findViewById(R.id.dynamic_detail_share_constraintLayout);
+        mGiveTextview = headView.findViewById(R.id.dynamic_give_textview);
+        mCommentTextview = headView.findViewById(R.id.dynamic_comment_textview);
+        mDeleteImageview = headView.findViewById(R.id.dynamic_detail_delete_imageview);
+        mNineGridTestLayout = headView.findViewById(R.id.dynamic_detail_nineGridTestLayout);
+
     }
 
     @Override
@@ -145,7 +190,10 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
     @Override
     protected void initListRequest(int page) {
         super.initListRequest(page);
-        pageSize = page;
+//        pageSize = page;
+        Logger.d("当前page::" + page);
+        mPresenter.dynamicComments(dynamic_id, page, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
+
     }
 
     @Override
@@ -161,13 +209,13 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
 //        Logger.d("dynamic_id::" + dynamic_id + "，userID:" + userID);
 
         mPresenter.dynamicDetail(dynamic_id);
-
+        autoRefresh();
         initButtonClick();
     }
 
     @Override
     protected void lazyLoad() {
-
+        autoRefresh();
     }
 
     private void initButtonClick() {
@@ -229,7 +277,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
                         Gson gson = new Gson();
                         String codeStr = gson.toJson(request);
                         mPresenter.dynamicComment(dynamic_id, codeStr);
-                        mSendEdittext.setText("");
+
                     }
                 });
     }
@@ -268,7 +316,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
     @Override
     public void returnDynamicDataBean(DynamicDetailBean.DataBean bean) {
 
-        mPresenter.dynamicComments(dynamic_id, pageSize, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
+//        mPresenter.dynamicComments(dynamic_id, 0, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
 
         Glide.with(mContext).load(bean.getPublisherAvatar()).into(mHeadImageview);
         mNameTextview.setText(bean.getPublisherName());
@@ -321,17 +369,33 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
     public void returnDynamicCommentsBean(DynamicCommentsBean.DataBean bean) {
         if (bean.getContent() == null || bean.getContent().size() == 0) {
             setEmptyErrorViewData(R.mipmap.img_show_empty, "暂时没有数据");
+            mSmartRefreshLayout.finishRefresh(true);
         } else {
             resetStateWhenLoadDataSuccess(bean.getContent());
         }
     }
 
+    //评论成功
     @Override
     public void returnDynamicCommentBean(DynamicCommentBean.DataBean bean) {
-        mPresenter.dynamicComments(dynamic_id, pageSize, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
 
+        //列表上添加刚评论的内容
+        if (commentAdapter != null) {
+            List<DynamicCommentsBean.ContentBean> data = commentAdapter.getData();
+            DynamicCommentsBean.ContentBean contentBean = new DynamicCommentsBean.ContentBean();
+            contentBean.setCommentContent(mSendEdittext.getText().toString().trim());
+            contentBean.setCommentTime(DateFormatUtils.formatDateTime(new Date().getTime(), DateFormatUtils.DATE_FORMAT_PATTERN_YMD_HMS));
+            contentBean.setCommentUserAvatar(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.HEAD_PIC_URL));
+            contentBean.setCommentUserName(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.NAME));
+            data.add(0, contentBean);
+            commentAdapter.notifyDataSetChanged();
+        }
+        mSendEdittext.setText("");
+//        mPresenter.dynamicComments(dynamic_id, pageSize, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
+        SystemUtil.closeInoutDecorView(getActivity());
         EventBus.getDefault().post(DynamicType.TYPE_ADD_COMMENT);
     }
+
 
     //删除动态圈成功
     @Override

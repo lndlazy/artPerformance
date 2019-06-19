@@ -9,6 +9,7 @@ public class DateFormatUtils {
 
     public static final String DATE_FORMAT_PATTERN_YMD = "yyyy.MM.dd";
     public static final String DATE_FORMAT_PATTERN_YMD_HM = "yyyy.MM.dd HH:mm";
+    public static final String DATE_FORMAT_PATTERN_YMD_HMS = "yyyy-MM-dd HH:mm:ss";
 
     /**
      * 时间戳转字符串
@@ -41,6 +42,20 @@ public class DateFormatUtils {
             return -1;
         }
         return date.getTime();
+    }
+
+
+    /**
+     * 将日期以yyyy-MM-dd HH:mm:ss格式化
+     *
+     * @param dateL
+     *            日期
+     * @return
+     */
+    public static String formatDateTime(long dateL,String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Date date = new Date(dateL);
+        return sdf.format(date);
     }
 
 
