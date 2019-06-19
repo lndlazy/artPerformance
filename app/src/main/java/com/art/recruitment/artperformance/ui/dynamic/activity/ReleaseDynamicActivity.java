@@ -142,7 +142,6 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                     startPreVideo();
                 else {
 
-
                     if (position == parent.getChildCount() - 1) {
                         if (mPicList.size() == MainConstant.MAX_SELECT_PIC_NUM) {
                             viewPluImg(position);
@@ -155,7 +154,6 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                     }
 
                 }
-
 
             }
         });
@@ -453,9 +451,10 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                                 File file = new File(mPicList.get(i));
                                 InputStream inputStream = new FileInputStream(file);
                                 String digest = FileMd5Util.digest(inputStream);
-                                PutObjectRequest picturePut = new PutObjectRequest(bean.getBucket(), Constant.DIR_DYNAMIC + digest + Constant.PIC_DIR, mPicList.get(i));
-                                mPicObjectKeyLists.add(Constant.DIR_DYNAMIC + digest);
-                                PutObjectResult result = oss.putObject(picturePut);
+                                String picObjectKey = Constant.DIR_DYNAMIC + digest + Constant.PIC_DIR;
+                                PutObjectRequest picturePut = new PutObjectRequest(bean.getBucket(), picObjectKey, mPicList.get(i));
+                                mPicObjectKeyLists.add(picObjectKey);
+                               oss.putObject(picturePut);
 
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
@@ -466,7 +465,6 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                         onUiThreadUp();
 
                     }
-
 
                 } catch (ClientException e) {
                     e.printStackTrace();

@@ -63,6 +63,8 @@ public class DynamicAdapter extends BaseRecyclerViewAdapter<DynamicListBean.Cont
             view.setUrlList(videoList);
             view.setVideoUrl(item.getVideoPath());
         }else {
+
+            view.setVideoUrl(null);
             //图片
             if (item.getImagePath() == null) {
                 view.setVisibility(View.GONE);

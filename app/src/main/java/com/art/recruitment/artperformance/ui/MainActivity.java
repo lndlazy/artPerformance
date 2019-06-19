@@ -228,9 +228,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         } else if (bean.getRealNameFlag() == 1) {
             //已经实名认证， 判断是否填写过 基本三项信息
 
-
             SPUtils.getInstance().getString(BaseConfig.BaseSPKey.PHONE_NUM);
-
             if (!TextUtils.isEmpty(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.PHONE_NUM))
                     && !TextUtils.isEmpty(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.NAME))
                     && ((SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.SEX)) != -1)) {
