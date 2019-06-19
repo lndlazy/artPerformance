@@ -10,9 +10,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
@@ -50,6 +52,7 @@ import com.hyphenate.easeui.model.EaseAtMessageHelper;
 import com.hyphenate.easeui.model.EaseCompat;
 import com.hyphenate.easeui.model.EaseDingMessageHelper;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
+import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.easeui.widget.EaseAlertDialog.AlertDialogUser;
@@ -67,6 +70,7 @@ import com.hyphenate.util.PathUtil;
 import java.io.File;
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -107,7 +111,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     protected ClipboardManager clipboard;
 
     protected Handler handler = new Handler();
-    protected File cameraFile;
+//    protected File cameraFile;
     protected EaseVoiceRecorderView voiceRecorderView;
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected ListView listView;
@@ -127,8 +131,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
     protected int[] itemStrings = {R.string.attach_take_pic, R.string.attach_picture};
     protected int[] itemdrawables = {R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector
-           };
-//    protected int[] itemStrings = {R.string.attach_take_pic, R.string.attach_picture, R.string.attach_location};
+    };
+    //    protected int[] itemStrings = {R.string.attach_take_pic, R.string.attach_picture, R.string.attach_location};
 //    protected int[] itemdrawables = {R.drawable.ease_chat_takepic_selector, R.drawable.ease_chat_image_selector,
 //            R.drawable.ease_chat_location_selector};
     protected int[] itemIds = {ITEM_TAKE_PICTURE, ITEM_PICTURE, ITEM_LOCATION};
@@ -572,9 +576,13 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.e("TAG", "====onActivityResult=====");
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAMERA) { // capture new image
+
+                Log.e("TAG", "拍照返回code ==== ");
                 if (cameraFile != null && cameraFile.exists())
                     sendImageMessage(cameraFile.getAbsolutePath());
             } else if (requestCode == REQUEST_CODE_LOCAL) { // send local image
@@ -1019,40 +1027,84 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
      * capture new image
      */
     protected void selectPicFromCamera() {
+
         if (!EaseCommonUtils.isSdcardExist()) {
             Toast.makeText(getActivity(), R.string.sd_card_does_not_exist, Toast.LENGTH_SHORT).show();
             return;
         }
-        cameraFile = new File(PathUtil.getInstance().getImagePath(), EMClient.getInstance().getCurrentUser()
-                + System.currentTimeMillis() + ".jpg");
-        if (!cameraFile.exists())
-            cameraFile.mkdirs();
+        takePhoto();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            ContentValues contentValues = new ContentValues(1);
-            contentValues.put(MediaStore.Images.Media.DATA, cameraFile.getAbsolutePath());
-            Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
-            startActivityForResult(intent, REQUEST_CODE_CAMERA);
+//        cameraFile = new File(PathUtil.getInstance().getImagePath(), EMClient.getInstance().getCurrentUser()
+//                + System.currentTimeMillis() + ".jpg");
+//        if (!cameraFile.exists())
+//            cameraFile.mkdirs();
+//
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//            ContentValues contentValues = new ContentValues(1);
+//            contentValues.put(MediaStore.Images.Media.DATA, cameraFile.getAbsolutePath());
+//            Uri uri = getContext().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            startActivityForResult(intent, REQUEST_CODE_CAMERA);
+//        } else {
+////            cameraFile = new File(PathUtil.getInstance().getImagePath(), EMClient.getInstance().getCurrentUser()
+////                    + System.currentTimeMillis() + ".jpg");
+//            //noinspection ResultOfMethodCallIgnored
+//            cameraFile.getParentFile().mkdirs();
+//            startActivityForResult(
+//                    new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)),
+//                    REQUEST_CODE_CAMERA);
+//        }
+//
+//        /*cameraFile = new File(PathUtil.getInstance().getImagePath(), EMClient.getInstance().getCurrentUser()
+//                + System.currentTimeMillis() + ".jpg");
+//        //noinspection ResultOfMethodCallIgnored
+//        cameraFile.getParentFile().mkdirs();
+//        startActivityForResult(
+//                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)),
+//                REQUEST_CODE_CAMERA);*/
+    }
+
+    private File cameraFile;
+
+    /**
+     * 拍照
+     */
+    public void takePhoto() {
+
+        String cacheDir = Environment.getExternalStorageDirectory().getPath() + "/artperformance";
+
+        File photoFile = new File(cacheDir);
+        //文件夹不存在就创建文件夹
+        if (!photoFile.exists())
+            photoFile.mkdirs();
+
+        //创建存放图片的jpg文件
+        cameraFile = new File(photoFile, EMClient.getInstance().getCurrentUser()
+                + System.currentTimeMillis() + ".jpg");
+
+        Uri uri = null;
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.M) {
+            uri = FileProvider.getUriForFile(getActivity(),
+                    EaseImageUtils.FILE_URL, cameraFile);
         } else {
-            cameraFile = new File(PathUtil.getInstance().getImagePath(), EMClient.getInstance().getCurrentUser()
-                    + System.currentTimeMillis() + ".jpg");
-            //noinspection ResultOfMethodCallIgnored
-            cameraFile.getParentFile().mkdirs();
-            startActivityForResult(
-                    new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)),
-                    REQUEST_CODE_CAMERA);
+            //创建存放图片的jpg文件
+            uri = Uri.fromFile(cameraFile);
         }
 
-        /*cameraFile = new File(PathUtil.getInstance().getImagePath(), EMClient.getInstance().getCurrentUser()
-                + System.currentTimeMillis() + ".jpg");
-        //noinspection ResultOfMethodCallIgnored
-        cameraFile.getParentFile().mkdirs();
-        startActivityForResult(
-                new Intent(MediaStore.ACTION_IMAGE_CAPTURE).putExtra(MediaStore.EXTRA_OUTPUT, EaseCompat.getUriForFile(getContext(), cameraFile)),
-                REQUEST_CODE_CAMERA);*/
+        if (uri == null) {
+//            showErr(getResources().getString(R.string.transfer_error));
+            return;
+        }
+
+
+        Intent mIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        mIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+        startActivityForResult(mIntent, REQUEST_CODE_CAMERA);
     }
+
 
     /**
      * select local image

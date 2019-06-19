@@ -19,16 +19,33 @@ public interface Constant {
 
     String FILE_PROVIDER_PATH = "com.art.recruitment.artperformance.fileprovider";// 文件提供路径
 
-    //bucket 头像存放目录
-    String DIR_HEADPIC = "head_pic/";
-    //视频目录
-    String DIR_VIDEO = "video/";
-    //封面
-    String DIR_COVER = "cover/";
-    //照片集
-    String DIR_PHOTOS = "photos/";
-    //动态圈
-    String DIR_DYNAMIC = "dynamic/";
+    //bucket 头像
+//    String DIR_HEADPIC = "head_pic/";
+    String DIR_HEADPIC = "actor/img/avatar/";
+    //个人视频
+    String DIR_VIDEO = "actor/video/personal/";
+    //个人视频预览图
+    String DIR_VIDEO_COVER = "actor/img/preview/personal/";
+    //    String DIR_VIDEO = "video/";
+    //主图
+//    String DIR_COVER = "cover/";
+    String DIR_COVER = "actor/img/primary/";
+    //照片
+//    String DIR_PHOTOS = "photos/";
+    String DIR_PHOTOS = "actor/img/photo/";
+    //动态圈图片
+    String DIR_DYNAMIC = "actor/img/dynamiccircle/";
+    //动态圈视频
+    String DIR_DYNAMIC_VIDEO = "actor/video/dynamiccircle/";
+    //动态圈视频预览图
+    String DIR_DYNAMIC_VIDEO_PREVIEW = "actor/img/preview/dynamiccircle/";
+
+    //个人视频预览图ObjectKey：actor/img/preview/personal/{previewImgName}
+
+
+    String PIC_DIR = ".jpg";
+    String VIDEO_DIR = ".mp4";
+
 
     String SORT_DESC = "desc";//降序
     String SORT_ASC = "asc";//升序

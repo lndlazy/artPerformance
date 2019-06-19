@@ -139,8 +139,22 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                 if (!TextUtils.isEmpty(videoPath))
                     //预览视频
                     startPreVideo();
-                else
-                    showTypeDialog(parent, position);
+                else {
+
+
+                    if (position == parent.getChildCount() - 1) {
+                        if (mPicList.size() == MainConstant.MAX_SELECT_PIC_NUM) {
+                            viewPluImg(position);
+                        } else {
+                            showTypeDialog(parent, position);
+//                            selectPic(MainConstant.MAX_SELECT_PIC_NUM - mPicList.size());
+                        }
+                    } else {
+                        viewPluImg(position);
+                    }
+
+                }
+
 
             }
         });
@@ -246,7 +260,6 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                     //选择的是视频
                     setVideoAdapter(PictureSelector.obtainMultipleResult(data));
 //                    refreshAdapter(PictureSelector.obtainMultipleResult(data));
-
                     break;
             }
         }
@@ -415,7 +428,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                         File videoFile = new File(videoPath);
                         InputStream inputStream = new FileInputStream(videoFile);
                         String videoMd5 = FileMd5Util.digest(inputStream);
-                        videoObjectKey = Constant.DIR_DYNAMIC + FileMd5Util.digest(inputStream);
+                        videoObjectKey = Constant.DIR_DYNAMIC_VIDEO + FileMd5Util.digest(inputStream) + Constant.VIDEO_DIR;
                         PutObjectRequest videoPut = new PutObjectRequest(bean.getBucket(), videoObjectKey, videoPath);
 //                        String s = UUID.randomUUID().toString();
 //                        ImageUtils.get
@@ -423,7 +436,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                         videoPreviewPath = ImageUtils.saveBitmap(videoThumbnail, videoMd5 + ".jpg");
                         File videoPreviewFile = new File(videoPreviewPath);
                         InputStream inputPreviewStream = new FileInputStream(videoPreviewFile);
-                        videoPreviewPathObjectkey = Constant.DIR_DYNAMIC + FileMd5Util.digest(inputPreviewStream);
+                        videoPreviewPathObjectkey = Constant.DIR_DYNAMIC_VIDEO_PREVIEW + FileMd5Util.digest(inputPreviewStream) + Constant.PIC_DIR;
                         PutObjectRequest videoPathPut = new PutObjectRequest(bean.getBucket(), videoPreviewPathObjectkey, videoPreviewPath);
 
                         oss.putObject(videoPut);
@@ -439,7 +452,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                                 File file = new File(mPicList.get(i));
                                 InputStream inputStream = new FileInputStream(file);
                                 String digest = FileMd5Util.digest(inputStream);
-                                PutObjectRequest picturePut = new PutObjectRequest(bean.getBucket(), Constant.DIR_DYNAMIC + digest, mPicList.get(i));
+                                PutObjectRequest picturePut = new PutObjectRequest(bean.getBucket(), Constant.DIR_DYNAMIC + digest + Constant.PIC_DIR, mPicList.get(i));
                                 mPicObjectKeyLists.add(Constant.DIR_DYNAMIC + digest);
                                 PutObjectResult result = oss.putObject(picturePut);
 
@@ -466,7 +479,6 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
 
             }
         }).start();
-
 
 //        // 异步上传时可以设置进度回调
 //        put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {

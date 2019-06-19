@@ -15,12 +15,12 @@ import android.widget.TextView;
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.dynamic.DynamicLikesBean;
 import com.art.recruitment.artperformance.bean.dynamic.DynamicListBean;
+import com.art.recruitment.artperformance.ui.dynamic.DynamicType;
 import com.art.recruitment.artperformance.ui.dynamic.activity.DynamicDetailActivity;
 import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActivity;
 import com.art.recruitment.artperformance.ui.dynamic.adapter.DynamicAdapter;
 import com.art.recruitment.artperformance.ui.dynamic.contract.DynamicFagmentContract;
 import com.art.recruitment.artperformance.ui.dynamic.presenter.DynamicFagmentPresenter;
-import com.art.recruitment.artperformance.ui.home.activity.RecruitmentInformationActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDynamicActivity;
 import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.Defaultcontent;
@@ -37,7 +37,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -52,7 +51,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.functions.Consumer;
 
 /**
- * 动态圈
+ * 动态圈列表
  */
 public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, DynamicListBean.ContentBean> implements DynamicFagmentContract {
 
@@ -67,7 +66,7 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
     private DynamicAdapter dynamicAdapter;
     private int itemPosition;
     //    private DynamicListBean.DataBean dataBeans;
-    private int deletePosition;
+    private int choosePosition = -1;
     private Dialog shareDialog;
 
     BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -75,7 +74,7 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
         public void onReceive(Context context, Intent intent) {
             int delete = intent.getIntExtra("delete", 0);
             if (delete == 1) {
-                dynamicAdapter.notifyItemRemoved(deletePosition);
+                dynamicAdapter.notifyItemRemoved(choosePosition);
             }
         }
     };
@@ -112,7 +111,7 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
                     case R.id.dynamic_comment_imageview:
                     case R.id.ll_content://进入详情页面
                         //评论
-                        deletePosition = position;
+                        choosePosition = position;
                         Intent intent = new Intent(getContext(), DynamicDetailActivity.class);
                         intent.putExtra("dynamic_id", dynamicAdapter.getData().get(position).getId());
                         startActivity(intent);
@@ -183,7 +182,7 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
         try {
             if (getActivity() != null)
                 getActivity().unregisterReceiver(receiver);
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -192,10 +191,48 @@ public class DynamicFragment extends BaseFragment<DynamicFagmentPresenter, Dynam
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(String event) {
         RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.login_logo);
+        options.placeholder(R.mipmap.ic_head_error);
         options.error(R.mipmap.ic_head_error);
         Glide.with(mContext).load(event).apply(options).into(mHeadImageview);
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void messageEventBus(Integer updateType) {
+
+        List<DynamicListBean.ContentBean> data = dynamicAdapter.getData();
+        DynamicListBean.ContentBean contentBean = null;
+        try {
+            contentBean = data.get(choosePosition);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        switch (updateType) {
+
+            case DynamicType.TYPE_ADD_COMMENT://详情里添加了评论
+
+                if (contentBean != null) {
+                    int commentNumber = contentBean.getCommentNumber();
+                    contentBean.setCommentNumber(commentNumber+1);
+                    dynamicAdapter.notifyItemChanged(choosePosition);
+                }
+
+
+                break;
+            case DynamicType.TYPE_ADD_LIKE://详情里添加了点赞
+                if (contentBean != null) {
+                    contentBean.setIsLikes(true);
+                    int likes = contentBean.getLikes();
+                    contentBean.setLikes(likes + 1);
+                    dynamicAdapter.notifyItemChanged(choosePosition);
+                }
+                break;
+
+        }
+//        EventBus.getDefault().post();
+
+    }
+
 
     private void initButtonClick() {
 

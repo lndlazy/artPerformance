@@ -1,12 +1,14 @@
 package com.art.recruitment.artperformance.ui;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -355,7 +357,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     }
 
 
-
     @Override
     public void onBackPressed() {
 
@@ -373,6 +374,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
 
     private static final int GET_RECODE_AUDIO = 0x911;
+    private static final int TAKE_PHOTO_REQUEST_CODE = 0x912;
     private static String[] PERMISSION_AUDIO = {
             Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA
     };
@@ -386,6 +388,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         int camer_permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
         if (camer_permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, PERMISSION_AUDIO, GET_RECODE_AUDIO);
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA},
+                    TAKE_PHOTO_REQUEST_CODE);
         }
     }
 

@@ -33,5 +33,9 @@ public class EaseImageUtils extends com.hyphenate.util.ImageUtils{
         EMLog.d("msg", "thum image path:" + path);
         return path;
     }
-	
+
+
+	public static final String FILE_URL = "com.art.recruitment.artperformance.fileprovider";
+
+
 }

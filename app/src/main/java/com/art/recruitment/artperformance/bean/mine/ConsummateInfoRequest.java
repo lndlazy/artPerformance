@@ -14,6 +14,7 @@ public class ConsummateInfoRequest {
     private String name;
     private String personalExperience;
     private String personalIntroductionVideo;
+    private String personalIntroductionVideoPreview;
     private List<String> photo;
     private List<String> primaryPhoto;
     private String telephone;
@@ -21,6 +22,14 @@ public class ConsummateInfoRequest {
     private int waist;
     private String wechat;
     private int wechatHiddenFlag;
+
+    public String getPersonalIntroductionVideoPreview() {
+        return personalIntroductionVideoPreview;
+    }
+
+    public void setPersonalIntroductionVideoPreview(String personalIntroductionVideoPreview) {
+        this.personalIntroductionVideoPreview = personalIntroductionVideoPreview;
+    }
 
     public int getAge() {
         return age;

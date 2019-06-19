@@ -44,6 +44,7 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerClickListener;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
@@ -218,12 +219,12 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         mBanner.setDelayTime(2000);
         mBanner.isAutoPlay(true);
         mBanner.setIndicatorGravity(BannerConfig.CENTER);
-        mBanner.setImages(bean.getPhotoView())
-                .start();
 
-        mBanner.setOnBannerListener(new OnBannerListener() {
+
+         mBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
+                Logger.d("=====OnBannerListener=====  ?????  " + position);
                 //预览图片
                 Intent intent = new Intent(mContext, PlusImageActivity.class);
                 intent.putStringArrayListExtra(MainConstant.IMG_LIST, (ArrayList<String>) bean.getPhotoView());
@@ -233,6 +234,8 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
 
             }
         });
+        mBanner.setImages(bean.getPhotoView())
+                .start();
     }
 
 
@@ -248,8 +251,10 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         mHeightTextview.setText(bean.getHeight() + "");
         mWeightTextview.setText(bean.getBodyWeight() + "");
         mThreeCirclesTextview.setText(bean.getBust() + "    " + bean.getWaist() + "    " + bean.getHips());
-        mWeChatTextview.setText(bean.getWechat());
-        mTelephoneTextview.setText(bean.getTelephone());
+        //微信号
+        mWeChatTextview.setText(bean.getWechatHiddenFlag() == 1 ? bean.getWechat() : "******");
+        //手机号
+        mTelephoneTextview.setText(bean.getTelephoneHiddenFlag() == 1 ? bean.getTelephone() : "***********");
         mOtherTextview.setText(bean.getPersonalExperience());
         Glide.with(mContext).load(bean.getPersonalIntroductionVideoView()).into(mVideoImageView);
 

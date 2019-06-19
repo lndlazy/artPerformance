@@ -76,6 +76,26 @@ public class GroupDetailBean extends BaseBean<GroupDetailBean.DataBean> {
         private List<String> photoView;
         private List<String> primaryPhotoView;
 
+        private int wechatHiddenFlag;
+        private int telephoneHiddenFlag;
+
+
+        public int getWechatHiddenFlag() {
+            return wechatHiddenFlag;
+        }
+
+        public void setWechatHiddenFlag(int wechatHiddenFlag) {
+            this.wechatHiddenFlag = wechatHiddenFlag;
+        }
+
+        public int getTelephoneHiddenFlag() {
+            return telephoneHiddenFlag;
+        }
+
+        public void setTelephoneHiddenFlag(int telephoneHiddenFlag) {
+            this.telephoneHiddenFlag = telephoneHiddenFlag;
+        }
+
         public int getAge() {
             return age;
         }

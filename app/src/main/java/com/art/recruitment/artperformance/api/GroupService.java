@@ -55,8 +55,8 @@ public interface GroupService {
      * 获取群演列表
      */
     @GET(ApiUrls.ACTORS)
-    Observable<GroupListBean> actorsList(@Query("maxAge") int maxAge,
-                                         @Query("minAge") int minAge,
+    Observable<GroupListBean> actorsList(@Query("maxAge") String maxAge,
+                                         @Query("minAge") String minAge,
                                          @Query("cityId") int cityId,
                                          @Query("gender") int gender,
                                          @Query("page") int page,

@@ -22,6 +22,7 @@ import com.art.recruitment.artperformance.bean.dynamic.DynamicCommentsBean;
 import com.art.recruitment.artperformance.bean.dynamic.DynamicDetailBean;
 import com.art.recruitment.artperformance.bean.dynamic.DynamicLikesBean;
 import com.art.recruitment.artperformance.bean.model.NineGridTestModel;
+import com.art.recruitment.artperformance.ui.dynamic.DynamicType;
 import com.art.recruitment.artperformance.ui.dynamic.adapter.DynamicCommentsAdapter;
 import com.art.recruitment.artperformance.ui.dynamic.contract.DynamicDataContract;
 import com.art.recruitment.artperformance.ui.dynamic.presenter.DynamicDataPresenter;
@@ -180,8 +181,9 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
                     }
                 });
 
+        //点赞
         RxView.
-                clicks(mGiveImageview).
+                clicks(mGiveConstraintLayout).
                 compose(RxClickTransformer.getClickTransformer()).
                 subscribe(new Consumer<Object>() {
                     @Override
@@ -215,6 +217,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
                     }
                 });
 
+        //评论
         RxView.
                 clicks(mSendTextview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -226,7 +229,6 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
                         Gson gson = new Gson();
                         String codeStr = gson.toJson(request);
                         mPresenter.dynamicComment(dynamic_id, codeStr);
-
                         mSendEdittext.setText("");
                     }
                 });
@@ -297,7 +299,6 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
             mNineGridTestLayout.setUrlList(bean.getImagePath());
         }
 
-
 //        mList = new ArrayList<>();
 //        NineGridTestModel model1 = new NineGridTestModel();
 //
@@ -327,7 +328,9 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
 
     @Override
     public void returnDynamicCommentBean(DynamicCommentBean.DataBean bean) {
-        mPresenter.dynamicComments(dynamic_id, pageSize, 20, Constant.SORT_DESC);
+        mPresenter.dynamicComments(dynamic_id, pageSize, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
+
+        EventBus.getDefault().post(DynamicType.TYPE_ADD_COMMENT);
     }
 
     //删除动态圈成功
@@ -349,6 +352,8 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
     @Override
     public void returnDynamicLikesBean(DynamicLikesBean.DataBean bean) {
         mPresenter.dynamicDetail(dynamic_id);
+
+        EventBus.getDefault().post(DynamicType.TYPE_ADD_LIKE);
     }
 
     @Override
@@ -380,7 +385,8 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
                 build();
 
         Window window = shareDialog.getWindow();
-        window.setWindowAnimations(R.style.mystyle);
+        if (window != null)
+            window.setWindowAnimations(R.style.mystyle);
 
         shareDialog.show();
 

@@ -133,7 +133,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     private String mSort = "";
     private Dialog dialog;
     private int mCityCode = -1;
-    private String mSearch;
+//    private String mSearch;
     private Dialog mPermissionSettingDialog;
 
     @Override
@@ -249,9 +249,9 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     protected void initListRequest(int page) {
         super.initListRequest(page);
 
-        com.orhanobut.logger.Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearch + ",page:" + page + ",mSort:" + mSort);
+        com.orhanobut.logger.Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearchEdittext.getText().toString().trim() + ",page:" + page + ",mSort:" + mSort);
 
-        mPresenter.recuitList(mCityCode, mSearch, page, BaseConfig.DEFAULT_PAGE_SIZE, mSort);
+        mPresenter.recuitList(mCityCode, mSearchEdittext.getText().toString().trim(), page, BaseConfig.DEFAULT_PAGE_SIZE, mSort);
     }
 
     private void initEditTextLisnter() {
@@ -259,7 +259,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {//搜索按键action
-                    mSearch = mSearchEdittext.getText().toString().trim();
+//                    mSearch = mSearchEdittext.getText().toString().trim();
 //                    mSearch = trim;
                     autoRefresh();
                     closeInoutDecorView(getActivity());
@@ -490,9 +490,6 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
             strings.add(bean.get(i).getImageUrl());
         }
 
-        mBanner.setImages(strings)
-                .start();
-
         mBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
@@ -501,6 +498,8 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
                 startActivity(intent);
             }
         });
+        mBanner.setImages(strings)
+                .start();
 
     }
 

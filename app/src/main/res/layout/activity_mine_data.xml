@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/y28"
-        android:paddingTop="@dimen/y68">
+        android:paddingTop="@dimen/y45">
 
         <ImageView
             android:id="@+id/mine_return_imageview"
@@ -310,17 +310,27 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toRightOf="@+id/mine_telePhone_textview"
-                    app:layout_constraintRight_toLeftOf="@id/mine_data_telePhone_switchButton"
+                    app:layout_constraintRight_toLeftOf="@id/ivTelSwitch"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.art.recruitment.artperformance.view.SwitchButton
-                    android:id="@+id/mine_data_telePhone_switchButton"
-                    android:layout_width="@dimen/x100"
-                    android:layout_height="@dimen/y52"
+                <ImageView
+                    android:id="@+id/ivTelSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/x30"
+                    android:background="@drawable/selector_hide"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:sb_checked="true"
-                    app:sb_show_indicator="false" />
+
+                    />
+
+                <!--<com.art.recruitment.artperformance.view.SwitchButton-->
+                <!--android:id="@+id/mine_data_telePhone_switchButton"-->
+                <!--android:layout_width="@dimen/x100"-->
+                <!--android:layout_height="@dimen/y52"-->
+                <!--android:layout_marginRight="@dimen/x30"-->
+                <!--app:layout_constraintRight_toRightOf="parent"-->
+                <!--app:sb_checked="true"-->
+                <!--app:sb_show_indicator="false" />-->
 
             </android.support.constraint.ConstraintLayout>
 
@@ -364,17 +374,29 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintHorizontal_bias="0"
                     app:layout_constraintLeft_toRightOf="@+id/mine_weChat_textview"
-                    app:layout_constraintRight_toLeftOf="@id/mine_data_wxChat_switchButton"
+                    app:layout_constraintRight_toLeftOf="@id/ivWxSwitch"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.art.recruitment.artperformance.view.SwitchButton
-                    android:id="@+id/mine_data_wxChat_switchButton"
-                    android:layout_width="@dimen/x100"
-                    android:layout_height="@dimen/y52"
+
+                <ImageView
+                    android:id="@+id/ivWxSwitch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/x30"
+                    android:background="@drawable/selector_hide"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:sb_checked="true"
-                    app:sb_show_indicator="false" />
+
+                    />
+
+
+                <!--<com.art.recruitment.artperformance.view.SwitchButton-->
+                <!--android:id="@+id/mine_data_wxChat_switchButton"-->
+                <!--android:layout_width="@dimen/x100"-->
+                <!--android:layout_height="@dimen/y52"-->
+                <!--android:layout_marginRight="@dimen/x30"-->
+                <!--app:layout_constraintRight_toRightOf="parent"-->
+                <!--app:sb_checked="true"-->
+                <!--app:sb_show_indicator="false" />-->
 
             </android.support.constraint.ConstraintLayout>
 

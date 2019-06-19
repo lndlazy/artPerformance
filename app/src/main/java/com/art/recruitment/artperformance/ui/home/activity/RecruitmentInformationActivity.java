@@ -331,8 +331,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
         mReleaseTimeTextview.setText("发布时间：" + bean.getReleaseTime());
         mReleasePeopleTextview.setText("发布人：" + bean.getPublisherName());
         mDeadlineTextview.setText("报名截止：" + bean.getApplyEndTime());
-        mRequiredPeopleTextview.setText("需要人数：" + bean.getRecruitNumber());
-        mWorkTimeTextview.setText("工作时间：" + bean.getWorkingHours());
+        mRequiredPeopleTextview.setText("需要人数：" + bean.getRecruitNumber() + "人");
+        mWorkTimeTextview.setText("工作时间：" + bean.getWorkingHours() + "天");
         mCollectionPlaceTextview.setText("集合地点：" + bean.getGatheringAddress());
         mSetTimeTextview.setText("集合时间：" + bean.getGatheringTime());
         if (!TextUtils.isEmpty(bean.getOtherRequirement())) {
@@ -344,7 +344,6 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
         if (bean.getLabelList() != null)
             tags.addAll(bean.getLabelList());
         mFlowlayout.setTags(tags);
-
 
     }
 

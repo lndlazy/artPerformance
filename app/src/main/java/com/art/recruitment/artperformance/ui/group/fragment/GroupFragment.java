@@ -104,8 +104,8 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
     private ContactAdapter mAdapter;
     private List<UserEntity> list;
     private GroupAdapter groupAdapter;
-    private int maxAge = -1;
-    private int minAge = -1;
+    //    private int maxAge = -1;
+//    private int minAge = -1;
     private int cityId = -1;
     private int gender = -1;
     private boolean pages;
@@ -182,11 +182,16 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
     @Override
     protected void initListRequest(int page) {
         super.initListRequest(page);
+
+        String maxAge = TextUtils.isEmpty(mHighAgeEdittext.getText().toString().trim()) ? "-1"
+                : mHighAgeEdittext.getText().toString().trim();
+        String minAge = TextUtils.isEmpty(mLowAgeEdittext.getText().toString().trim()) ? "-1"
+                : mHighAgeEdittext.getText().toString().trim();
+
         mPresenter.actorsList(maxAge, minAge, cityId, gender, page, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
     }
 
     private void initButtonClick() {
-
 
         RxView.
                 clicks(mAgeDetermineTextview).
@@ -197,32 +202,31 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                         String mLowAge = mLowAgeEdittext.getText().toString().trim();
                         String mHighAge = mHighAgeEdittext.getText().toString().trim();
 
-                        if (!TextUtils.isEmpty(mLowAge) && !TextUtils.isEmpty(mHighAge)) {
-                            if (isNumeric(mLowAge) && isNumeric(mHighAge)) {
-                                if (Integer.parseInt(mLowAge) < Integer.parseInt(mHighAge)) {
-                                    mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                                    ageColor(true);
-                                    maxAge = Integer.parseInt(mHighAge);
-                                    minAge = Integer.parseInt(mLowAge);
-                                    hideAgeChooseView();
+//                        if (!TextUtils.isEmpty(mLowAge) && !TextUtils.isEmpty(mHighAge)) {
+                        if (isNumeric(mLowAge) && isNumeric(mHighAge)) {
+                            if (Integer.parseInt(mLowAge) < Integer.parseInt(mHighAge)) {
+                                mAgeChoiceConstranintLayout.setVisibility(View.GONE);
+                                ageColor(true);
+//                                    maxAge = Integer.parseInt(mHighAge);
+//                                    minAge = Integer.parseInt(mLowAge);
+                                hideAgeChooseView();
 
-
-                                    closeInoutDecorView(getActivity());
-                                    autoRefresh();
-                                } else {
-                                    mLowAgeEdittext.setText("");
-                                    mHighAgeEdittext.setText("");
-                                    ToastUtils.showShort("最高年龄不可低于最低年龄哦");
-                                    ageColor(false);
-                                }
+                                closeInoutDecorView(getActivity());
+                                autoRefresh();
                             } else {
-                                ToastUtils.showShort("只可以输入整数，请重新输入");
+                                mLowAgeEdittext.setText("");
+                                mHighAgeEdittext.setText("");
+                                ToastUtils.showShort("最高年龄不可低于最低年龄哦");
                                 ageColor(false);
                             }
                         } else {
-                            ToastUtils.showShort("年龄不能为空");
+                            ToastUtils.showShort("只可以输入整数，请重新输入");
                             ageColor(false);
                         }
+//                        } else {
+//                            ToastUtils.showShort("年龄不能为空");
+//                            ageColor(false);
+//                        }
                     }
                 });
 

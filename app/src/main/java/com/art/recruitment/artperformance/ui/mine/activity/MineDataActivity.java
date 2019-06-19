@@ -51,6 +51,7 @@ import com.art.recruitment.artperformance.ui.mine.adapter.MinePhotoAdapter;
 import com.art.recruitment.artperformance.ui.mine.contract.MineDataContract;
 import com.art.recruitment.artperformance.ui.mine.presenter.MineDataPresenter;
 import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.FileMd5Util;
 import com.art.recruitment.artperformance.utils.ImageUtils;
 import com.art.recruitment.artperformance.utils.MatisseGlideEngine;
 import com.art.recruitment.artperformance.utils.PermissionTipUtils;
@@ -58,7 +59,6 @@ import com.art.recruitment.artperformance.utils.StringsUtils;
 import com.art.recruitment.artperformance.utils.UriUtil;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.PermissionRationalDialog;
-import com.art.recruitment.artperformance.view.SwitchButton;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
@@ -85,6 +85,9 @@ import com.zhihu.matisse.internal.entity.CaptureStrategy;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -148,10 +151,19 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     TextView mOtherNumberTextviewv;
     @BindView(R.id.mine_preservation_textview)
     TextView mPreservationTextview;
-    @BindView(R.id.mine_data_telePhone_switchButton)
-    SwitchButton mTelePhoneSwitchButton;
-    @BindView(R.id.mine_data_wxChat_switchButton)
-    SwitchButton mWxChatSwitchButton;
+
+//    @BindView(R.id.mine_data_telePhone_switchButton)
+//    SwitchButton mTelePhoneSwitchButton;
+
+//    @BindView(R.id.mine_data_wxChat_switchButton)
+//    SwitchButton mWxChatSwitchButton;
+
+    @BindView(R.id.ivTelSwitch)
+    ImageView ivTelSwitch;
+    @BindView(R.id.ivWxSwitch)
+    ImageView ivWxSwitch;
+
+
     @BindView(R.id.mine_data_redioGroup)
     RadioGroup mRadioGroup;
     @BindView(R.id.mine_data_head_imageview)
@@ -224,7 +236,15 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private List<Uri> photoList = new ArrayList<>();//存放照片集的uri集合
     private List<String> photoObjectKeyList = new ArrayList<>();//存放照片集的objectKey集合
     private ProgressDialog show;
+
+
     private String mCity;
+    //个人视频封面 object
+    private PutObjectRequest putVideoCover;
+    private ProgressDialog videoShow;
+    private String videoProviewPathObjectKey;//个人视频路径objectKey
+    private Bitmap videoThumbnail;
+    private String videoPreviewPath = "";//视频预览路径
 
 
     @Override
@@ -254,6 +274,11 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         mPresenter.getPersonalData();
 
+        ivTelSwitch.setSelected(true);
+        ivWxSwitch.setSelected(true);
+        telePhoneSwitchButton = 1;
+        wxChatSwitchButton = 1;
+
         initPic();
 
         initMatisse();
@@ -262,27 +287,45 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         initRecyclerView();
 
-        mTelePhoneSwitchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+
+        ivTelSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
-                if (isChecked) {
-                    telePhoneSwitchButton = 1;
-                } else {
-                    telePhoneSwitchButton = 0;
-                }
+            public void onClick(View v) {
+
+                telePhoneSwitchButton = ivTelSwitch.isSelected() ? 0 : 1;
+                ivTelSwitch.setSelected(!ivTelSwitch.isSelected());
+
+            }
+        });
+        ivWxSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                wxChatSwitchButton = ivWxSwitch.isSelected() ? 0 : 1;
+                ivWxSwitch.setSelected(!ivWxSwitch.isSelected());
             }
         });
 
-        mWxChatSwitchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
-                if (isChecked) {
-                    wxChatSwitchButton = 1;
-                } else {
-                    wxChatSwitchButton = 0;
-                }
-            }
-        });
+//        mTelePhoneSwitchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+//                if (isChecked) {
+//                    telePhoneSwitchButton = 1;
+//                } else {
+//                    telePhoneSwitchButton = 0;
+//                }
+//            }
+//        });
+
+//        mWxChatSwitchButton.setOnCheckedChangeListener(new SwitchButton.OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(SwitchButton view, boolean isChecked) {
+//                if (isChecked) {
+//                    wxChatSwitchButton = 1;
+//                } else {
+//                    wxChatSwitchButton = 0;
+//                }
+//            }
+//        });
 
         mRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -612,6 +655,8 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         request.setPersonalExperience(mOther);
         //视频
         request.setPersonalIntroductionVideo(videoObjectKey);
+        //视频封面
+        request.setPersonalIntroductionVideoPreview(videoProviewPathObjectKey);
         //图片列表
         request.setPhoto(photoObjectKeyList);
         //封面
@@ -808,9 +853,9 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //            mMasterAdapter.notifyDataSetChanged();
 //        }
 
-        //TODO 视频
+
         if (!TextUtils.isEmpty(bean.getPersonalIntroductionVideo())) {
-            //TODO videolist?
+
 //            List<ImageModel> mTempImageList2 = new ArrayList<>();
 //            ImageModel model2 = new ImageModel();
 //            model2.setUris(dataBean.getPersonalIntroductionVideo());
@@ -1340,61 +1385,117 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         Logger.d("videoPath::" + videoPath);
 
-        Bitmap videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 300, 300);
+        videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 500, 500);
 
         videoPicView.setImageBitmap(videoThumbnail);
 
-        startUploadVideo(selectedVideo, videoPath);
+        try {
+            startUploadVideo(selectedVideo, videoPath);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            ToastUtils.showShort("文件不存在");
+        }
     }
 
     //开始上传视频
-    private void startUploadVideo(Uri videoUri, String videoPath) {
+    private void startUploadVideo(Uri videoUri, String videoPath) throws FileNotFoundException {
         if (oss != null && !TextUtils.isEmpty(bucket) && !TextUtils.isEmpty(endpoint)) {
 
-            videoObjectKey = Constant.DIR_VIDEO + StringsUtils.getMd5Name(videoUri, this);
+            videoObjectKey = Constant.DIR_VIDEO + StringsUtils.getMd5Name(videoUri, this) + Constant.VIDEO_DIR;
+//            videoObjectPathKey = Constant.DIR_VIDEO_COVER + StringsUtils.getMd5Name(videoUri, this) + Constant.PIC_DIR;
+//            String videoMd5 = FileMd5Util.digest(inputStream);
+
+            //获取缩略图路径
+            videoPreviewPath = ImageUtils.saveBitmap(videoThumbnail, Constant.DIR_VIDEO_COVER + StringsUtils.getMd5Name(videoUri, this) + ".jpg");
+
+            //视频缩略图objectkey
+            File videoPreviewFile = new File(videoPreviewPath);
+            InputStream inputPreviewStream = new FileInputStream(videoPreviewFile);
+            videoProviewPathObjectKey =Constant.DIR_VIDEO_COVER + FileMd5Util.digest(inputPreviewStream) + Constant.PIC_DIR;
 
             putVideo = new PutObjectRequest(bucket, videoObjectKey, videoPath);
-            putVideo.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+            putVideoCover = new PutObjectRequest(bucket, videoProviewPathObjectKey, videoPreviewPath);
+
+            videoShow = ProgressDialog.show(this, "视频上传中...", "");
+
+            new Thread(new Runnable() {
                 @Override
-                public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-//                    Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
-                }
-            });
+                public void run() {
 
-            oss.asyncPutObject(putVideo, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-                @Override
-                public void onSuccess(PutObjectRequest request, final PutObjectResult result) {
+                    try {
+                        //上传视频封面
+                        oss.putObject(putVideoCover);
 
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            //转换成url
-                            mPresenter.pathUrl(videoObjectKey, FileType.PIC_TYPE_VIDEO);
-                        }
-                    });
+                        oss.putObject(putVideo);
 
-                }
+                        hideVideoShow(true);
 
-                @Override
-                public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-                    // 请求异常。
-                    if (clientExcepion != null) {
-                        // 本地异常，如网络异常等。
-                        clientExcepion.printStackTrace();
+                    } catch (ClientException e) {
+                        e.printStackTrace();
+                    } catch (ServiceException e) {
+                        e.printStackTrace();
+                    } finally {
+                        hideVideoShow(false);
                     }
-                    if (serviceException != null) {
-                        // 服务异常。
-                        Log.e("ErrorCode", serviceException.getErrorCode());
-//                        Log.e("RequestId", serviceException.getRequestId());
-//                        Log.e("HostId", serviceException.getHostId());
-//                        Log.e("RawMessage", serviceException.getRawMessage());
-                    }
+
                 }
-            });
+            }).start();
+
+//            putVideo.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
+//                @Override
+//                public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
+////                    Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
+//                }
+//            });
+//
+//            oss.asyncPutObject(putVideo, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
+//                @Override
+//                public void onSuccess(PutObjectRequest request, final PutObjectResult result) {
+//
+//                    runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            //转换成url
+//                            mPresenter.pathUrl(videoObjectKey, FileType.PIC_TYPE_VIDEO);
+//                        }
+//                    });
+//
+//                }
+//
+//                @Override
+//                public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
+//                    // 请求异常。
+//                    if (clientExcepion != null) {
+//                        // 本地异常，如网络异常等。
+//                        clientExcepion.printStackTrace();
+//                    }
+//                    if (serviceException != null) {
+//                        // 服务异常。
+//                        Log.e("ErrorCode", serviceException.getErrorCode());
+////                        Log.e("RequestId", serviceException.getRequestId());
+////                        Log.e("HostId", serviceException.getHostId());
+////                        Log.e("RawMessage", serviceException.getRawMessage());
+//                    }
+//                }
+//            });
 
         } else {
             //TODO 统一操作
         }
+    }
+
+    private void hideVideoShow(final boolean b) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (videoShow != null && videoShow.isShowing())
+                    videoShow.dismiss();
+
+                if (b)
+                    //转换成url
+                    mPresenter.pathUrl(videoObjectKey, FileType.PIC_TYPE_VIDEO);
+            }
+        });
     }
 
 
@@ -1403,7 +1504,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
      */
     private void startUploadPhotoList() {
 
-        show = ProgressDialog.show(this, "", "");
+        show = ProgressDialog.show(this, "照片上传中...", "");
 
         new Thread(new Runnable() {
             @Override
@@ -1414,7 +1515,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     //生成上传的objectkey集合
                     for (int i = 0; i < photoList.size(); i++) {
                         //获取上传的objectkey
-                        final String photoObjectKey = Constant.DIR_PHOTOS + StringsUtils.getMd5Name(photoList.get(i), MineDataActivity.this);
+                        final String photoObjectKey = Constant.DIR_PHOTOS + StringsUtils.getMd5Name(photoList.get(i), MineDataActivity.this) + Constant.PIC_DIR;
                         photoObjectKeyList.add(photoObjectKey);
 
                         putPhotoList = new PutObjectRequest(bucket, photoObjectKey,
@@ -1429,7 +1530,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                             }
                         });
 
-                        Log.d("PutObject", "UploadSuccess");
+//                        Log.d("PutObject", "UploadSuccess");
                         if (i == photoList.size() - 1) {
                             stopShow();
                         }
@@ -1528,13 +1629,13 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
                 case Constant.DIR_COVER://封面
 
-                    coverObjectKey = pic_type + StringsUtils.getMd5Name(uri, this);
+                    coverObjectKey = pic_type + StringsUtils.getMd5Name(uri, this) + Constant.PIC_DIR;
                     putHead = new PutObjectRequest(bucket, coverObjectKey, filePath);
 
                     break;
 
                 case Constant.DIR_HEADPIC://头像
-                    headPicObjectKey = pic_type + StringsUtils.getMd5Name(uri, this);
+                    headPicObjectKey = pic_type + StringsUtils.getMd5Name(uri, this) + Constant.PIC_DIR;
                     putHead = new PutObjectRequest(bucket, headPicObjectKey, filePath);
                     break;
 

@@ -45,7 +45,7 @@ public class GroupFragmentPresenter extends BasePresenter<GroupFragmentContract>
     /**
      * 获取群演列表
      */
-    public void actorsList(int maxAge, int minAge, int cityId, int gender, int page, int size, String sort) {
+    public void actorsList(String maxAge, String minAge, int cityId, int gender, int page, int size, String sort) {
         Api.
                 observable(Api.getService(GroupService.class).actorsList(maxAge, minAge, cityId, gender, page, size, sort)).
                 presenter(this).

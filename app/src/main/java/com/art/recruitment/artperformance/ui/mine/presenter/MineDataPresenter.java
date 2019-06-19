@@ -146,7 +146,7 @@ public class MineDataPresenter extends BasePresenter<MineDataContract> {
                 observable(Api.getService(MineService.class).pathUrl(path)).
                 presenter(this).
                 requestMode(RequestMode.SINGLE).
-                showLoading(true).
+                showLoading(false).
                 doRequest(new RxSubscriber<String, BaseBean<String>>() {
                     @Override
                     protected void _onSuccess(String picUrl, String successMessage) {
