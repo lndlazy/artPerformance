@@ -50,6 +50,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
@@ -250,7 +251,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     protected void initListRequest(int page) {
         super.initListRequest(page);
 
-        com.orhanobut.logger.Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearchEdittext.getText().toString().trim() + ",page:" + page + ",mSort:" + mSort);
+      Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearchEdittext.getText().toString().trim() + ",page:" + page + ",mSort:" + mSort);
 
         mPresenter.recuitList(mCityCode, mSearchEdittext.getText().toString().trim(), page, BaseConfig.DEFAULT_PAGE_SIZE, mSort);
     }

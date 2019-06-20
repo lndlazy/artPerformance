@@ -7,8 +7,10 @@ import android.content.Context;
 import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 /**
  * 系统工具箱
@@ -85,4 +87,15 @@ public class SystemUtil {
         String deviceId = tm.getDeviceId();
         return deviceId;
     }
+
+    /**
+     * 关闭软件盘
+     */
+    public static void closeInoutDecorView(Activity activity) {
+        View view = activity.getWindow().peekDecorView();
+        InputMethodManager inputMethodManager = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null)
+            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
 }

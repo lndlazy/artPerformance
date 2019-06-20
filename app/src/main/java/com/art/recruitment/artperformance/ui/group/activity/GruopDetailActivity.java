@@ -116,6 +116,9 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
     @BindView(R.id.group_detail_video_imageview)
     ImageView mVideoImageView;
 
+//    @BindView(R.id.iv_play)
+//    ImageView iv_play;
+
     private MyImageLoader mMyImageLoader;
     private GroupDetailBean.DataBean beans;
     private int group_id;
@@ -149,7 +152,7 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         mPresenter.recuitDetail(group_id);
 
         initBottonClick();
-
+//        iv_play.setVisibility(View.INVISIBLE);
     }
 
     private void initBottonClick() {
@@ -221,7 +224,7 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         mBanner.setIndicatorGravity(BannerConfig.CENTER);
 
 
-         mBanner.setOnBannerListener(new OnBannerListener() {
+        mBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
                 Logger.d("=====OnBannerListener=====  ?????  " + position);
@@ -256,9 +259,10 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         //手机号
         mTelephoneTextview.setText(bean.getTelephoneHiddenFlag() == 1 ? bean.getTelephone() : "***********");
         mOtherTextview.setText(bean.getPersonalExperience());
-        Glide.with(mContext).load(bean.getPersonalIntroductionVideoView()).into(mVideoImageView);
-
+        Glide.with(mContext).load(bean.getPersonalIntroductionVideoPreviewView()).into(mVideoImageView);
         videoPlayUrl = bean.getPersonalIntroductionVideoView();
+
+//        iv_play.setVisibility(TextUtils.isEmpty(videoPlayUrl)? View.INVISIBLE : View.VISIBLE);
 
         if (bean.isIsLikes()) {
             mZanImageview.setImageDrawable(UIUtils.getDrawable(R.mipmap.icon_circle_like_p));

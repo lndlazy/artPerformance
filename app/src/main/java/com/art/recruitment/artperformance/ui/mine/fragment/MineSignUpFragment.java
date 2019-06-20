@@ -72,8 +72,17 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
                     case R.id.mine_sign_chat_imageview:
                         //聊天
                         //通过recruitmentId获取groupId
-
-                        mPresenter.chatGroups(mAdapter.getData().get(position).getRecruitmentId());
+//                        mPresenter.chatGroups(mAdapter.getData().get(position).getRecruitmentId());
+                        if (mAdapter.getData().get(position) != null
+                                && mAdapter.getData().get(position).getImSimpleInfo() != null) {
+                            Intent chat = new Intent(getContext(), ChatActivity.class);
+                            chat.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getImSimpleInfo().getUsername());  //对方账号
+//                        chat.putExtra(EaseConstant.EXTRA_USER_NAME, mAdapter.getData().get(position).getApplyUserName());  //对方账号
+                            chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
+                            startActivity(chat);
+                        } else {
+                            ToastUtils.showShort("数据错误");
+                        }
 
                         break;
 

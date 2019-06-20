@@ -95,7 +95,8 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
     private String videoPreviewPath = "";//视频预览路径
     private String videoPreviewPathObjectkey = "";//视频预览路径objectkey
     private ProgressDialog show;
-    private Bitmap videoThumbnail;
+    private Bitmap waterMaskCenter;//带播放水印的视频预览图
+    //    private Bitmap videoThumbnail;
 
 
     @Override
@@ -276,9 +277,11 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
 
             videoPath = localMedia.get(0).getPath();
 
-            videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 500, 500);
+           Bitmap videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 500, 500);
+
+            waterMaskCenter = ImageUtils.createWaterMaskCenter(videoThumbnail, this);
             List<Bitmap> bitmaps = new ArrayList<>();
-            bitmaps.add(videoThumbnail);
+            bitmaps.add(waterMaskCenter);
             mGridViewAddImgAdapter.setBitmapList(bitmaps);
             mGridViewAddImgAdapter.notifyDataSetChanged();
         }
@@ -432,7 +435,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
 //                        String s = UUID.randomUUID().toString();
 //                        ImageUtils.get
                         //用视频的md5值 当封面图片的 名称
-                        videoPreviewPath = ImageUtils.saveBitmap(videoThumbnail, videoMd5 + ".jpg");
+                        videoPreviewPath = ImageUtils.saveBitmap(waterMaskCenter, videoMd5 + ".jpg");
                         File videoPreviewFile = new File(videoPreviewPath);
                         InputStream inputPreviewStream = new FileInputStream(videoPreviewFile);
                         videoPreviewPathObjectkey = Constant.DIR_DYNAMIC_VIDEO_PREVIEW + FileMd5Util.digest(inputPreviewStream) + Constant.PIC_DIR;

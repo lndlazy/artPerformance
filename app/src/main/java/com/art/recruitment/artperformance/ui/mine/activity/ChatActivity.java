@@ -3,9 +3,12 @@ package com.art.recruitment.artperformance.ui.mine.activity;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
 import com.art.recruitment.artperformance.R;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.ui.EaseChatFragment;
+import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 
 public class ChatActivity extends FragmentActivity {
 
@@ -16,6 +19,50 @@ public class ChatActivity extends FragmentActivity {
 
         EaseChatFragment easeChatFragment = new EaseChatFragment();  //环信聊天界面
         easeChatFragment.setArguments(getIntent().getExtras()); //需要的参数
+        easeChatFragment.setChatFragmentHelper(new EaseChatFragment.EaseChatFragmentHelper() {
+            @Override
+            public void onSetMessageAttributes(EMMessage message) {
+
+
+
+
+            }
+
+            @Override
+            public void onEnterToChatDetails() {
+
+            }
+
+            @Override
+            public void onAvatarClick(String username) {
+
+            }
+
+            @Override
+            public void onAvatarLongClick(String username) {
+
+            }
+
+            @Override
+            public boolean onMessageBubbleClick(EMMessage message) {
+                return false;
+            }
+
+            @Override
+            public void onMessageBubbleLongClick(EMMessage message) {
+
+            }
+
+            @Override
+            public boolean onExtendMenuItemClick(int itemId, View view) {
+                return false;
+            }
+
+            @Override
+            public EaseCustomChatRowProvider onSetCustomChatRowProvider() {
+                return null;
+            }
+        });
         getSupportFragmentManager().beginTransaction().add(R.id.layout_chat,easeChatFragment).commit();
 
     }

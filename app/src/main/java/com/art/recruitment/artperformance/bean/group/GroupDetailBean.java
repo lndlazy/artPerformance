@@ -75,10 +75,25 @@ public class GroupDetailBean extends BaseBean<GroupDetailBean.DataBean> {
         private String wechat;
         private List<String> photoView;
         private List<String> primaryPhotoView;
-
+        private String personalIntroductionVideoPreviewView;
         private int wechatHiddenFlag;
         private int telephoneHiddenFlag;
 
+        public String getPersonalIntroductionVideoPreviewView() {
+            return personalIntroductionVideoPreviewView;
+        }
+
+        public void setPersonalIntroductionVideoPreviewView(String personalIntroductionVideoPreviewView) {
+            this.personalIntroductionVideoPreviewView = personalIntroductionVideoPreviewView;
+        }
+
+        public boolean isLikes() {
+            return isLikes;
+        }
+
+        public void setLikes(boolean likes) {
+            isLikes = likes;
+        }
 
         public int getWechatHiddenFlag() {
             return wechatHiddenFlag;

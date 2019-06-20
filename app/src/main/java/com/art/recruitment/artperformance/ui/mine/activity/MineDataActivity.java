@@ -243,8 +243,8 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private PutObjectRequest putVideoCover;
     private ProgressDialog videoShow;
     private String videoProviewPathObjectKey;//个人视频路径objectKey
-    private Bitmap videoThumbnail;
     private String videoPreviewPath = "";//视频预览路径
+    private Bitmap waterMaskCenter;//带播放按钮的视频缩略图
 
 
     @Override
@@ -408,6 +408,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     }
                 });
 
+        //头像
         RxView.
                 clicks(mHeadImageview).
                 compose(RxClickTransformer.getClickTransformer()).
@@ -763,6 +764,8 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         if (bean.getCityId() != 0)
             cityCode = bean.getCityId();
 
+        //视频预览的objectkey
+        videoProviewPathObjectKey = bean.getPersonalIntroductionVideo();
 
         //设置头像
         if (!TextUtils.isEmpty(bean.getAvatar())) {
@@ -1385,9 +1388,11 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         Logger.d("videoPath::" + videoPath);
 
-        videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 500, 500);
+        Bitmap videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 500, 500);
 
-        videoPicView.setImageBitmap(videoThumbnail);
+        waterMaskCenter = ImageUtils.createWaterMaskCenter(videoThumbnail, this);
+
+        videoPicView.setImageBitmap(waterMaskCenter);
 
         try {
             startUploadVideo(selectedVideo, videoPath);
@@ -1405,13 +1410,15 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //            videoObjectPathKey = Constant.DIR_VIDEO_COVER + StringsUtils.getMd5Name(videoUri, this) + Constant.PIC_DIR;
 //            String videoMd5 = FileMd5Util.digest(inputStream);
 
+//            Bitmap waterMaskCenter = ImageUtils.createWaterMaskCenter(videoThumbnail, this);
+
             //获取缩略图路径
-            videoPreviewPath = ImageUtils.saveBitmap(videoThumbnail, Constant.DIR_VIDEO_COVER + StringsUtils.getMd5Name(videoUri, this) + ".jpg");
+            videoPreviewPath = ImageUtils.saveBitmap(waterMaskCenter, Constant.DIR_VIDEO_COVER + StringsUtils.getMd5Name(videoUri, this) + ".jpg");
 
             //视频缩略图objectkey
             File videoPreviewFile = new File(videoPreviewPath);
             InputStream inputPreviewStream = new FileInputStream(videoPreviewFile);
-            videoProviewPathObjectKey =Constant.DIR_VIDEO_COVER + FileMd5Util.digest(inputPreviewStream) + Constant.PIC_DIR;
+            videoProviewPathObjectKey = Constant.DIR_VIDEO_COVER + FileMd5Util.digest(inputPreviewStream) + Constant.PIC_DIR;
 
             putVideo = new PutObjectRequest(bucket, videoObjectKey, videoPath);
             putVideoCover = new PutObjectRequest(bucket, videoProviewPathObjectKey, videoPreviewPath);

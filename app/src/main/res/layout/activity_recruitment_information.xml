@@ -15,9 +15,10 @@
 
         <ImageView
             android:id="@+id/details_return_imageview"
-            android:layout_width="@dimen/x40"
-            android:layout_height="@dimen/y40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:src="@mipmap/nav_arrow"
+            android:padding="@dimen/x15"
             android:layout_marginTop="@dimen/y64"
             android:layout_marginLeft="@dimen/x30"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -105,14 +106,14 @@
                     android:id="@+id/details_release_people_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"/>
 
                 <TextView
                     android:id="@+id/details_release_time_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"
                     android:layout_marginTop="@dimen/y20"
                     app:layout_constraintTop_toBottomOf="@+id/details_release_people_textview"/>
@@ -121,7 +122,7 @@
                     android:id="@+id/details_deadline_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"
                     android:layout_marginTop="@dimen/y20"
                     app:layout_constraintTop_toBottomOf="@+id/details_release_time_textview"/>
@@ -142,14 +143,14 @@
                     android:id="@+id/details_required_people_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"/>
 
                 <TextView
                     android:id="@+id/details_work_time_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"
                     android:layout_marginTop="@dimen/y20"
                     app:layout_constraintTop_toBottomOf="@+id/details_required_people_textview"/>
@@ -170,14 +171,14 @@
                     android:id="@+id/details_collection_place_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"/>
 
                 <TextView
                     android:id="@+id/details_set_time_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"
                     android:layout_marginTop="@dimen/y20"
                     app:layout_constraintTop_toBottomOf="@+id/details_collection_place_textview"/>
@@ -200,14 +201,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/home_other_requirements"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"/>
 
                 <TextView
                     android:id="@+id/details_other_requirements_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="13sp"
+                    android:textSize="15sp"
                     android:textColor="@color/color_545859"
                     android:lineSpacingExtra="@dimen/y20"
                     android:layout_marginTop="@dimen/y20"
@@ -224,7 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_enrolment"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:textColor="@color/color_545859"
                 android:layout_margin="@dimen/x30"/>
 
@@ -274,7 +275,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/home_communicate"
-                android:textSize="13sp"
+                android:textSize="15sp"
                 android:textColor="@color/color_33353a"
                 android:layout_marginLeft="@dimen/x10"
                 app:layout_constraintLeft_toRightOf="@+id/home_communicate_imageview"

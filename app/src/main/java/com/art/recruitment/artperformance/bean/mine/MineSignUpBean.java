@@ -1,6 +1,5 @@
 package com.art.recruitment.artperformance.bean.mine;
 
-import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.common.base.BaseBean;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
@@ -239,6 +238,15 @@ public class MineSignUpBean extends BaseBean<MineSignUpBean.DataBean> {
         private List<String> labels;
         private String salary;
         private int salaryType;
+        private ImSimpleInfo imSimpleInfo;
+
+        public ImSimpleInfo getImSimpleInfo() {
+            return imSimpleInfo;
+        }
+
+        public void setImSimpleInfo(ImSimpleInfo imSimpleInfo) {
+            this.imSimpleInfo = imSimpleInfo;
+        }
 
         public String getSalary() {
             return salary;
@@ -340,6 +348,20 @@ public class MineSignUpBean extends BaseBean<MineSignUpBean.DataBean> {
         public int getItemType() {
             return 0;
         }
+
+
+        public static class ImSimpleInfo {
+            private String username;
+
+            public String getUsername() {
+                return username;
+            }
+
+            public void setUsername(String username) {
+                this.username = username;
+            }
+        }
+
     }
 
     public static class FieldErrsBean {

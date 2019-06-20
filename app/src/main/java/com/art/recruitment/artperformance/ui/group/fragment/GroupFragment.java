@@ -187,7 +187,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
         String maxAge = TextUtils.isEmpty(mHighAgeEdittext.getText().toString().trim()) ? "-1"
                 : mHighAgeEdittext.getText().toString().trim();
         String minAge = TextUtils.isEmpty(mLowAgeEdittext.getText().toString().trim()) ? "-1"
-                : mHighAgeEdittext.getText().toString().trim();
+                : mLowAgeEdittext.getText().toString().trim();
 
         mPresenter.actorsList(maxAge, minAge, cityId, gender, page, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
     }
@@ -203,31 +203,31 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
                         String mLowAge = mLowAgeEdittext.getText().toString().trim();
                         String mHighAge = mHighAgeEdittext.getText().toString().trim();
 
-//                        if (!TextUtils.isEmpty(mLowAge) && !TextUtils.isEmpty(mHighAge)) {
-                        if (isNumeric(mLowAge) && isNumeric(mHighAge)) {
-                            if (Integer.parseInt(mLowAge) < Integer.parseInt(mHighAge)) {
-                                mAgeChoiceConstranintLayout.setVisibility(View.GONE);
-                                ageColor(true);
+                        if (!TextUtils.isEmpty(mLowAge) && !TextUtils.isEmpty(mHighAge)) {
+                            if (isNumeric(mLowAge) && isNumeric(mHighAge)) {
+                                if (Integer.parseInt(mLowAge) < Integer.parseInt(mHighAge)) {
+                                    mAgeChoiceConstranintLayout.setVisibility(View.GONE);
+                                    ageColor(true);
 //                                    maxAge = Integer.parseInt(mHighAge);
 //                                    minAge = Integer.parseInt(mLowAge);
-                                hideAgeChooseView();
+                                    hideAgeChooseView();
 
-                                SystemUtil.closeInoutDecorView(getActivity());
-                                autoRefresh();
+                                    SystemUtil.closeInoutDecorView(getActivity());
+                                    autoRefresh();
+                                } else {
+                                    mLowAgeEdittext.setText("");
+                                    mHighAgeEdittext.setText("");
+                                    ToastUtils.showShort("最高年龄不可低于最低年龄哦");
+                                    ageColor(false);
+                                }
                             } else {
-                                mLowAgeEdittext.setText("");
-                                mHighAgeEdittext.setText("");
-                                ToastUtils.showShort("最高年龄不可低于最低年龄哦");
+                                ToastUtils.showShort("只可以输入整数，请重新输入");
                                 ageColor(false);
                             }
                         } else {
-                            ToastUtils.showShort("只可以输入整数，请重新输入");
+                            ToastUtils.showShort("年龄不能为空");
                             ageColor(false);
                         }
-//                        } else {
-//                            ToastUtils.showShort("年龄不能为空");
-//                            ageColor(false);
-//                        }
                     }
                 });
 
@@ -416,7 +416,7 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
 
     public static boolean isNumeric(String str) {
         for (int i = 0; i < str.length(); i++) {
-            System.out.println(str.charAt(i));
+//            System.out.println(str.charAt(i));
             if (!Character.isDigit(str.charAt(i))) {
                 return false;
             }

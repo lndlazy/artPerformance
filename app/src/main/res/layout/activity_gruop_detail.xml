@@ -14,64 +14,64 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:focusable="true"
-            android:focusableInTouchMode="true">
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/group_detail_photo_imageview"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y418"
-                android:scaleType="centerCrop"
-                android:background="@color/color_33353a"/>
+                android:background="@color/color_33353a"
+                android:scaleType="centerCrop" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/x30"
                 android:layout_marginLeft="@dimen/x30"
-                android:layout_marginRight="@dimen/x30">
+                android:layout_marginRight="@dimen/x30"
+                android:layout_marginTop="@dimen/x30">
 
                 <TextView
                     android:id="@+id/group_detail_name_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="17sp"
-                    android:textColor="@color/color_333435" />
+                    android:textColor="@color/color_333435"
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/group_detail_count_textview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
                     android:layout_marginRight="@dimen/x2"
+                    android:textSize="15sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/group_detail_name_textview"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/group_detail_name_textview"
-                    app:layout_constraintBottom_toBottomOf="@+id/group_detail_name_textview"/>
+                    app:layout_constraintTop_toTopOf="@+id/group_detail_name_textview" />
 
                 <ImageView
                     android:id="@+id/group_detail_zan_imageview"
                     android:layout_width="@dimen/x30"
                     android:layout_height="@dimen/y30"
                     android:layout_marginRight="@dimen/x12"
+                    app:layout_constraintBottom_toBottomOf="@+id/group_detail_count_textview"
                     app:layout_constraintRight_toLeftOf="@+id/group_detail_count_textview"
-                    app:layout_constraintTop_toTopOf="@+id/group_detail_count_textview"
-                    app:layout_constraintBottom_toBottomOf="@+id/group_detail_count_textview"/>
+                    app:layout_constraintTop_toTopOf="@+id/group_detail_count_textview" />
 
             </android.support.constraint.ConstraintLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y2"
-                android:layout_marginTop="@dimen/y30"
                 android:layout_marginBottom="@dimen/y30"
-                android:background="@color/color_f0f2f4"/>
+                android:layout_marginTop="@dimen/y30"
+                android:background="@color/color_f0f2f4" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/x30"
                 android:layout_marginLeft="@dimen/x30"
+                android:layout_marginRight="@dimen/x30"
                 android:orientation="horizontal">
 
                 <android.support.constraint.ConstraintLayout
@@ -84,17 +84,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/group_detail_gender"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_333435" />
+                        android:textColor="@color/color_333435"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/group_detail_gender_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
                         android:layout_marginRight="@dimen/x2"
+                        android:textSize="15sp"
                         app:layout_constraintLeft_toRightOf="@+id/group_detail_gender"
-                        app:layout_constraintTop_toTopOf="@+id/group_detail_gender"/>
+                        app:layout_constraintTop_toTopOf="@+id/group_detail_gender" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -108,17 +108,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/group_detail_age"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_333435" />
+                        android:textColor="@color/color_333435"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/group_detail_age_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
                         android:layout_marginRight="@dimen/x2"
+                        android:textSize="15sp"
                         app:layout_constraintLeft_toRightOf="@+id/group_detail_age"
-                        app:layout_constraintTop_toTopOf="@+id/group_detail_age"/>
+                        app:layout_constraintTop_toTopOf="@+id/group_detail_age" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -127,8 +127,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/x30"
                 android:layout_marginLeft="@dimen/x30"
+                android:layout_marginRight="@dimen/x30"
                 android:layout_marginTop="@dimen/y24"
                 android:orientation="horizontal">
 
@@ -142,17 +142,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/group_detail_city"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_333435" />
+                        android:textColor="@color/color_333435"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/group_detail_city_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
                         android:layout_marginRight="@dimen/x2"
+                        android:textSize="15sp"
                         app:layout_constraintLeft_toRightOf="@+id/group_detail_city"
-                        app:layout_constraintTop_toTopOf="@+id/group_detail_city"/>
+                        app:layout_constraintTop_toTopOf="@+id/group_detail_city" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -166,17 +166,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/group_detail_height"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_333435" />
+                        android:textColor="@color/color_333435"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/group_detail_height_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
                         android:layout_marginRight="@dimen/x2"
+                        android:textSize="15sp"
                         app:layout_constraintLeft_toRightOf="@+id/group_detail_height"
-                        app:layout_constraintTop_toTopOf="@+id/group_detail_height"/>
+                        app:layout_constraintTop_toTopOf="@+id/group_detail_height" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -185,8 +185,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/x30"
                 android:layout_marginLeft="@dimen/x30"
+                android:layout_marginRight="@dimen/x30"
                 android:layout_marginTop="@dimen/y24"
                 android:orientation="horizontal">
 
@@ -200,17 +200,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/group_detail_weight"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_333435" />
+                        android:textColor="@color/color_333435"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/group_detail_weight_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
                         android:layout_marginRight="@dimen/x2"
+                        android:textSize="15sp"
                         app:layout_constraintLeft_toRightOf="@+id/group_detail_weight"
-                        app:layout_constraintTop_toTopOf="@+id/group_detail_weight"/>
+                        app:layout_constraintTop_toTopOf="@+id/group_detail_weight" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -224,17 +224,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/group_detail_three_circles"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_333435" />
+                        android:textColor="@color/color_333435"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/group_detail_three_circles_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
                         android:layout_marginRight="@dimen/x2"
+                        android:textSize="15sp"
                         app:layout_constraintLeft_toRightOf="@+id/group_detail_three_circles"
-                        app:layout_constraintTop_toTopOf="@+id/group_detail_three_circles"/>
+                        app:layout_constraintTop_toTopOf="@+id/group_detail_three_circles" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -243,10 +243,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/x30"
-                android:layout_marginLeft="@dimen/x30"
-                android:layout_marginTop="@dimen/y24"
                 android:layout_marginBottom="@dimen/y30"
+                android:layout_marginLeft="@dimen/x30"
+                android:layout_marginRight="@dimen/x30"
+                android:layout_marginTop="@dimen/y24"
                 android:orientation="horizontal">
 
                 <android.support.constraint.ConstraintLayout
@@ -259,17 +259,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/group_detail_weChat"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_333435" />
+                        android:textColor="@color/color_333435"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/group_detail_weChat_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
                         android:layout_marginRight="@dimen/x2"
+                        android:textSize="15sp"
                         app:layout_constraintLeft_toRightOf="@+id/group_detail_weChat"
-                        app:layout_constraintTop_toTopOf="@+id/group_detail_weChat"/>
+                        app:layout_constraintTop_toTopOf="@+id/group_detail_weChat" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -283,17 +283,17 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/group_detail_telephone"
-                        android:textSize="13sp"
-                        android:textColor="@color/color_333435" />
+                        android:textColor="@color/color_333435"
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/group_detail_telephone_textview"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="13sp"
                         android:layout_marginRight="@dimen/x2"
+                        android:textSize="15sp"
                         app:layout_constraintLeft_toRightOf="@+id/group_detail_telephone"
-                        app:layout_constraintTop_toTopOf="@+id/group_detail_telephone"/>
+                        app:layout_constraintTop_toTopOf="@+id/group_detail_telephone" />
 
                 </android.support.constraint.ConstraintLayout>
 
@@ -302,85 +302,109 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y14"
-                android:background="@color/color_f0f2f4"/>
+                android:background="@color/color_f0f2f4" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/x30"
                 android:text="@string/group_detail_photo_display"
-                android:textSize="17sp"
-                android:textColor="@color/color_333435"/>
+                android:textColor="@color/color_333435"
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y2"
-                android:background="@color/color_f0f2f4"
                 android:layout_marginLeft="@dimen/x30"
-                android:layout_marginRight="@dimen/x30"/>
+                android:layout_marginRight="@dimen/x30"
+                android:background="@color/color_f0f2f4" />
 
             <com.youth.banner.Banner
                 android:id="@+id/group_detail_banner"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y340"
-                android:layout_margin="@dimen/x30"/>
+                android:layout_margin="@dimen/x30" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y14"
-                android:background="@color/color_f0f2f4"/>
+                android:background="@color/color_f0f2f4" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/x30"
                 android:text="@string/group_detail_video_display"
-                android:textSize="17sp"
-                android:textColor="@color/color_333435"/>
+                android:textColor="@color/color_333435"
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y2"
-                android:background="@color/color_f0f2f4"
                 android:layout_marginLeft="@dimen/x30"
-                android:layout_marginRight="@dimen/x30"/>
+                android:layout_marginRight="@dimen/x30"
+                android:background="@color/color_f0f2f4" />
+
 
             <ImageView
                 android:id="@+id/group_detail_video_imageview"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:scaleType="centerCrop"
                 android:layout_height="@dimen/y388"
-                android:layout_margin="@dimen/x30"/>
+                android:layout_margin="@dimen/x30" />
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content">-->
+
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/group_detail_video_imageview"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="@dimen/y388"-->
+                    <!--android:layout_margin="@dimen/x30" />-->
+
+                <!--<ImageView-->
+                    <!--android:id="@+id/iv_play"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerInParent="true"-->
+                    <!--android:layout_margin="@dimen/x30"-->
+                    <!--android:src="@mipmap/ic_play" />-->
+
+            <!--</RelativeLayout>-->
+
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y14"
-                android:background="@color/color_f0f2f4"/>
+                android:background="@color/color_f0f2f4" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/x30"
                 android:text="@string/group_detail_other_experiences"
-                android:textSize="17sp"
-                android:textColor="@color/color_333435"/>
+                android:textColor="@color/color_333435"
+                android:textSize="18sp" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y2"
-                android:background="@color/color_f0f2f4"
                 android:layout_marginLeft="@dimen/x30"
-                android:layout_marginRight="@dimen/x30"/>
+                android:layout_marginRight="@dimen/x30"
+                android:background="@color/color_f0f2f4" />
 
             <TextView
                 android:id="@+id/group_detail_other_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="@color/color_8b8f95"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginBottom="@dimen/y30"
                 android:layout_marginLeft="@dimen/x40"
                 android:layout_marginRight="@dimen/x50"
-                android:layout_marginBottom="@dimen/y30"/>
+                android:layout_marginTop="@dimen/y30"
+                android:textColor="@color/color_8b8f95"
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -390,21 +414,21 @@
         android:id="@+id/group_detail_return_imageview"
         android:layout_width="@dimen/x40"
         android:layout_height="@dimen/y40"
-        android:src="@mipmap/nav_arrow_w"
-        android:layout_marginTop="@dimen/y64"
         android:layout_marginLeft="@dimen/x30"
+        android:layout_marginTop="@dimen/y64"
+        android:src="@mipmap/nav_arrow_w"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/group_detail_message_imageview"
         android:layout_width="@dimen/x60"
         android:layout_height="@dimen/y60"
+        android:layout_marginRight="@dimen/x30"
         android:padding="@dimen/x10"
         android:src="@mipmap/nav_share_w"
-        android:layout_marginRight="@dimen/x30"
-        app:layout_constraintTop_toTopOf="@+id/group_detail_return_imageview"
-        app:layout_constraintRight_toRightOf="parent"/>
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/group_detail_return_imageview" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/group_detail_button"
@@ -418,24 +442,24 @@
             android:layout_width="@dimen/x40"
             android:layout_height="@dimen/y40"
             android:src="@mipmap/icon_message"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintRight_toLeftOf="@+id/group_detail_instant_communication"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintRight_toLeftOf="@+id/group_detail_instant_communication"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/group_detail_instant_communication"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/group_detail_instant_communication"
-            android:textSize="17sp"
-            android:textColor="@color/color_ffffff"
             android:layout_marginLeft="@dimen/x14"
+            android:text="@string/group_detail_instant_communication"
+            android:textColor="@color/color_ffffff"
+            android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/group_detail_message"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </android.support.constraint.ConstraintLayout>
 
