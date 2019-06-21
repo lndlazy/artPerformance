@@ -4,6 +4,7 @@ import com.art.recruitment.artperformance.api.HomeService;
 import com.art.recruitment.artperformance.api.LoginService;
 import com.art.recruitment.artperformance.bean.home.BannerBean;
 import com.art.recruitment.artperformance.bean.home.CitiSearch;
+import com.art.recruitment.artperformance.bean.home.LogoBean;
 import com.art.recruitment.artperformance.bean.home.RecruitListBean;
 import com.art.recruitment.artperformance.bean.login.TokenBean;
 import com.art.recruitment.artperformance.ui.home.contract.HomeContract;
@@ -23,7 +24,6 @@ public class HomePresenter extends BasePresenter<HomeContract> {
 
     /**
      * 获取Banner
-     *
      */
     public void getBanner() {
 
@@ -47,7 +47,6 @@ public class HomePresenter extends BasePresenter<HomeContract> {
 
     /**
      * 获取招募列表
-     *
      */
     public void recuitList(int citycode, String keyword, final int page, int size, String sort) {
 
@@ -71,7 +70,6 @@ public class HomePresenter extends BasePresenter<HomeContract> {
 
     /**
      * 搜索城市
-     *
      */
     public void citiSearch(String cityName, final boolean isAutoLocation) {
 
@@ -93,4 +91,29 @@ public class HomePresenter extends BasePresenter<HomeContract> {
                     }
                 });
     }
+
+
+    /**
+     * 获取logo 的 url
+     */
+    public void getLogoUrl() {
+
+        Api.
+                observable(Api.getService(HomeService.class).logoIcon()).
+                presenter(this).
+                requestMode(RequestMode.SINGLE).
+                showLoading(false).
+                doRequest(new RxSubscriber<LogoBean.DataBean, LogoBean>() {
+                    @Override
+                    protected void _onSuccess(LogoBean.DataBean bean, String successMessage) {
+                        mView.returnLogoUrl(bean);
+                    }
+
+                    @Override
+                    protected void _onError(ErrorType errorType, int errorCode, String message, LogoBean.DataBean bean) {
+
+                    }
+                });
+    }
+
 }

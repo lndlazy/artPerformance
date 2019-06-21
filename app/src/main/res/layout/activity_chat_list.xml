@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="@dimen/x30"
     tools:context=".ui.mine.activity.ChatListActivity">
-
+    <!--android:fitsSystemWindows="true"-->
     <LinearLayout
         android:id="@+id/layout_chat_lisr"
         android:orientation="vertical"

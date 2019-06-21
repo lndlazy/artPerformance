@@ -2,6 +2,7 @@ package com.art.recruitment.artperformance.ui.home.contract;
 
 import com.art.recruitment.artperformance.bean.home.BannerBean;
 import com.art.recruitment.artperformance.bean.home.CitiSearch;
+import com.art.recruitment.artperformance.bean.home.LogoBean;
 import com.art.recruitment.artperformance.bean.home.RecruitListBean;
 import com.art.recruitment.common.base.BaseView;
 
@@ -32,4 +33,7 @@ public interface HomeContract extends BaseView {
      * @param isAutoLocation
      */
     void returnCitiSearchBean(CitiSearch.DataBean bean, boolean isAutoLocation);
+
+    void returnLogoUrl(LogoBean.DataBean bean);
+
 }

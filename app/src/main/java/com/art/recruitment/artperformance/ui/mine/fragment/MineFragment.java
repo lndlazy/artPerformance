@@ -64,6 +64,7 @@ import butterknife.Unbinder;
 import io.reactivex.functions.Consumer;
 
 public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> implements MineContract {
+
     @BindView(R.id.mine_message_imageview)
     ImageView mMessageImageview;
     @BindView(R.id.mine_name_textview)

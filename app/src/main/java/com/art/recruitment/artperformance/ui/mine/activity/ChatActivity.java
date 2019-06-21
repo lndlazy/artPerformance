@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.art.recruitment.artperformance.R;
+import com.art.recruitment.common.base.ui.BaseFragmentActivity;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 
-public class ChatActivity extends FragmentActivity {
+public class ChatActivity extends BaseFragmentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

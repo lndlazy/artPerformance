@@ -9,6 +9,7 @@ import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.group.ApplyListBean;
 import com.art.recruitment.artperformance.bean.group.CencelHiringBean;
 import com.art.recruitment.artperformance.bean.group.HiringBean;
+import com.art.recruitment.artperformance.ui.group.activity.GruopDetailActivity;
 import com.art.recruitment.artperformance.ui.group.activity.MineRecruitActivity;
 import com.art.recruitment.artperformance.ui.group.adapter.EmploymentAdapter;
 import com.art.recruitment.artperformance.ui.group.contract.EmploymentContract;
@@ -113,6 +114,12 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 //                        chat2.putExtra(EaseConstant.EXTRA_USER_NAME, mAdapter.getData().get(position).getApplyUserName());  //对方账号
                         chat2.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
                         startActivity(chat2);
+                        break;
+
+                    case R.id.mine_recruit_head_imageview://点击头像 进入演员详情页面
+                        Intent intent = new Intent(getContext(), GruopDetailActivity.class);
+                        intent.putExtra("group_id", mAdapter.getData().get(position).getApplyUserId());
+                        startActivity(intent);
                         break;
                     default:
                         break;

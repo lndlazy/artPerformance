@@ -124,6 +124,7 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
     private int group_id;
     private Dialog shareDialog;
     private String videoPlayUrl;
+    String shareTitle;
 
     @Override
     protected IToolbar getIToolbar() {
@@ -247,6 +248,8 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         beans = bean;
         Glide.with(mContext).load(bean.getPrimaryPhotoView().get(0)).into(mPhotoImageview);
         mNameTextview.setText(bean.getName());
+
+        shareTitle = bean.getName() + "-演员已就位";
         mCountTextview.setText(bean.getLikes() + "");
         mGenderTextview.setText(bean.getGenderText());
         mAgeTextview.setText(bean.getAge() + "");
@@ -334,10 +337,11 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
             }
         });
 
+
         mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(GruopDetailActivity.this, shareUrl, ShareUtils.SHARE_TITLE
+                ShareUtils.shareWeb(GruopDetailActivity.this, shareUrl, shareTitle
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
                 );
                 hideDialog();
@@ -347,7 +351,7 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         mCircleFriendsConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(GruopDetailActivity.this, shareUrl, ShareUtils.SHARE_TITLE
+                ShareUtils.shareWeb(GruopDetailActivity.this, shareUrl, shareTitle
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
                 );
                 hideDialog();
@@ -357,7 +361,7 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         mQQZoneConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(GruopDetailActivity.this, shareUrl, ShareUtils.SHARE_TITLE
+                ShareUtils.shareWeb(GruopDetailActivity.this, shareUrl, shareTitle
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
                 );
                 hideDialog();
@@ -367,7 +371,7 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
         mQQConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(GruopDetailActivity.this, shareUrl, ShareUtils.SHARE_TITLE
+                ShareUtils.shareWeb(GruopDetailActivity.this, shareUrl, shareTitle
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
                 );
                 hideDialog();

@@ -60,7 +60,6 @@ public class MyApplication extends BaseApplication {
     public void onCreate() {
         super.onCreate();
 
-
         //设置异常捕获
 //        Thread.setDefaultUncaughtExceptionHandler(this);
 //        //排除InputMethodManager泄漏检测，貌似是SDK泄漏，有时间再检测

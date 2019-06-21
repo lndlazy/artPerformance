@@ -221,12 +221,14 @@ public class ApiUrls {
     public static final String AUTHENTICATION_LOGIN = "authentication/token/social/{socialType}";
 
 
-
     /**
      * 第三方账号绑定
      */
     public static final String AUTHENTICATION_BIND = "/authentication/token/social/{socialType}/bind";
 
+
+    //图标logo
+    public static final String LOGO_ICON = "/home/logo";
 
 
 }

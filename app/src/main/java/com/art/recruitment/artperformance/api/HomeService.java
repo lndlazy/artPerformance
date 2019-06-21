@@ -4,6 +4,7 @@ import com.art.recruitment.artperformance.bean.home.ApplyBean;
 import com.art.recruitment.artperformance.bean.home.BannerBean;
 import com.art.recruitment.artperformance.bean.home.CitiSearch;
 import com.art.recruitment.artperformance.bean.home.CitisBean;
+import com.art.recruitment.artperformance.bean.home.LogoBean;
 import com.art.recruitment.artperformance.bean.home.RecruitListBean;
 import com.art.recruitment.artperformance.bean.home.RecruitmentInforBean;
 import com.art.recruitment.artperformance.bean.login.TokenBean;
@@ -67,4 +68,13 @@ public interface HomeService {
      */
     @POST(ApiUrls.APPLY_LIST)
     Observable<ApplyBean> applyPost(@Path("recruitmentId") String recruitmentId);
+
+    
+    /**
+     * 获取logo url
+     */
+    @GET(ApiUrls.LOGO_ICON)
+    Observable<LogoBean> logoIcon();
+
+
 }

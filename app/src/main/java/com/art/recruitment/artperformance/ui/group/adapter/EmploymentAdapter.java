@@ -70,6 +70,7 @@ public class EmploymentAdapter extends BaseRecyclerViewAdapter<ApplyListBean.Con
         helper.addOnClickListener(R.id.mine_recruit_refuse_textview);
         helper.addOnClickListener(R.id.mine_recruit_employment_textview);
         helper.addOnClickListener(R.id.mine_recruit_employment_chat_imageview);
+        helper.addOnClickListener(R.id.mine_recruit_head_imageview);
 
     }
 }

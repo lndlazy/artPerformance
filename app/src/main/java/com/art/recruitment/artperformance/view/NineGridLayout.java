@@ -34,6 +34,16 @@ public abstract class NineGridLayout extends ViewGroup {
     private boolean mIsFirst = true;
     private List<String> mUrlList = new ArrayList<>();
 
+//    private boolean isVideo = false;
+//
+//    public boolean isVideo() {
+//        return isVideo;
+//    }
+//
+//    public void setVideo(boolean video) {
+//        isVideo = video;
+//    }
+
     public NineGridLayout(Context context) {
         super(context);
         init(context);
@@ -104,11 +114,11 @@ public abstract class NineGridLayout extends ViewGroup {
     }
 
 
-    protected String videoUrl;
-
-    public void setVideoUrl(String url) {
-        videoUrl = url;
-    }
+//    protected String videoUrl;
+//
+//    public void setVideoUrl(String url) {
+//        videoUrl = url;
+//    }
 
 
     public void notifyDataSetChanged() {
@@ -191,6 +201,9 @@ public abstract class NineGridLayout extends ViewGroup {
             @Override
             public void onClick(View v) {
                 onClickImage(i, url, mUrlList);
+
+                if (onItemClick!=null)
+                    onItemClick.onclick(i);
             }
         });
         return imageView;
@@ -312,5 +325,21 @@ public abstract class NineGridLayout extends ViewGroup {
 
     protected abstract void displayImage(RatioImageView imageView, String url);
 
-    protected abstract void onClickImage(int position, String url, List<String> urlList);
+    public abstract void onClickImage(int position, String url, List<String> urlList);
+
+
+    public interface OnItemClick {
+
+        abstract void onclick(int i);
+    }
+
+    OnItemClick onItemClick;
+
+    public OnItemClick getOnItemClick() {
+        return onItemClick;
+    }
+
+    public void setOnItemClick(OnItemClick onItemClick) {
+        this.onItemClick = onItemClick;
+    }
 }

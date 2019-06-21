@@ -40,6 +40,9 @@ public class BaseConfig {
      */
     public static class BaseSPKey {
 
+        //LOGO url
+        public static final String LOGO_URL = "LOGO_URL";
+
         //城市名称
         public static final String CITY_NAME = "CITY_NAME";
         //城市编码

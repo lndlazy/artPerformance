@@ -208,6 +208,8 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private static final int CODE_GALLERY_REQUEST = 0xa0;
     private static final int CODE_COVER_REQUEST = 0xa1;
     private static final int CODE_RESULT_REQUEST = 0xa2;
+    private static final int CODE_RESULT_COVER_REQUEST = 0xa3;
+
     //    private static int output_X = 128;
 //    private static int output_Y = 128;
     //业务服务器返回的签名content
@@ -245,6 +247,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     private String videoProviewPathObjectKey;//个人视频路径objectKey
     private String videoPreviewPath = "";//视频预览路径
     private Bitmap waterMaskCenter;//带播放按钮的视频缩略图
+    private File coverOutFile;
 
 
     @Override
@@ -780,6 +783,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
             coverPic.setImageURI(Uri.parse(bean.getPrimaryPhotoView().get(0)));
 //            headPicUrl = bean.getAvatar();
+            coverDelete.setVisibility(View.VISIBLE);
             coverObjectKey = bean.getPrimaryPhoto().get(0);
         }
 
@@ -1206,95 +1210,148 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 10 && resultCode == AppCompatActivity.RESULT_OK) {
-            //选择 照片集返回的数据
-            photoListBack(data);
 
-        } else if (requestCode == 300 && resultCode == AppCompatActivity.RESULT_OK && data != null) {
+        if (resultCode == AppCompatActivity.RESULT_OK) {
 
-            videoBack(data);
+            switch (requestCode) {
 
-//            personalIntroductionVideo = null;
-//            List<Uri> mSelectedImages = Matisse.obtainResult(data);
-//            if (mSelectedImages != null && mSelectedImages.size() > 0) {
-//                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
-//                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
-//                    List<ImageModel> mTempImageList = new ArrayList<>();
-//                    for (String path : mSelectedImagesPath) {
-//                        ImageModel imageModel = new ImageModel();
-//                        imageModel.setUris(path);
-//                        mTempImageList.add(imageModel);
-//                    }
-//                    mImageLists.remove(mClickedItemPosition);
-//                    mImageLists.addAll(mTempImageList);
-//                    if (mImageLists.size() < 1) {
-//                        mImageLists.add(mAddImageModel);
-//                    }
-//                    personalIntroductionVideo = mImageLists.get(0).getUris();
-//                    mVideoAdapter.setNewData(mImageLists);
-//                    mVideoAdapter.notifyDataSetChanged();
-//                }
-//            }
+                case 10:
+                    //选择 照片集返回的数据
+                    photoListBack(data);
+                    break;
 
-        } else if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK) {
-            //选择城市
-            if (data != null && data.getExtras() != null) {
-                String city = data.getExtras().getString("city");
-                cityCode = data.getExtras().getInt("code");
-                mCitiyEdittext.setText(city);
-            }
+                case 300:
+                    if (data != null)
+                        videoBack(data);
+                    break;
 
-        } else if (requestCode == CODE_GALLERY_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+                case 100:
+                    break;
 
-            // 头像  ==>  相册选择后 开始裁剪
-            outFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
+                case CODE_GALLERY_REQUEST:
+                    // 头像  ==>  相册选择后 开始裁剪
+                    outFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
 //            Logger.d("outFile地址::" + outFile.getPath() + "====>" + outFile.getAbsolutePath());
-            cropRawPhoto(checkSelectPhoto(data));//裁剪
+                    cropRawPhoto(checkSelectPhoto(data));//裁剪
+                    break;
 
-//            cropRawPhoto(data.getData());
-//            Uri data1 = data.getData();
-//            String mSelectedImagesPath = UriUtil.getRealFilePath(this, data1);
-//            ImageModel imageModel = new ImageModel();
-//            imageModel.setUris(mSelectedImagesPath);
-//
-//            Logger.d("头像地址::" + imageModel.getUris());
-//            avater = imageModel.getUris();
+                case CODE_COVER_REQUEST:
+                    //裁剪封面
+                    coverOutFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
+                    cropCover(checkSelectPhoto(data));
+                    break;
 
-        } else if (requestCode == CODE_COVER_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+                case CODE_RESULT_COVER_REQUEST:
+                    //选择封面
+                    coverBack(data);
+                    break;
 
-            //选择封面
-            coverBack(data);
+                case CODE_RESULT_REQUEST:
+                    // 头像==>裁剪后返回的数据
+                    if (data != null)
+                        //加载,上传 头像
+                        setImageToHeadView(data);
+                    break;
 
-//            mPrimaryPhoto.removeAll(mPrimaryPhoto);
-//            List<Uri> mSelectedImages = Matisse.obtainResult(data);
-//            if (mSelectedImages != null && mSelectedImages.size() > 0) {
-//                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
-//                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
-//                    List<ImageModel> mTempImageList = new ArrayList<>();
-//                    for (String path : mSelectedImagesPath) {
-//                        ImageModel imageModel = new ImageModel();
-//                        imageModel.setUris(path);
-//                        mTempImageList.add(imageModel);
-//                    }
-//                    mImageListt.remove(mClickedItemPosition);
-//                    mImageListt.addAll(mTempImageList);
-//                    if (mImageListt.size() < 1) {
-//                        mImageListt.add(mAddImageModel);
-//                    }
-//
-//                    mPrimaryPhoto.add(mImageListt.get(0).getUris());
-//
-//                    mMasterAdapter.setNewData(mImageListt);
-//                    mMasterAdapter.notifyDataSetChanged();
-//                }
-//            }
-        } else if (requestCode == CODE_RESULT_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
-            // 头像==>裁剪后返回的数据
-            if (data != null) {
-                //加载,上传 头像
-                setImageToHeadView(data);
             }
+
         }
+
+//        if (requestCode == 10 && resultCode == AppCompatActivity.RESULT_OK) {
+//            //选择 照片集返回的数据
+//            photoListBack(data);
+//
+//        } else if (requestCode == 300 && resultCode == AppCompatActivity.RESULT_OK && data != null) {
+//
+//            videoBack(data);
+//
+////            personalIntroductionVideo = null;
+////            List<Uri> mSelectedImages = Matisse.obtainResult(data);
+////            if (mSelectedImages != null && mSelectedImages.size() > 0) {
+////                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
+////                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
+////                    List<ImageModel> mTempImageList = new ArrayList<>();
+////                    for (String path : mSelectedImagesPath) {
+////                        ImageModel imageModel = new ImageModel();
+////                        imageModel.setUris(path);
+////                        mTempImageList.add(imageModel);
+////                    }
+////                    mImageLists.remove(mClickedItemPosition);
+////                    mImageLists.addAll(mTempImageList);
+////                    if (mImageLists.size() < 1) {
+////                        mImageLists.add(mAddImageModel);
+////                    }
+////                    personalIntroductionVideo = mImageLists.get(0).getUris();
+////                    mVideoAdapter.setNewData(mImageLists);
+////                    mVideoAdapter.notifyDataSetChanged();
+////                }
+////            }
+//
+//        } else if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK) {
+//            //选择城市
+//            if (data != null && data.getExtras() != null) {
+//                String city = data.getExtras().getString("city");
+//                cityCode = data.getExtras().getInt("code");
+//                mCitiyEdittext.setText(city);
+//            }
+//
+//        } else if (requestCode == CODE_GALLERY_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+//
+//            // 头像  ==>  相册选择后 开始裁剪
+//            outFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
+////            Logger.d("outFile地址::" + outFile.getPath() + "====>" + outFile.getAbsolutePath());
+//            cropRawPhoto(checkSelectPhoto(data));//裁剪
+//
+////            cropRawPhoto(data.getData());
+////            Uri data1 = data.getData();
+////            String mSelectedImagesPath = UriUtil.getRealFilePath(this, data1);
+////            ImageModel imageModel = new ImageModel();
+////            imageModel.setUris(mSelectedImagesPath);
+////
+////            Logger.d("头像地址::" + imageModel.getUris());
+////            avater = imageModel.getUris();
+//
+//        } else if (requestCode == CODE_COVER_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+//
+//            //裁剪封面
+//            coverOutFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
+//            cropCover(checkSelectPhoto(data));
+//
+////            mPrimaryPhoto.removeAll(mPrimaryPhoto);
+////            List<Uri> mSelectedImages = Matisse.obtainResult(data);
+////            if (mSelectedImages != null && mSelectedImages.size() > 0) {
+////                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
+////                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
+////                    List<ImageModel> mTempImageList = new ArrayList<>();
+////                    for (String path : mSelectedImagesPath) {
+////                        ImageModel imageModel = new ImageModel();
+////                        imageModel.setUris(path);
+////                        mTempImageList.add(imageModel);
+////                    }
+////                    mImageListt.remove(mClickedItemPosition);
+////                    mImageListt.addAll(mTempImageList);
+////                    if (mImageListt.size() < 1) {
+////                        mImageListt.add(mAddImageModel);
+////                    }
+////
+////                    mPrimaryPhoto.add(mImageListt.get(0).getUris());
+////
+////                    mMasterAdapter.setNewData(mImageListt);
+////                    mMasterAdapter.notifyDataSetChanged();
+////                }
+////            }
+//        } else if (requestCode == CODE_RESULT_COVER_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+//
+//            //选择封面
+//            coverBack(data);
+//
+//        } else if (requestCode == CODE_RESULT_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
+//            // 头像==>裁剪后返回的数据
+//            if (data != null) {
+//                //加载,上传 头像
+//                setImageToHeadView(data);
+//            }
+//        }
 
     }
 
@@ -2091,6 +2148,48 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //        intent.putExtra("return-data", true);
 
         startActivityForResult(intent, CODE_RESULT_REQUEST);
+    }
+
+    /**
+     * 裁剪原始的图片
+     */
+    public void cropCover(Uri uri) {
+
+        if (uri == null) {
+            Log.d(TAG, "The uri is not exist.");
+            return;
+        }
+
+        Intent intent = new Intent("com.android.camera.action.CROP");
+        intent.setDataAndType(uri, "image/*");
+        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION |
+                Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(coverOutFile));
+        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString()); // 输出的图片格式
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(outFile.getPath()));
+        intent.putExtra("crop", "true");
+        // aspectX aspectY 是宽高的比例
+        intent.putExtra("aspectX", 750);
+        intent.putExtra("aspectY", 418);
+        // 取消人脸识别
+        intent.putExtra("noFaceDetection", true);
+        // outputX outputY 是裁剪图片宽高
+        intent.putExtra("outputX", 750);
+        intent.putExtra("outputY", 418);
+
+//        Intent intent = new Intent("com.android.camera.action.CROP");
+//        intent.setDataAndType(uri, "image/*");
+//
+//        intent.putExtra("crop", "true");
+//
+//        intent.putExtra("aspectX", 1);
+//        intent.putExtra("aspectY", 1);
+//
+//        intent.putExtra("outputX", output_X);
+//        intent.putExtra("outputY", output_Y);
+//        intent.putExtra("return-data", true);
+
+        startActivityForResult(intent, CODE_RESULT_COVER_REQUEST);
     }
 
     /**

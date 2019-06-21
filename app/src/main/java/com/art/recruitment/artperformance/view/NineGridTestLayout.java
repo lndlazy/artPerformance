@@ -20,6 +20,7 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
+import com.orhanobut.logger.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,34 +97,30 @@ public class NineGridTestLayout extends NineGridLayout {
     }
 
     @Override
-    protected void onClickImage(int i, String url, List<String> urlList) {
+    public void onClickImage(int i, String url, List<String> urlList) {
 //        Toast.makeText(mContext, "点击了图片" + url, Toast.LENGTH_SHORT).show();
 
-        if (!TextUtils.isEmpty(videoUrl)) {
-            PictureSelector.create(fragment).externalPictureVideo(videoUrl);
-        }else {
-
-            Intent intent = new Intent(mContext, PlusImageActivity.class);
-            intent.putStringArrayListExtra(MainConstant.IMG_LIST, (ArrayList<String>) urlList);
-            intent.putExtra(MainConstant.POSITION, i);
-            intent.putExtra("canDelete", false);
-            mContext.startActivity(intent);
-
-//           List<LocalMedia> localMedia = new ArrayList<>();
-//            localMedia.add()
-//            PictureSelector.create(fragment).externalPicturePreview(i, selectList);
-
-        }
+//        Logger.d("isVideo 是否是视频::" + isVideo);
+//        if (isVideo) {
+//            PictureSelector.create(fragment).externalPictureVideo(url);
+//        } else {
+//
+//            Intent intent = new Intent(mContext, PlusImageActivity.class);
+//            intent.putStringArrayListExtra(MainConstant.IMG_LIST, (ArrayList<String>) urlList);
+//            intent.putExtra(MainConstant.POSITION, i);
+//            intent.putExtra("canDelete", false);
+//            mContext.startActivity(intent);
+//
+////           List<LocalMedia> localMedia = new ArrayList<>();
+////            localMedia.add()
+////            PictureSelector.create(fragment).externalPicturePreview(i, selectList);
+//
+//        }
 
 
 //        videoUrl
 
     }
-
-
-
-
-
 
 
 }

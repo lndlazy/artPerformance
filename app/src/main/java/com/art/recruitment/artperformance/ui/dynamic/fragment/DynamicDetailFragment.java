@@ -24,8 +24,10 @@ import com.art.recruitment.artperformance.bean.dynamic.DynamicDetailBean;
 import com.art.recruitment.artperformance.bean.dynamic.DynamicLikesBean;
 import com.art.recruitment.artperformance.bean.model.NineGridTestModel;
 import com.art.recruitment.artperformance.ui.dynamic.DynamicType;
+import com.art.recruitment.artperformance.ui.dynamic.activity.PlusImageActivity;
 import com.art.recruitment.artperformance.ui.dynamic.adapter.DynamicCommentsAdapter;
 import com.art.recruitment.artperformance.ui.dynamic.contract.DynamicDataContract;
+import com.art.recruitment.artperformance.ui.dynamic.contract.MainConstant;
 import com.art.recruitment.artperformance.ui.dynamic.presenter.DynamicDataPresenter;
 import com.art.recruitment.artperformance.utils.Constant;
 import com.art.recruitment.artperformance.utils.DateFormatUtils;
@@ -33,6 +35,7 @@ import com.art.recruitment.artperformance.utils.Defaultcontent;
 import com.art.recruitment.artperformance.utils.ShareUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.ExpandableTextView;
+import com.art.recruitment.artperformance.view.NineGridLayout;
 import com.art.recruitment.artperformance.view.NineGridTestLayout;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.config.BaseConfig;
@@ -48,6 +51,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.luck.picture.lib.PictureSelector;
 import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -314,7 +318,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
     }
 
     @Override
-    public void returnDynamicDataBean(DynamicDetailBean.DataBean bean) {
+    public void returnDynamicDataBean(final DynamicDetailBean.DataBean bean) {
 
 //        mPresenter.dynamicComments(dynamic_id, 0, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
 
@@ -335,17 +339,57 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
         }
 
         mNineGridTestLayout.setFragment(this);
-        if (!TextUtils.isEmpty(bean.getVideoPath())) {
-            //视频
-            List<String> videoList = new ArrayList<>();
-            videoList.add(bean.getVideoPreview());
-            mNineGridTestLayout.setVideoUrl(bean.getVideoPath());
-            mNineGridTestLayout.setUrlList(videoList);
+        mNineGridTestLayout.setIsShowAll(false);
+
+
+        if (bean.getImagePath() != null || !TextUtils.isEmpty(bean.getVideoPreview())) {
+
+            mNineGridTestLayout.setVisibility(View.VISIBLE);
+            if (bean.getImagePath() != null &&   bean.getImagePath().size() > 0) {
+                mNineGridTestLayout.setUrlList(bean.getImagePath());
+//                mNineGridTestLayout.setVideo(false);
+            } else if (!TextUtils.isEmpty(bean.getVideoPreview())) {
+                List<String> pics = new ArrayList<>();
+                pics.add(bean.getVideoPreview());
+//                mNineGridTestLayout.setVideo(true);
+                mNineGridTestLayout.setUrlList(pics);
+            }
 
         } else {
-            mNineGridTestLayout.setIsShowAll(false);
-            mNineGridTestLayout.setUrlList(bean.getImagePath());
+
+            mNineGridTestLayout.setVisibility(View.GONE);
+
         }
+        mNineGridTestLayout.setOnItemClick(new NineGridLayout.OnItemClick() {
+            @Override
+            public void onclick(int i) {
+
+                if (!TextUtils.isEmpty(bean.getVideoPreview())) {
+                    PictureSelector.create(DynamicDetailFragment.this).externalPictureVideo(bean.getVideoPath());
+                } else {
+
+                    Intent intent = new Intent(mContext, PlusImageActivity.class);
+                    intent.putStringArrayListExtra(MainConstant.IMG_LIST, (ArrayList<String>) bean.getImagePath());
+                    intent.putExtra(MainConstant.POSITION, i);
+                    intent.putExtra("canDelete", false);
+                    mContext.startActivity(intent);
+                }
+
+            }
+        });
+
+
+//        if (!TextUtils.isEmpty(bean.getVideoPath())) {
+//            //视频
+//            List<String> videoList = new ArrayList<>();
+//            videoList.add(bean.getVideoPreview());
+//            mNineGridTestLayout.setVideoUrl(bean.getVideoPath());
+//            mNineGridTestLayout.setUrlList(videoList);
+//
+//        } else {
+//            mNineGridTestLayout.setIsShowAll(false);
+//            mNineGridTestLayout.setUrlList(bean.getImagePath());
+//        }
 
 //        mList = new ArrayList<>();
 //        NineGridTestModel model1 = new NineGridTestModel();

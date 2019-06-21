@@ -26,6 +26,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.home.BannerBean;
 import com.art.recruitment.artperformance.bean.home.CitiSearch;
+import com.art.recruitment.artperformance.bean.home.LogoBean;
 import com.art.recruitment.artperformance.bean.home.RecruitListBean;
 import com.art.recruitment.artperformance.ui.home.activity.CityActivity;
 import com.art.recruitment.artperformance.ui.home.activity.RecruitmentInformationActivity;
@@ -35,6 +36,7 @@ import com.art.recruitment.artperformance.ui.home.presenter.HomePresenter;
 import com.art.recruitment.artperformance.ui.login.activity.UserAgreementActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatListActivity;
 import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.Defaultcontent;
 import com.art.recruitment.artperformance.utils.PermissionTipUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.PermissionRationalDialog;
@@ -135,7 +137,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     private String mSort = "";
     private Dialog dialog;
     private int mCityCode = -1;
-//    private String mSearch;
+    //    private String mSearch;
     private Dialog mPermissionSettingDialog;
 
     @Override
@@ -208,6 +210,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
         EventBus.getDefault().register(this);
 
+        mPresenter.getLogoUrl();
     }
 
 
@@ -251,7 +254,7 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     protected void initListRequest(int page) {
         super.initListRequest(page);
 
-      Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearchEdittext.getText().toString().trim() + ",page:" + page + ",mSort:" + mSort);
+        Logger.d("请求参数:mCityCode:" + mCityCode + ",mSearch:" + mSearchEdittext.getText().toString().trim() + ",page:" + page + ",mSort:" + mSort);
 
         mPresenter.recuitList(mCityCode, mSearchEdittext.getText().toString().trim(), page, BaseConfig.DEFAULT_PAGE_SIZE, mSort);
     }
@@ -467,6 +470,14 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
             SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_CODE, bean.getCityCode());
         }
 
+    }
+
+    @Override
+    public void returnLogoUrl(LogoBean.DataBean bean) {
+        if (bean != null) {
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGO_URL, bean.getUrl());
+            Defaultcontent.imageurl = bean.getUrl();
+        }
     }
 
     private void initBanner(final List<BannerBean.DataBean> bean) {
