@@ -53,6 +53,7 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.tools.PictureFileUtils;
+import com.orhanobut.logger.Logger;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -277,7 +278,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
 
             videoPath = localMedia.get(0).getPath();
 
-           Bitmap videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 500, 500);
+            Bitmap videoThumbnail = ImageUtils.getVideoThumbnail(videoPath, 500, 500);
 
             waterMaskCenter = ImageUtils.createWaterMaskCenter(videoThumbnail, this);
             List<Bitmap> bitmaps = new ArrayList<>();
@@ -316,9 +317,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                 subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
-
                         nextStep();
-
                     }
                 });
     }
@@ -350,6 +349,8 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
         dynamicRequest.setImagePath(mPicObjectKeyLists);
         dynamicRequest.setVideoPath(videoObjectKey);
         dynamicRequest.setVideoPreview(videoPreviewPathObjectkey);
+        Logger.d("videoObjectKey:::" + videoObjectKey
+                + ",videoPreviewPathObjectkey:::" + videoPreviewPathObjectkey);
         Gson gson = new Gson();
         String codeStr = gson.toJson(dynamicRequest);
         mPresenter.releaseDynamic(codeStr);
@@ -357,10 +358,10 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
         mPicObjectKeyLists.clear();
         mPicList.clear();
 
-        videoPath = "";//视频路径
-        videoObjectKey = "";
-        videoPreviewPath = "";//视频预览路径
-        videoPreviewPathObjectkey = "";//视频预览路径objectkey
+//        videoPath = "";//视频路径
+//        videoObjectKey = "";
+//        videoPreviewPath = "";//视频预览路径
+//        videoPreviewPathObjectkey = "";//视频预览路径objectkey
     }
 
 
@@ -392,6 +393,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                     Gson gson = new Gson();
                     SignaTureBean signaTureBean = gson.fromJson(string, SignaTureBean.class);
                     beans = signaTureBean.getData();
+                    Logger.d("签名::: "+ beans);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -430,15 +432,18 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                         File videoFile = new File(videoPath);
                         InputStream inputStream = new FileInputStream(videoFile);
                         String videoMd5 = FileMd5Util.digest(inputStream);
-                        videoObjectKey = Constant.DIR_DYNAMIC_VIDEO + FileMd5Util.digest(inputStream) + Constant.VIDEO_DIR;
+                        videoObjectKey = Constant.DIR_DYNAMIC_VIDEO + videoMd5 + Constant.VIDEO_DIR;
                         PutObjectRequest videoPut = new PutObjectRequest(bean.getBucket(), videoObjectKey, videoPath);
 //                        String s = UUID.randomUUID().toString();
 //                        ImageUtils.get
                         //用视频的md5值 当封面图片的 名称
+
                         videoPreviewPath = ImageUtils.saveBitmap(waterMaskCenter, videoMd5 + ".jpg");
                         File videoPreviewFile = new File(videoPreviewPath);
                         InputStream inputPreviewStream = new FileInputStream(videoPreviewFile);
                         videoPreviewPathObjectkey = Constant.DIR_DYNAMIC_VIDEO_PREVIEW + FileMd5Util.digest(inputPreviewStream) + Constant.PIC_DIR;
+
+                        Logger.d("视频预览objeckKey::" + videoPreviewPathObjectkey);
                         PutObjectRequest videoPathPut = new PutObjectRequest(bean.getBucket(), videoPreviewPathObjectkey, videoPreviewPath);
 
                         oss.putObject(videoPut);
@@ -457,7 +462,7 @@ public class ReleaseDynamicActivity extends BaseActivity<ReleaseDynamicPresenter
                                 String picObjectKey = Constant.DIR_DYNAMIC + digest + Constant.PIC_DIR;
                                 PutObjectRequest picturePut = new PutObjectRequest(bean.getBucket(), picObjectKey, mPicList.get(i));
                                 mPicObjectKeyLists.add(picObjectKey);
-                               oss.putObject(picturePut);
+                                oss.putObject(picturePut);
 
                             } catch (FileNotFoundException e) {
                                 e.printStackTrace();
