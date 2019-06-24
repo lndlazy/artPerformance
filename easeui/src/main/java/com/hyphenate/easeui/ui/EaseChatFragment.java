@@ -54,6 +54,7 @@ import com.hyphenate.easeui.model.EaseDingMessageHelper;
 import com.hyphenate.easeui.utils.EaseCommonUtils;
 import com.hyphenate.easeui.utils.EaseImageUtils;
 import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.easeui.utils.SpKey;
 import com.hyphenate.easeui.widget.EaseAlertDialog;
 import com.hyphenate.easeui.widget.EaseAlertDialog.AlertDialogUser;
 import com.hyphenate.easeui.widget.EaseChatExtendMenu;
@@ -111,7 +112,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     protected ClipboardManager clipboard;
 
     protected Handler handler = new Handler();
-//    protected File cameraFile;
+    //    protected File cameraFile;
     protected EaseVoiceRecorderView voiceRecorderView;
     protected SwipeRefreshLayout swipeRefreshLayout;
     protected ListView listView;
@@ -725,6 +726,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             // group message
             if (message.getChatType() == ChatType.GroupChat || message.getChatType() == ChatType.ChatRoom) {
                 username = message.getTo();
+
+
             } else {
                 // single chat message
                 username = message.getFrom();
@@ -735,6 +738,22 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
                 messageList.refreshSelectLast();
                 conversation.markMessageAsRead(message.getMsgId());
             }
+
+            try {
+                String name = message.getStringAttribute(SpKey.USER_NAME);
+                String head_pic = message.getStringAttribute(SpKey.HEAD_PIC_URL);
+
+//                Log.e("TAG", "收到消息::" + message.toString() + "， 昵称:" + name + ",头像:" + head_pic);
+
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
+
+//            message.setAttribute(BaseConfig.BaseSPKey.NAME,
+//                    SPUtils.getInstance().getString(BaseConfig.BaseSPKey.NAME));
+//            message.setAttribute(BaseConfig.BaseSPKey.HEAD_PIC_URL,
+//                    SPUtils.getInstance().getString(BaseConfig.BaseSPKey.HEAD_PIC_URL));
+
             EaseUI.getInstance().getNotifier().vibrateAndPlayTone(message);
         }
     }

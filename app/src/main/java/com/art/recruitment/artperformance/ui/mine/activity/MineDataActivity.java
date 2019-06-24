@@ -945,7 +945,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bean.getGender());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.NAME, bean.getName());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getName());
 
 //        SaveUtils.put(this, MyInfoSave.PHONE_NUM, bean.getTelephone());
 //        SaveUtils.put(this, MyInfoSave.SEX, bean.getGender());

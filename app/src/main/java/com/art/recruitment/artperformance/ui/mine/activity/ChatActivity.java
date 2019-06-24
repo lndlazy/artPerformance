@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.art.recruitment.artperformance.R;
+import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragmentActivity;
+import com.blankj.utilcode.util.SPUtils;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
@@ -24,9 +26,10 @@ public class ChatActivity extends BaseFragmentActivity {
             @Override
             public void onSetMessageAttributes(EMMessage message) {
 
-
-
-
+                message.setAttribute(BaseConfig.BaseSPKey.USER_NAME,
+                        SPUtils.getInstance().getString(BaseConfig.BaseSPKey.USER_NAME));
+                message.setAttribute(BaseConfig.BaseSPKey.HEAD_PIC_URL,
+                        SPUtils.getInstance().getString(BaseConfig.BaseSPKey.HEAD_PIC_URL));
             }
 
             @Override

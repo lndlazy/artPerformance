@@ -286,8 +286,10 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             public void onSuccess() {
                 EMClient.getInstance().groupManager().loadAllGroups();
                 EMClient.getInstance().chatManager().loadAllConversations();
+
+//                EMClient.getInstance().
                 startActivity(MainActivity.class);
-                ToastUtils.showShort("登录聊天服务器成功！");
+//                ToastUtils.showShort("登录聊天服务器成功！");
                 finish();
             }
 
@@ -341,7 +343,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
     private void setLoginValue(TokenBean.DataBean tokenBean) {
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, tokenBean.getToken());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, tokenBean.getId());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, tokenBean.getUsername());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, tokenBean.getName());
 //        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
     }
 

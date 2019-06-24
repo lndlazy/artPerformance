@@ -430,7 +430,7 @@ public class DynamicDetailFragment extends BaseFragment<DynamicDataPresenter, Dy
             contentBean.setCommentContent(mSendEdittext.getText().toString().trim());
             contentBean.setCommentTime(DateFormatUtils.formatDateTime(new Date().getTime(), DateFormatUtils.DATE_FORMAT_PATTERN_YMD_HMS));
             contentBean.setCommentUserAvatar(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.HEAD_PIC_URL));
-            contentBean.setCommentUserName(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.NAME));
+            contentBean.setCommentUserName(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.USER_NAME));
             data.add(0, contentBean);
             commentAdapter.notifyDataSetChanged();
         }

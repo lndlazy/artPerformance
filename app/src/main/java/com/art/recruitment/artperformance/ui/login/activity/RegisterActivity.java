@@ -405,7 +405,7 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
 //        SPUtils.getInstance().put(BaseConfig.BaseSPKey.NAME, registerBean.getData().getName());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, registerBean.getToken());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, registerBean.getId());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, registerBean.getUsername());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, registerBean.getName());
 //        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TELE_PHONE, registerBean.getData().getTelephone());
 //        SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHOTO, registerBean.getData().getPhoto());
 

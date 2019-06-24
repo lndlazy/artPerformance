@@ -230,7 +230,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
             SPUtils.getInstance().getString(BaseConfig.BaseSPKey.PHONE_NUM);
             if (!TextUtils.isEmpty(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.PHONE_NUM))
-                    && !TextUtils.isEmpty(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.NAME))
+                    && !TextUtils.isEmpty(SPUtils.getInstance().getString(BaseConfig.BaseSPKey.USER_NAME))
                     && ((SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.SEX)) != -1)) {
                 Intent intent = new Intent(MainActivity.this, ReleaseRecruitmentActivity.class);
                 intent.putExtra("release_id", 0);

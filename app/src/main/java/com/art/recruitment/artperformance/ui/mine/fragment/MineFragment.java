@@ -452,7 +452,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bean.getAvatarView());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bean.getGender());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getUsername());
+        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getName());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.AGE, bean.getAge());
 
         if (!TextUtils.isEmpty(bean.getWechat()))

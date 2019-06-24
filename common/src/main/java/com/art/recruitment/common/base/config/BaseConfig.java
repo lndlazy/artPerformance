@@ -63,7 +63,7 @@ public class BaseConfig {
          */
         public static final String TOKEN = "token";
 
-        public static final String NAME = "name";
+
 
         /**
          * 登录时间
@@ -87,7 +87,7 @@ public class BaseConfig {
          */
         public static final String EXTRANET_IP = "extranetIp";
 
-
+//        public static final String NAME = "name";
         public static final String HEAD_PIC_URL = "head_pic_url";
         //        public static final    String USER_NAME = "user_name";
         public static final String PHONE_NUM = "phone_num";

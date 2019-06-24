@@ -1,15 +1,12 @@
 package com.art.recruitment.artperformance.ui.mine.activity;
 
 import android.content.Intent;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.common.base.ui.BaseFragmentActivity;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.easeui.EaseConstant;
-import com.hyphenate.easeui.ui.EaseChatFragment;
 import com.hyphenate.easeui.ui.EaseConversationListFragment;
 
 public class ChatListActivity extends BaseFragmentActivity {

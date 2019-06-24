@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="@dimen/x30"
+    android:fitsSystemWindows="true"
     tools:context=".ui.mine.activity.ChatListActivity">
     <!--android:fitsSystemWindows="true"-->
     <LinearLayout

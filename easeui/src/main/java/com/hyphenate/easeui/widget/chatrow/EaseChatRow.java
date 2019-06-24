@@ -145,8 +145,10 @@ public abstract class EaseChatRow extends LinearLayout {
         if(userAvatarView != null) {
             //set nickname and avatar
             if (message.direct() == Direct.SEND) {
+                //发送方
                 EaseUserUtils.setUserAvatar(context, EMClient.getInstance().getCurrentUser(), userAvatarView);
             } else {
+                //接受方
                 EaseUserUtils.setUserAvatar(context, message.getFrom(), userAvatarView);
                 EaseUserUtils.setUserNick(message.getFrom(), usernickView);
             }
