@@ -20,6 +20,13 @@ import java.util.HashMap;
 
 public class ImageUtils {
 
+
+    //缩略图
+    public static final String IMAGE_SMART = "?x-oss-process=image/resize,w_200";
+
+
+
+
     public static int[] getImageWidthHeight(String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -170,4 +177,10 @@ public class ImageUtils {
         canvas.restore();
         return newb;
     }
+
+
+
+
+
+
 }

@@ -36,6 +36,7 @@ import com.alibaba.sdk.android.oss.ServiceException;
 import com.alibaba.sdk.android.oss.callback.OSSCompletedCallback;
 import com.alibaba.sdk.android.oss.callback.OSSProgressCallback;
 import com.alibaba.sdk.android.oss.common.auth.OSSCustomSignerCredentialProvider;
+import com.alibaba.sdk.android.oss.model.GetObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectRequest;
 import com.alibaba.sdk.android.oss.model.PutObjectResult;
 import com.art.recruitment.artperformance.R;
@@ -274,15 +275,12 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     protected void initView(@Nullable Bundle savedInstanceState) {
 
         editorType = getIntent().getIntExtra(Constant.EDITOR_TYPE, -1);
-
-        mPresenter.getPersonalData();
+        initPic();
 
         ivTelSwitch.setSelected(true);
         ivWxSwitch.setSelected(true);
         telePhoneSwitchButton = 1;
         wxChatSwitchButton = 1;
-
-        initPic();
 
         initMatisse();
 
@@ -290,6 +288,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         initRecyclerView();
 
+        mPresenter.getPersonalData();
 
         ivTelSwitch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -786,6 +785,19 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             coverDelete.setVisibility(View.VISIBLE);
             coverObjectKey = bean.getPrimaryPhoto().get(0);
         }
+
+//        if (oss != null && !TextUtils.isEmpty(bucket)) {
+//
+//            for (int i = 0; i < bean.getPhoto().size(); i++) {
+//
+//                String url = oss.presignPublicObjectURL(bucket, bean.getPhoto().get(i));
+//                url = url + ImageUtils.IMAGE_SMART;
+//                Logger.d("图片的地址::" + url);
+//
+//            }
+//
+//        }
+
 
         if (bean.getPhoto() != null && bean.getPhoto().size() > 0) {
             //显示图片集
@@ -1355,6 +1367,11 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
     }
 
+    /**
+     * 选择相册返回的数据
+     *
+     * @param data
+     */
     private void photoListBack(Intent data) {
 
         List<Uri> mSelectedImages = Matisse.obtainResult(data);
@@ -1388,7 +1405,16 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         } else {  //更换图片，只能选择一张
             mImageList.set(mClickedItemPosition, mTempImageList.get(0));
-            photoList.set(mClickedItemPosition, mSelectedImages.get(0));
+//            photoList.set(mClickedItemPosition, mSelectedImages.get(0));
+            photoList.add(mSelectedImages.get(0));
+            try {
+                if (photoObjectKeyList != null && photoObjectKeyList.size() > mClickedItemPosition)
+                    photoObjectKeyList.remove(mClickedItemPosition);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
 
         mPhotoAdapter.setNewData(mImageList);
@@ -1584,15 +1610,19 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
                         putPhotoList = new PutObjectRequest(bucket, photoObjectKey,
                                 UriUtil.getRealFilePath(MineDataActivity.this, photoList.get(i)));
-
+                        // 图片处理。
+//                        GetObjectRequest objectRequest = new GetObjectRequest();
+//                        objectRequest.set
+//                        oss.putObject()
+//                        putPhotoList.setxOssProcess("image/resize,m_fixed,w_100,h_100");
                         PutObjectResult putResult = oss.putObject(putPhotoList);
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mPresenter.pathUrl(photoObjectKey, FileType.PIC_TYPE_PHOTOS);
-                            }
-                        });
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mPresenter.pathUrl(photoObjectKey, FileType.PIC_TYPE_PHOTOS);
+//                            }
+//                        });
 
 //                        Log.d("PutObject", "UploadSuccess");
                         if (i == photoList.size() - 1) {
@@ -1654,9 +1684,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //            });
 //
 //        }
-
-
-//        s
 
     }
 
