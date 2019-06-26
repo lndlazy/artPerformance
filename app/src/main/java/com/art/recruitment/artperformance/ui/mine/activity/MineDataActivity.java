@@ -685,7 +685,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             @Override
             public String signContent(final String content) {
 
-//                Logger.d("content内容::" + content);
+                Logger.d("content内容====》》:" + content);
 
                 URL url = null;
                 try {

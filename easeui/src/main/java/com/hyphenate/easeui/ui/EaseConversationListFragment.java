@@ -30,6 +30,7 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.widget.EaseConversationList;
+import com.hyphenate.easeui.widget.EaseTitleBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -62,7 +63,19 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.ease_fragment_conversation_list, container, false);
+        View view = inflater.inflate(R.layout.ease_fragment_conversation_list, container, false);
+        EaseTitleBar titleBar = view.findViewById(R.id.title_bar);
+
+        titleBar.setLeftImageResource(R.drawable.ease_mm_title_back);
+        titleBar.setLeftLayoutClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (getActivity() != null)
+                    getActivity().finish();
+            }
+        });
+        return view;
     }
 
     @Override
@@ -109,7 +122,6 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 //                    chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
 //                    startActivity(chat);
 //                    Log.e("TAG", "id:" + id + ",type:" + conversation.getType());
-
 
 
                     listItemClickListener.onListItemClicked(conversation);

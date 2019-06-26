@@ -23,6 +23,8 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import butterknife.BindView;
@@ -78,7 +80,6 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                         mPresenter.cencelHiring(mAdapter.getData().get(position).getRecruitmentId(), mAdapter.getData().get(position).getId());
                         break;
 
-
                     case R.id.mine_recruit_chat_imageview:
                         //已录用 聊天
 
@@ -87,11 +88,13 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                             return;
                         }
 
+                        userinfo(position);
+
                         Intent chat = new Intent(getContext(), ChatActivity.class);
                         chat.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getIm().getUsername());  //对方账号
-//                        chat.putExtra(EaseConstant.EXTRA_USER_NAME, mAdapter.getData().get(position).getApplyUserName());  //对方账号
                         chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
                         startActivity(chat);
+
                         break;
                     case R.id.mine_recruit_refuse_textview:
                         mPresenter.cencelHiring(mAdapter.getData().get(position).getRecruitmentId(), mAdapter.getData().get(position).getId());
@@ -108,6 +111,7 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                             ToastUtils.showShort("数据错误");
                             return;
                         }
+                        userinfo(position);
 
                         Intent chat2 = new Intent(getContext(), ChatActivity.class);
                         chat2.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getIm().getUsername());  //对方账号
@@ -127,6 +131,14 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
             }
         });
         return mAdapter;
+    }
+
+    private void userinfo(int position) {
+        EaseUser easeUser = new EaseUser(mAdapter.getData().get(position).getIm().getUsername());
+        easeUser.setAvatar(mAdapter.getData().get(position).getApplyUserAvatar());
+        easeUser.setNickname(mAdapter.getData().get(position).getApplyUserName());
+        EaseUserUtils.contactList.put(mAdapter.getData().get(position).getIm().getUsername(), easeUser);
+        EaseUserUtils.save2sp();
     }
 
     @Override

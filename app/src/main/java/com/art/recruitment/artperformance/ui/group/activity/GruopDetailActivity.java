@@ -37,6 +37,8 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.luck.picture.lib.PictureSelector;
 import com.orhanobut.logger.Logger;
@@ -125,6 +127,8 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
     private Dialog shareDialog;
     private String videoPlayUrl;
     String shareTitle;
+    private String actorName;
+    private String actorHeadImg;
 
     @Override
     protected IToolbar getIToolbar() {
@@ -246,9 +250,10 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
     @Override
     public void returnGroupDetailBean(GroupDetailBean.DataBean bean) {
         beans = bean;
+        actorHeadImg = bean.getPrimaryPhotoView().get(0);
         Glide.with(mContext).load(bean.getPrimaryPhotoView().get(0)).into(mPhotoImageview);
         mNameTextview.setText(bean.getName());
-
+        actorName = bean.getName();
         shareTitle = bean.getName() + "-演员已就位";
         mCountTextview.setText(bean.getLikes() + "");
         mGenderTextview.setText(bean.getGenderText());
@@ -278,10 +283,16 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
 
     @Override
     public void returnActorIdBean(ActorIdBean.DataBean bean) {
-        Logger.d("username:::" + bean.getUsername());
+
+        EaseUser easeUser = new EaseUser(bean.getUsername());
+        if (!TextUtils.isEmpty(actorHeadImg))
+            easeUser.setAvatar(actorHeadImg);
+        easeUser.setNickname(actorName);
+        EaseUserUtils.contactList.put(bean.getUsername(), easeUser);
+        EaseUserUtils.save2sp();
+
         Intent chat = new Intent(this, ChatActivity.class);
         chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getUsername());  //对方账号
-//        chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getuse());  //对方账号
         chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
         startActivity(chat);
     }

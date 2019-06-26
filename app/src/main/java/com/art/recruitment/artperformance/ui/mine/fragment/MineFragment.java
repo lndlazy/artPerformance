@@ -2,24 +2,18 @@ package com.art.recruitment.artperformance.ui.mine.fragment;
 
 import android.app.Dialog;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.mine.MineBean;
-import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActivity;
-import com.art.recruitment.artperformance.ui.group.activity.MineRecruitActivity;
 import com.art.recruitment.artperformance.ui.login.activity.LoginActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.AboutUsActivity;
-import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatListActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.FeedbackActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
@@ -37,7 +31,6 @@ import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
-import com.art.recruitment.common.utils.UIUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
@@ -45,10 +38,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMMessageBody;
-import com.hyphenate.easeui.EaseConstant;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
@@ -59,8 +49,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import io.reactivex.functions.Consumer;
 
 public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> implements MineContract {

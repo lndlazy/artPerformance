@@ -38,6 +38,8 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.orhanobut.logger.Logger;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -105,6 +107,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     private String chat_username;
     private ImageAdapter adapter;
     private List<String> list = new ArrayList<>();
+    private String publisherName;
     //    private int home_id;
 
     @Override
@@ -187,10 +190,15 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
                 subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
+
+                        EaseUser easeUser = new EaseUser(chat_username);
+//                        easeUser.setAvatar();
+                        easeUser.setNickname(publisherName);
+                        EaseUserUtils.contactList.put(chat_username, easeUser);
+                        EaseUserUtils.save2sp();
+
                         Intent chat = new Intent(RecruitmentInformationActivity.this, ChatActivity.class);
-                        Logger.d("对方账户id::" + chat_username + "，home_name:" + home_name);
                         chat.putExtra(EaseConstant.EXTRA_USER_ID, chat_username);  //对方账号
-//                        chat.putExtra(EaseConstant.EXTRA_USER_NAME, home_name);  //对方账号
                         chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_SINGLE); //单聊模式
                         startActivity(chat);
                     }
@@ -234,7 +242,6 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
         });
 
         final String shareUrl = Api.HTTP_URL + subUrl;
-
 
         Logger.d("shareTitle::" + shareTitle);
 
@@ -298,7 +305,6 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
         listSuccess(bean);
 
-
         for (int i = 0; i < bean.getApplyUsers().size(); i++) {
             list.add(bean.getApplyUsers().get(i).getApplyUserAvatar());
         }
@@ -329,7 +335,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
         if (simpleImInfo != null)
             chat_username = simpleImInfo.getUsername();
 
-
+        publisherName = bean.getPublisherName();
         mPriceTextview.setText((Constant.TYPE_PRICE_FACE.equals(bean.getSalaryType())) ? "面议" : "￥" + bean.getSalary());
         mReleaseTimeTextview.setText("发布时间：" + bean.getReleaseTime());
         mReleasePeopleTextview.setText("发布人：" + bean.getPublisherName());

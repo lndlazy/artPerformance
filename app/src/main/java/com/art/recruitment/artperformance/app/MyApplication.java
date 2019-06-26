@@ -13,10 +13,16 @@ import com.art.recruitment.common.base.BaseApplication;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.config.ApiConfig;
 import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.easeui.EaseUI;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.easeui.utils.SpKey;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
@@ -27,9 +33,11 @@ import com.umeng.socialize.UMShareAPI;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 //import com.alibaba.wireless.security.jaq.JAQException;
 //import com.alibaba.wireless.security.jaq.SecurityInit;
@@ -137,6 +145,13 @@ public class MyApplication extends BaseApplication {
         // 设置开启debug模式
         EMClient.getInstance().setDebugMode(true);
 
+
+        Gson gson = new Gson();
+        java.lang.reflect.Type type = new TypeToken<HashMap<String, EaseUser>>() {
+        }.getType();
+        Map<String, EaseUser> objectMap = gson.fromJson(SPUtils.getInstance().getString(SpKey.CONTACT_LIST), type);
+        if (objectMap != null && objectMap.size() > 0)
+            EaseUserUtils.contactList.putAll(objectMap);
 
 //        int pid = android.os.Process.myPid();
 //        String processAppName = getAppName(pid);

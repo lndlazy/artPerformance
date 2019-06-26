@@ -3,6 +3,7 @@ package com.art.recruitment.artperformance.ui.mine.fragment;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -24,6 +25,8 @@ import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.ToastUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
@@ -75,6 +78,15 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
 //                        mPresenter.chatGroups(mAdapter.getData().get(position).getRecruitmentId());
                         if (mAdapter.getData().get(position) != null
                                 && mAdapter.getData().get(position).getImSimpleInfo() != null) {
+
+
+                            EaseUser easeUser = new EaseUser(mAdapter.getData().get(position).getImSimpleInfo().getUsername());
+//                            if (!TextUtils.isEmpty(actorHeadImg))
+//                                easeUser.setAvatar(actorHeadImg);
+                            easeUser.setNickname(mAdapter.getData().get(position).getPublisherName());
+                            EaseUserUtils.contactList.put(mAdapter.getData().get(position).getImSimpleInfo().getUsername(), easeUser);
+                            EaseUserUtils.save2sp();
+
                             Intent chat = new Intent(getContext(), ChatActivity.class);
                             chat.putExtra(EaseConstant.EXTRA_USER_ID, mAdapter.getData().get(position).getImSimpleInfo().getUsername());  //对方账号
 //                        chat.putExtra(EaseConstant.EXTRA_USER_NAME, mAdapter.getData().get(position).getApplyUserName());  //对方账号
@@ -177,10 +189,10 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
 
     @Override
     public void returnChatGroupsBean(MineRecruitBean.DataBean bean) {
-        Intent chat = new Intent(getContext(), ChatActivity.class);
-        chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getChatGroupId());  //对方账号
-        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_GROUP); //群聊模式
-        startActivity(chat);
+//        Intent chat = new Intent(getContext(), ChatActivity.class);
+//        chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getChatGroupId());  //对方账号
+//        chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_GROUP); //群聊模式
+//        startActivity(chat);
     }
 
     @Override
