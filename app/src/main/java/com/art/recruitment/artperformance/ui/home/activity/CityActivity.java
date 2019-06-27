@@ -76,7 +76,7 @@ public class CityActivity extends BaseActivity<GroupFragmentPresenter> implement
         mPresenter.cityList();
         intent = getIntent();
 
-        intent.getStringExtra("");
+//        intent.getStringExtra("");
 //        intent.getIntExtra("")
 
         initAdapter();

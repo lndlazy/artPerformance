@@ -11,7 +11,7 @@ public interface SpKey {
     String HEAD_PIC_URL = "head_pic_url";
 
 
-    String GROUP_NAME = "Group_name";//群聊名称
+    String GROUP_NAME = "group_name";//群聊名称
 
     String CONTACT_LIST = "CONTACT_LIST";//本地存储的聊天列表
 }
