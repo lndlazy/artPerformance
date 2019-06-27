@@ -948,26 +948,16 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
     public void returnEssentialInfoBean(ConsummateInfoBean.DataBean bean) {
         ToastUtils.showShort("资料已保存");
 
-        if (!TextUtils.isEmpty(mWeChat)) {
-
+        if (!TextUtils.isEmpty(mWeChat))
             SPUtils.getInstance().put(BaseConfig.BaseSPKey.WECHAT, mWeChat);
-        }
 
-//        SaveUtils.put(this, MyInfoSave.HEAD_PIC_URL, bean.getAvatar());
-
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
+        if (!TextUtils.isEmpty(bean.getTelephone()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bean.getGender());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getName());
 
-//        SaveUtils.put(this, MyInfoSave.PHONE_NUM, bean.getTelephone());
-//        SaveUtils.put(this, MyInfoSave.SEX, bean.getGender());
-//        SaveUtils.put(this, MyInfoSave.USER_NAME, bean.getUsername());
-//        SaveUtils.put(this, MyInfoSave.AGE, bean.getAge());
-//        SaveUtils.put(this, MyInfoSave.WECHAT, bean.getWechat());
+        if (!TextUtils.isEmpty(bean.getName()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getName());
 
-//        mPhotoList.clear();
-//        mPrimaryPhotoList.clear();
-//        personalIntroductionVideoList = null;
         finish();
 //        mHeadImageview = null;
     }

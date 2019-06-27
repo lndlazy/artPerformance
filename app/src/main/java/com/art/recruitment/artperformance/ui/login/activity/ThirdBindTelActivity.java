@@ -11,10 +11,6 @@ import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.im.ImUserBean;
-import com.art.recruitment.artperformance.bean.login.RegisterBean;
-import com.art.recruitment.artperformance.bean.login.RegisterRequest;
-import com.art.recruitment.artperformance.bean.login.ResetPasswordBean;
-import com.art.recruitment.artperformance.bean.login.ResetPasswordRequest;
 import com.art.recruitment.artperformance.bean.login.VerificationCodeBean;
 import com.art.recruitment.artperformance.bean.login.VerificationCodeRequest;
 import com.art.recruitment.artperformance.ui.MainActivity;
@@ -250,17 +246,20 @@ public class ThirdBindTelActivity extends BaseActivity<ThirdBindPresenter> imple
     @Override
     public void returnBindInfo(ThirdBindResultEntry.DataBean bindResult) {
 
-//        String token = bindResult.getTokenInfo().getToken();
-
-        if (bindResult.getTokenInfo()==null)
+        if (bindResult.getTokenInfo() == null)
             return;
 
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, bindResult.getTokenInfo().getToken());
 
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bindResult.getTokenInfo().getAvatar());
+        if (!TextUtils.isEmpty(bindResult.getTokenInfo().getAvatar()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bindResult.getTokenInfo().getAvatar());
+
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bindResult.getTokenInfo().getGender());
+
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, bindResult.getTokenInfo().getId());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bindResult.getTokenInfo().getName());
+
+        if (!TextUtils.isEmpty(bindResult.getTokenInfo().getName()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bindResult.getTokenInfo().getName());
 
         setLoginValue(bindResult);
         mPresenter.imUser();
@@ -301,12 +300,11 @@ public class ThirdBindTelActivity extends BaseActivity<ThirdBindPresenter> imple
     }
 
     private void setLoginValue(ThirdBindResultEntry.DataBean bindResult) {
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.NAME, registerBean.getData().getName());
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, registerBean.getToken());
+
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, bindResult.getTokenInfo().getId());
+
+        if (!TextUtils.isEmpty(bindResult.getTokenInfo().getName()))
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bindResult.getTokenInfo().getName());
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TELE_PHONE, registerBean.getData().getTelephone());
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHOTO, registerBean.getData().getPhoto());
 
     }
 

@@ -1,7 +1,5 @@
 package com.art.recruitment.artperformance.ui.login.activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,13 +7,10 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.im.ImUserBean;
@@ -302,7 +297,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             public void onError(int code, String message) {
                 startActivity(MainActivity.class);
                 finish();
-                ToastUtils.showShort("登录聊天服务器失败！" );
+                ToastUtils.showShort("登录聊天服务器失败！");
 
                 Logger.d("登录聊天服务器失败:::" + message);
             }
@@ -315,10 +310,13 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, thirdLoginBean.getToken());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, thirdLoginBean.getId());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, thirdLoginBean.getName());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, thirdLoginBean.getAvatar());
 
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
+        if (!TextUtils.isEmpty(thirdLoginBean.getName()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, thirdLoginBean.getName());
+
+        if (!TextUtils.isEmpty(thirdLoginBean.getAvatar()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, thirdLoginBean.getAvatar());
+
         mPresenter.imUser();
 
     }
@@ -334,17 +332,19 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                 bindIntent.putExtra("socialAccount", thirdLoginName);
                 bindIntent.putExtra("socialType", socialType);
                 startActivity(bindIntent);
-            }else
+            } else
 
-            ToastUtils.showShort(message);
+                ToastUtils.showShort(message);
         }
     }
 
     private void setLoginValue(TokenBean.DataBean tokenBean) {
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, tokenBean.getToken());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, tokenBean.getId());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, tokenBean.getName());
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "2");
+
+        if (!TextUtils.isEmpty(tokenBean.getName()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, tokenBean.getName());
+
     }
 
     //授权
@@ -381,7 +381,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
                         break;
                     case QQ:
                         socialType = Constant.THIRD_LOGIN_QQ;
-                       break;
+                        break;
 
                 }
 

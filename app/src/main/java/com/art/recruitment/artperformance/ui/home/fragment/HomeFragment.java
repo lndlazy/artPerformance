@@ -1,6 +1,5 @@
 package com.art.recruitment.artperformance.ui.home.fragment;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -460,6 +458,8 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
             //保存定位的城市信息
             SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOCATION_CITY_CODE, bean.getCityCode());
+
+            if (!TextUtils.isEmpty(bean.getCityName()))
             SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOCATION_CITY_NAME, bean.getCityName());
 
         } else {
@@ -475,6 +475,8 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
     @Override
     public void returnLogoUrl(LogoBean.DataBean bean) {
         if (bean != null) {
+
+            if (!TextUtils.isEmpty(bean.getUrl()))
             SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGO_URL, bean.getUrl());
             Defaultcontent.imageurl = bean.getUrl();
         }
@@ -580,6 +582,8 @@ public class HomeFragment extends BaseFragment<HomePresenter, RecruitListBean.Co
 
                 mCityCode = bean.getCityCode();
                 SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_CODE, bean.getCityCode());
+
+                if (!TextUtils.isEmpty(bean.getCityName()))
                 SPUtils.getInstance().put(BaseConfig.BaseSPKey.CITY_NAME, bean.getCityName());
                 autoRefresh();
 

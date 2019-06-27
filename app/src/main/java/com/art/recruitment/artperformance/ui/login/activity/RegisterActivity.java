@@ -1,6 +1,5 @@
 package com.art.recruitment.artperformance.ui.login.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
@@ -22,10 +21,8 @@ import com.art.recruitment.artperformance.bean.login.VerificationCodeBean;
 import com.art.recruitment.artperformance.bean.login.VerificationCodeRequest;
 import com.art.recruitment.artperformance.ui.MainActivity;
 import com.art.recruitment.artperformance.ui.login.contract.RegisterContract;
-import com.art.recruitment.artperformance.ui.login.contract.ThirdBindContract;
 import com.art.recruitment.artperformance.ui.login.presenter.RegisterPresenter;
 import com.art.recruitment.artperformance.utils.TimeCountDownHelper;
-import com.art.recruitment.common.base.BasePresenter;
 import com.art.recruitment.common.base.callback.IToolbar;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
@@ -38,13 +35,11 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.exceptions.HyphenateException;
 import com.jakewharton.rxbinding2.view.RxView;
 
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
 public class RegisterActivity extends BaseActivity<RegisterPresenter> implements RegisterContract {
@@ -117,11 +112,7 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == Global.PHONE_NUMBER_SIZE) {
-                    mIsPhoneOk = true;
-                } else {
-                    mIsPhoneOk = false;
-                }
+                mIsPhoneOk = s.length() == Global.PHONE_NUMBER_SIZE;
                 setButtonStatus();
             }
 
@@ -139,11 +130,7 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 0) {
-                    mIsPasswordOk = true;
-                } else {
-                    mIsPasswordOk = false;
-                }
+                mIsPasswordOk = s.length() > 0;
                 setButtonStatus();
             }
 
@@ -161,11 +148,7 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() == 4) {
-                    mIsVerificationOk = true;
-                } else {
-                    mIsVerificationOk = false;
-                }
+                mIsVerificationOk = s.length() == 4;
                 setButtonStatus();
             }
 
@@ -402,12 +385,12 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
     }
 
     private void setLoginValue(RegisterBean.DataBean registerBean) {
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.NAME, registerBean.getData().getName());
+
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, registerBean.getToken());
         SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, registerBean.getId());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, registerBean.getName());
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TELE_PHONE, registerBean.getData().getTelephone());
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHOTO, registerBean.getData().getPhoto());
+
+        if (!TextUtils.isEmpty(registerBean.getName()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, registerBean.getName());
 
     }
 }

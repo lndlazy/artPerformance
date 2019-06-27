@@ -1,9 +1,7 @@
 package com.art.recruitment.artperformance.ui.login.activity;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.widget.ImageView;
@@ -29,7 +27,6 @@ import com.jakewharton.rxbinding2.view.RxView;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import io.reactivex.functions.Consumer;
 
 public class LaunchActivity extends BaseActivity<LaunchPresenter> implements LaunchContract {

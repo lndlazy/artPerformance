@@ -326,10 +326,6 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     }
 
     private void logout() {
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.TOKEN, "");
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.ID, "");
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, "");
-//        SPUtils.getInstance().put(BaseConfig.BaseSPKey.LOGIN_TIME, "");
 
         SPUtils.getInstance().clear();
 
@@ -437,11 +433,20 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
             EventBus.getDefault().post(bean.getAvatarView());
 
         //保存个人资料
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bean.getAvatarView());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bean.getGender());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getName());
-        SPUtils.getInstance().put(BaseConfig.BaseSPKey.AGE, bean.getAge());
+        if (!TextUtils.isEmpty(bean.getAvatarView()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bean.getAvatarView());
+
+        if (!TextUtils.isEmpty(bean.getTelephone()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.PHONE_NUM, bean.getTelephone());
+
+        if (bean.getGender() != 0)
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.SEX, bean.getGender());
+
+        if (!TextUtils.isEmpty(bean.getName()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getName());
+
+        if (bean.getAge() != 0)
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.AGE, bean.getAge());
 
         if (!TextUtils.isEmpty(bean.getWechat()))
             SPUtils.getInstance().put(BaseConfig.BaseSPKey.WECHAT, bean.getWechat());
