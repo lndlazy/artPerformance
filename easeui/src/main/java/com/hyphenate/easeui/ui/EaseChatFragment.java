@@ -323,8 +323,19 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             if (chatType == EaseConstant.CHATTYPE_GROUP) {
                 //group chat
                 EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
-                if (group != null)
-                    titleBar.setTitle(group.getGroupName());
+
+                if (EaseUserUtils.contactList != null && EaseUserUtils.contactList.containsKey(toChatUsername)) {
+
+                    EaseUser easeUser = EaseUserUtils.contactList.get(toChatUsername);
+                    if (easeUser != null) {
+                        String nickname = easeUser.getNickname();
+                        titleBar.setTitle(nickname);
+                    }
+
+                }
+
+//                if (group != null)
+//                    titleBar.setTitle(group.getGroupName());
 
                 // listen the event that user moved out group or group is dismissed
                 groupListener = new GroupListener();
@@ -578,12 +589,12 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.e("TAG", "====onActivityResult=====");
+//        Log.e("TAG", "====onActivityResult=====");
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE_CAMERA) { // capture new image
 
-                Log.e("TAG", "拍照返回code ==== ");
+//                Log.e("TAG", "拍照返回code ==== ");
                 if (cameraFile != null && cameraFile.exists())
                     sendImageMessage(cameraFile.getAbsolutePath());
             } else if (requestCode == REQUEST_CODE_LOCAL) { // send local image
@@ -707,13 +718,16 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             public void onError(final int error, String errorMsg) {
 
                 EMLog.d(TAG, "join room failure : " + error);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        pd.dismiss();
-                    }
-                });
-                getActivity().finish();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            pd.dismiss();
+                        }
+                    });
+                    getActivity().finish();
+                }
+
             }
         });
     }
@@ -726,8 +740,6 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
             // group message
             if (message.getChatType() == ChatType.GroupChat || message.getChatType() == ChatType.ChatRoom) {
                 username = message.getTo();
-
-
             } else {
                 // single chat message
                 username = message.getFrom();
@@ -939,10 +951,7 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         if (message == null) {
             return;
         }
-        if (chatFragmentHelper != null) {
-            //set extension
-            chatFragmentHelper.onSetMessageAttributes(message);
-        }
+
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
             message.setChatType(ChatType.GroupChat);
         } else if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
@@ -950,6 +959,12 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
         }
 
         message.setMessageStatusCallback(messageStatusCallback);
+
+        if (chatFragmentHelper != null) {
+            //set extension
+            chatFragmentHelper.onSetMessageAttributes(message);
+        }
+
 
         // Send message.
         EMClient.getInstance().chatManager().sendMessage(message);

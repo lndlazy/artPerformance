@@ -285,8 +285,8 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
     public void returnActorIdBean(ActorIdBean.DataBean bean) {
 
         EaseUser easeUser = new EaseUser(bean.getUsername());
-        if (!TextUtils.isEmpty(actorHeadImg))
-            easeUser.setAvatar(actorHeadImg);
+//        if (!TextUtils.isEmpty(actorHeadImg))
+        easeUser.setAvatar(actorHeadImg);
         easeUser.setNickname(actorName);
         EaseUserUtils.contactList.put(bean.getUsername(), easeUser);
         EaseUserUtils.save2sp();

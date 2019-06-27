@@ -11,7 +11,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
+import com.hyphenate.chat.EMChatManager;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
+import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.easeui.R;
 import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.EaseUI.EaseUserProfileProvider;
@@ -26,6 +29,9 @@ import java.util.Map;
 
 public class EaseUserUtils {
 
+
+//    public static String group_name = "";
+
     static EaseUserProfileProvider userProvider;
 
     static {
@@ -38,9 +44,9 @@ public class EaseUserUtils {
     public static void save2sp() {
 
         Gson gson = new Gson();
-        String s = gson.toJson(contactList);
+//        String s = gson.toJson(contactList);
 //        Log.e("TAG", "缓存数据:::" + s);
-        SPUtils.getInstance().put(SpKey.CONTACT_LIST,  gson.toJson(contactList));
+        SPUtils.getInstance().put(SpKey.CONTACT_LIST, gson.toJson(contactList));
 
     }
 
@@ -55,13 +61,30 @@ public class EaseUserUtils {
 //            return userProvider.getUser(hxId);
 //
 //        return null;
+        EaseUser easeUser = null;
+//        EMChatManager emChatManager = EMClient.getInstance().chatManager();
 
-        if (hxId.equals(EMClient.getInstance().getCurrentUser())) {
-            EaseUser currentUserInfo = EaseCommonUtils.getCurrentUserInfo(hxId);
-            return currentUserInfo;
+
+        EMGroupManager emGroupManager = EMClient.getInstance().groupManager();
+        EMGroup group = emGroupManager.getGroup(hxId);
+
+        if (group != null && contactList.containsKey(hxId)) {
+
+            //该聊天是群聊
+//                Log.e("TAG", "getUserInfo==>  这是群聊:" + hxId);
+            easeUser = new EaseUser(hxId);
+            easeUser.setNickname(contactList.get(hxId).getNickname());
+            return easeUser;
         }
 
-        EaseUser easeUser;
+//        Log.e("TAG", "getUserInfo  不是群聊????????  ");
+
+        if (hxId.equals(EMClient.getInstance().getCurrentUser())) {
+            easeUser = EaseCommonUtils.getCurrentUserInfo(hxId);
+            return easeUser;
+        }
+
+
         if (contactList != null && contactList.containsKey(hxId)) {
 
         } else { // 如果内存中没有，则将本地数据库中的取出到内存中。
@@ -81,7 +104,6 @@ public class EaseUserUtils {
             }
         }
         return easeUser;
-
 
     }
 

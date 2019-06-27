@@ -159,21 +159,34 @@ public final class EaseUI {
                 for (EMMessage msg : messages) {
 
                     try {
-                        String username = msg.getStringAttribute(SpKey.USER_NAME);
-                        String picUrl = msg.getStringAttribute(SpKey.HEAD_PIC_URL);
 
-//                        Log.e("TAG", "   0000 EaseUI  接受到了消息  :::" + messages.toString()
-//                                + ",username:" + username + ",picUrl:" + picUrl);
+                        Log.e("TAG", "   0000 EaseUI  接受到了消息  :::" + msg.toString());
 
                         if (msg.getChatType() == EMMessage.ChatType.GroupChat) {
                             //群聊
 
+                            Log.e("TAG", "群聊消息::" + msg.toString());
+
+                            EaseUser groupUser = new EaseUser(msg.getTo());
+                            String groupName = msg.getStringAttribute(SpKey.GROUP_NAME);
+                            groupUser.setNickname(groupName);
+                            if (EaseUserUtils.contactList != null) {
+                                EaseUserUtils.contactList.put(msg.getTo(), groupUser);
+                                EaseUserUtils.save2sp();
+                            }
+
                         } else {
+                            String username = msg.getStringAttribute(SpKey.USER_NAME);
+                            String picUrl = msg.getStringAttribute(SpKey.HEAD_PIC_URL);
                             //单聊
                             EaseUser easeUser = new EaseUser(msg.getFrom());
                             easeUser.setNickname(username);
                             easeUser.setAvatar(picUrl);
-                            EaseUserUtils.contactList.put(msg.getFrom(), easeUser);
+
+                            if (EaseUserUtils.contactList != null) {
+                                EaseUserUtils.contactList.put(msg.getFrom(), easeUser);
+                                EaseUserUtils.save2sp();
+                            }
                         }
 
                     } catch (HyphenateException e) {

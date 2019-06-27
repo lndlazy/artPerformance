@@ -77,6 +77,7 @@ public class BaseConfig {
         public static final String ID = "id";
 
         public static final String USER_NAME = "username";
+//        public static final String USER_NAME = "username";
 
         public static final String TELE_PHONE = "telephone";
 

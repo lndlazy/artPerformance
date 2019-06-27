@@ -98,6 +98,7 @@ public class MineFecruitmentFragment extends BaseFragment<MineFecruitmentPresent
                     case R.id.mine_fecruitment_personnel_textview:
                         //人员录用
                         Intent intent = new Intent(getContext(), MineRecruitActivity.class);
+                        intent.putExtra("retirementName", commAdapter.getData().get(position).getTitle());
                         intent.putExtra("id", commAdapter.getData().get(position).getId());
                         startActivity(intent);
                         break;

@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.mine.MineRecruitBean;
+import com.art.recruitment.artperformance.bean.mine.PathUrlBean;
 import com.art.recruitment.artperformance.ui.group.adapter.MineRecruitViewPagerAdapter;
 import com.art.recruitment.artperformance.ui.group.contract.EmploymentContract;
 import com.art.recruitment.artperformance.ui.group.contract.MineRecruitContract;
@@ -32,6 +33,8 @@ import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
+import com.hyphenate.easeui.domain.EaseUser;
+import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.orhanobut.logger.Logger;
 
@@ -65,6 +68,7 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
     private EmploymentFragment employmentFragmentOut;
     private String id;
     private String groupID;
+    private String retirementName;//招募标题
 
     @Override
     protected IToolbar getIToolbar() {
@@ -90,6 +94,7 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
     protected void initView(@Nullable Bundle savedInstanceState) {
 
         id = getIntent().getStringExtra("id");
+        retirementName = getIntent().getStringExtra("retirementName");
 
         mTabEntities.add(new TabEntity("已录用", mIconSelectIds[0], mIconUnselectIds[0]));
         mTabEntities.add(new TabEntity("待录用", mIconSelectIds[0], mIconUnselectIds[0]));
@@ -186,6 +191,15 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
 
     @Override
     public void returnChatGroupsBean(MineRecruitBean.DataBean bean) {
+
+        EaseUser easeUser = new EaseUser(bean.getChatGroupId());
+//        easeUser.setAvatar(publisherAvatar);
+        easeUser.setNickname(retirementName);
+        EaseUserUtils.contactList.put(bean.getChatGroupId(), easeUser);
+        EaseUserUtils.save2sp();
+//        EaseUserUtils.group_name = retirementName;
+
+        //人员录用， 发起群聊
         Intent chat = new Intent(MineRecruitActivity.this, ChatActivity.class);
         chat.putExtra(EaseConstant.EXTRA_USER_ID, bean.getChatGroupId());  //对方账号
         chat.putExtra(EaseConstant.EXTRA_CHAT_TYPE, EaseConstant.CHATTYPE_GROUP); //群聊

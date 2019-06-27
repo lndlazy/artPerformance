@@ -15,12 +15,9 @@ import android.widget.TextView;
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.home.ApplyBean;
 import com.art.recruitment.artperformance.bean.home.RecruitmentInforBean;
-import com.art.recruitment.artperformance.ui.MainActivity;
 import com.art.recruitment.artperformance.ui.home.adapter.ImageAdapter;
 import com.art.recruitment.artperformance.ui.home.contract.RecruitmentInformaContract;
 import com.art.recruitment.artperformance.ui.home.presenter.RecruitmentInformaPresenter;
-import com.art.recruitment.artperformance.ui.login.activity.UserAgreementActivity;
-
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.utils.Constant;
@@ -36,7 +33,6 @@ import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseUserUtils;
@@ -107,7 +103,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     private String chat_username;
     private ImageAdapter adapter;
     private List<String> list = new ArrayList<>();
-    private String publisherName;
+    private String publisherName;//发布人昵称
+    private String publisherAvatar;//发布人头像
     //    private int home_id;
 
     @Override
@@ -192,7 +189,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
                     public void accept(Object o) throws Exception {
 
                         EaseUser easeUser = new EaseUser(chat_username);
-//                        easeUser.setAvatar();
+                        easeUser.setAvatar(publisherAvatar);
                         easeUser.setNickname(publisherName);
                         EaseUserUtils.contactList.put(chat_username, easeUser);
                         EaseUserUtils.save2sp();
@@ -316,7 +313,6 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
     public void returnApplyBean(ApplyBean.DataBean bean) {
         ToastUtils.showShort("报名成功");
 
-
         //报名成功 添加头像
         String headUrl = SPUtils.getInstance().getString(BaseConfig.BaseSPKey.HEAD_PIC_URL);
         Logger.d("头像地址::" + headUrl);
@@ -334,6 +330,8 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
         if (simpleImInfo != null)
             chat_username = simpleImInfo.getUsername();
+
+        publisherAvatar = bean.getPublisherAvatarView();
 
         publisherName = bean.getPublisherName();
         mPriceTextview.setText((Constant.TYPE_PRICE_FACE.equals(bean.getSalaryType())) ? "面议" : "￥" + bean.getSalary());

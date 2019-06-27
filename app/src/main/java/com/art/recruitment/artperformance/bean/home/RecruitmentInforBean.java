@@ -77,6 +77,15 @@ public class RecruitmentInforBean extends BaseBean<RecruitmentInforBean.DataBean
         private int cityId;
         private String cityName;
         private SimpleImInfo simpleImInfo;
+        private String publisherAvatarView;
+
+        public String getPublisherAvatarView() {
+            return publisherAvatarView;
+        }
+
+        public void setPublisherAvatarView(String publisherAvatarView) {
+            this.publisherAvatarView = publisherAvatarView;
+        }
 
         public SimpleImInfo getSimpleImInfo() {
             return simpleImInfo;
