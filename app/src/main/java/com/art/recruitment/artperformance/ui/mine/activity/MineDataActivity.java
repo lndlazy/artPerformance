@@ -1432,6 +1432,10 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             return;
 
         Uri uri = data.getData();
+
+        if (uri == null)
+            uri = Uri.fromFile(coverOutFile);
+
         if (uri != null) {
             coverPic.setImageURI(uri.toString());
             Logger.d("uri路径::" + uri.toString() + "   ::uri.getPath():" + uri.getPath());
