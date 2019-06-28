@@ -1228,6 +1228,12 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     break;
 
                 case 100:
+                    //选择城市
+                    if (data != null && data.getExtras() != null) {
+                        String city = data.getExtras().getString("city");
+                        cityCode = data.getExtras().getInt("code");
+                        mCitiyEdittext.setText(city);
+                    }
                     break;
 
                 case CODE_GALLERY_REQUEST:

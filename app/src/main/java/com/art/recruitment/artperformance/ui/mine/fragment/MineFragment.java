@@ -372,7 +372,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.APP_SHARE_TITLE
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
                 );
                 hideDialog();
@@ -382,7 +382,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mCircleFriendsConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.APP_SHARE_TITLE
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
                 );
                 hideDialog();
@@ -392,7 +392,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mQQZoneConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.APP_SHARE_TITLE
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
                 );
                 hideDialog();
@@ -402,7 +402,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mQQConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.SHARE_TITLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.APP_SHARE_TITLE
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
                 );
                 hideDialog();

@@ -334,6 +334,13 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
 
         String mDetailedLocation = mDetailedLocationEdittext.getText().toString().trim();
         String mDeadlineForRegistration = mDeadlineForRegistrationTextview.getText().toString().trim();
+
+        //报名截止时间
+        if (workEndTime <= System.currentTimeMillis()) {
+            ToastUtils.showShort("截止时间不能早于当前时间");
+            return;
+        }
+
         String mOther = mOtherEdittext.getText().toString().trim();
 
         ReleaseRecruitmentRequest recruitmentRequest = new ReleaseRecruitmentRequest();

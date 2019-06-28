@@ -22,7 +22,12 @@ public class ShareUtils {
     public static final String SHARE_TITLE = "艺站，为您提供一站式服务";
     public static final String SHARE_TITLE_DYNAMIC = "艺站朋友圈发来一条消息";
     //分享的描述
-    public static final String SHARE_DESC = "更多信息，尽在艺站";
+//    public static final String SHARE_DESC = "更多信息，尽在艺站";
+    public static final String SHARE_DESC = "点击可查看更多";
+
+    public static final String ACTOR_SHARE_TITLE = "艺站-演员已就位";
+
+    public static final String APP_SHARE_TITLE= "演艺圈为您提供一站式服务";
 
     /**
      * 分享链接

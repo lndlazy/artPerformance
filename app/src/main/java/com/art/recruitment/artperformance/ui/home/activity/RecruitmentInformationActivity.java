@@ -240,7 +240,7 @@ public class RecruitmentInformationActivity extends BaseActivity<RecruitmentInfo
 
         final String shareUrl = Api.HTTP_URL + subUrl;
 
-        Logger.d("shareTitle::" + shareTitle);
+//        Logger.d("shareTitle::" + shareTitle);
 
         mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
