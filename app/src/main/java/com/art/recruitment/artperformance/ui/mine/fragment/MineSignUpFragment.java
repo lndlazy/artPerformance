@@ -44,6 +44,7 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
     SmartRefreshLayout mSmartRefreshLayout;
     //    private MineSignUpAdapter adapter;
     private MineSignUpMAdapter mAdapter;
+    private String publisherAvatar;
 
     @Override
     protected int getLayoutId() {
@@ -79,10 +80,8 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
                         if (mAdapter.getData().get(position) != null
                                 && mAdapter.getData().get(position).getImSimpleInfo() != null) {
 
-
                             EaseUser easeUser = new EaseUser(mAdapter.getData().get(position).getImSimpleInfo().getUsername());
-//                            if (!TextUtils.isEmpty(actorHeadImg))
-//                                easeUser.setAvatar(actorHeadImg);
+                            easeUser.setAvatar(publisherAvatar);
                             easeUser.setNickname(mAdapter.getData().get(position).getPublisherName());
                             EaseUserUtils.contactList.put(mAdapter.getData().get(position).getImSimpleInfo().getUsername(), easeUser);
                             EaseUserUtils.save2sp();
@@ -176,6 +175,9 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
         if (page == 0) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         }
+
+
+        publisherAvatar = bean.getPublisherAvatarView();
 
         resetStateWhenLoadDataSuccess(bean.getContent());
 

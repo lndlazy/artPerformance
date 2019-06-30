@@ -160,6 +160,9 @@ public final class EaseUI {
 
                     try {
 
+                        getNotifier().vibrateAndPlayTone(msg);
+//                        getNotifier().setNotificationInfoProvider();
+                        getNotifier().notify(msg);
                         Log.e("TAG", "   0000 EaseUI  接受到了消息  :::" + msg.toString());
 
                         if (msg.getChatType() == EMMessage.ChatType.GroupChat) {

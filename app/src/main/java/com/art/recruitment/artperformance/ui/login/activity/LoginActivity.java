@@ -34,7 +34,9 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.Gson;
 import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMChatManager;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.adapter.EMAChatManager;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.orhanobut.logger.Logger;
 import com.umeng.socialize.UMAuthListener;
@@ -285,6 +287,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 //                EMClient.getInstance().
                 startActivity(MainActivity.class);
 //                ToastUtils.showShort("登录聊天服务器成功！");
+
+
+
                 finish();
             }
 

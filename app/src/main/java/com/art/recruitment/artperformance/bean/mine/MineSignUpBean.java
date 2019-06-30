@@ -49,6 +49,15 @@ public class MineSignUpBean extends BaseBean<MineSignUpBean.DataBean> {
         private int totalElements;
         private int totalPages;
         private List<ContentBean> content;
+        private String publisherAvatarView;
+
+        public String getPublisherAvatarView() {
+            return publisherAvatarView;
+        }
+
+        public void setPublisherAvatarView(String publisherAvatarView) {
+            this.publisherAvatarView = publisherAvatarView;
+        }
 
         public boolean isEmpty() {
             return empty;
