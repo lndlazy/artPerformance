@@ -60,6 +60,8 @@ public class ChatActivity extends BaseFragmentActivity {
             @Override
             public void onEnterToChatDetails() {
 
+                //进入群详情页面
+
             }
 
             @Override

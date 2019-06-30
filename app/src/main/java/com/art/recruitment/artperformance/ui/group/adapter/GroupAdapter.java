@@ -39,7 +39,7 @@ public class GroupAdapter extends BaseRecyclerViewAdapter<GroupListBean.ContentB
 
         RequestOptions options = new RequestOptions();
         options.centerCrop();
-        options.error(item.getGender() == Constant.GENDER_MALE ? R.mipmap.ic_male_error : R.mipmap.ic_female_error);
+        options.error(R.mipmap.icon_default);
         Glide.with(mContext).load(item.getPrimaryPhotoView().get(0)).apply(options).into(s);
 
         helper.addOnClickListener(R.id.group_photo_imageview);

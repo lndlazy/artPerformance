@@ -17,6 +17,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import com.hyphenate.chat.EMChatRoom;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMCmdMessageBody;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMCursorResult;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
@@ -70,6 +72,7 @@ import com.hyphenate.util.PathUtil;
 
 import java.io.File;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -1182,11 +1185,54 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
      */
     protected void toGroupDetails() {
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
+
+
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    List<String> memberList = new ArrayList<>();
+                    EMCursorResult<String> result = null;
+                    final int pageSize = 20;
+                    try {
+                        do {
+                            result = EMClient.getInstance().groupManager().fetchGroupMembers(toChatUsername,
+                                    result != null ? result.getCursor() : "", pageSize);
+                            memberList.addAll(result.getData());
+                        }
+                        while (!TextUtils.isEmpty(result.getCursor()) && result.getData().size() == pageSize);
+
+
+                        Log.e("TAG", "toChatUsername:: " + toChatUsername);
+                        for (int i = 0; i < result.getData().size(); i++) {
+                            Log.e("TAG", "群成员:::" + result.getData().get(i));
+                        }
+
+//                        Log.e("TAG", "");
+
+                    } catch (HyphenateException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }).start();
+
+
             EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
+
+//            EMCursorResult<String> result = null;
+
+//            try {
+////                result = EMClient.getInstance().groupManager().fetchGroupMembers(toChatUsername, result == null ? "" : result.getCursor(), 20);
+//            } catch (HyphenateException e) {
+//                e.printStackTrace();
+//            }
             if (group == null) {
                 Toast.makeText(getActivity(), R.string.gorup_not_found, Toast.LENGTH_SHORT).show();
                 return;
             }
+
+
             if (chatFragmentHelper != null) {
                 chatFragmentHelper.onEnterToChatDetails();
             }
