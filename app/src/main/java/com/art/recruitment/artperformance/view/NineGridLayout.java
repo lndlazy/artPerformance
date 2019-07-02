@@ -140,6 +140,8 @@ public abstract class NineGridLayout extends ViewGroup {
         }
 
         if (size == 1) {
+            if (mUrlList==null || mUrlList.size()<=0)
+                return;
             String url = mUrlList.get(0);
             RatioImageView imageView = createImageView(0, url);
 

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
+import com.art.recruitment.artperformance.api.ApiUrls;
 import com.art.recruitment.artperformance.bean.mine.MineBean;
 import com.art.recruitment.artperformance.ui.login.activity.LoginActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.AboutUsActivity;
@@ -367,7 +368,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         });
 
         //TODO 修改url
-        final String shareUrl = Api.HTTP_URL + "actors/" + (SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.ID)) + "/share";
+        final String shareUrl = Api.HTTP_URL + ApiUrls.SHARE_APP;
 
         mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override

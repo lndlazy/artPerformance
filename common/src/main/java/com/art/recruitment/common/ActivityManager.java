@@ -331,6 +331,8 @@ public class ActivityManager {
     public void appExit() {
         try {
             finishAllActivity();
+
+//            EMClient.getInstance().logout(true);
 //            android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
         } catch (Exception e) {

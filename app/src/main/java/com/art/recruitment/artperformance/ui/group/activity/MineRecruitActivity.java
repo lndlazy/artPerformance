@@ -69,6 +69,8 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
     private String id;
     private String groupID;
     private String retirementName;//招募标题
+    private int retireNum;//总录用人数
+    private int alreadyRetireNum;
 
     @Override
     protected IToolbar getIToolbar() {
@@ -92,8 +94,9 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
 
     @Override
     protected void initView(@Nullable Bundle savedInstanceState) {
-
+        alreadyRetireNum = 0;
         id = getIntent().getStringExtra("id");
+        retireNum = getIntent().getIntExtra("retireNum", 0);
         retirementName = getIntent().getStringExtra("retirementName");
 
         mTabEntities.add(new TabEntity("已录用", mIconSelectIds[0], mIconUnselectIds[0]));
@@ -114,6 +117,33 @@ public class MineRecruitActivity extends BaseActivity<MineRecruitPresenter> impl
         initFragmentList();
 
         initButtonClick();
+    }
+
+
+    public int getRetireNum() {
+        return retireNum;
+    }
+
+    public void setRetireNum(int retireNum) {
+        this.retireNum = retireNum;
+    }
+
+    //增加当前录用人员数量
+    public void addAlreadyRetireNum() {
+        ++alreadyRetireNum;
+    }
+
+    //取消人员录用， 减少当前录用成员数量
+    public void decressAlreadyRetireNum() {
+        --alreadyRetireNum;
+    }
+
+    public int getAlreadyRetireNum() {
+        return alreadyRetireNum;
+    }
+
+    public void setAlreadyRetireNum(int alreadyRetireNum) {
+        this.alreadyRetireNum = alreadyRetireNum;
     }
 
     private void initButtonClick() {

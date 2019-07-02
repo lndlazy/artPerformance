@@ -40,8 +40,11 @@ public class GroupAdapter extends BaseRecyclerViewAdapter<GroupListBean.ContentB
         RequestOptions options = new RequestOptions();
         options.centerCrop();
         options.error(R.mipmap.icon_default);
-        Glide.with(mContext).load(item.getPrimaryPhotoView().get(0)).apply(options).into(s);
-
+        if (item.getPrimaryPhotoView() != null && item.getPrimaryPhotoView().size() > 0)
+            Glide.with(mContext).load(item.getPrimaryPhotoView().get(0)).apply(options).into(s);
+        else {
+            s.setImageResource(R.mipmap.icon_default);
+        }
         helper.addOnClickListener(R.id.group_photo_imageview);
         helper.addOnClickListener(R.id.constrainLike);
 

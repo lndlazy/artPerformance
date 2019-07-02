@@ -231,4 +231,8 @@ public class ApiUrls {
     public static final String LOGO_ICON = "/home/logo";
 
 
+    //我的 分享
+    public static final String SHARE_APP = "home/share/app";
+
+
 }

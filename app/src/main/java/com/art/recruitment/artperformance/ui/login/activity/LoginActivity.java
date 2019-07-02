@@ -302,7 +302,7 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
             public void onError(int code, String message) {
                 startActivity(MainActivity.class);
                 finish();
-                ToastUtils.showShort("登录聊天服务器失败！");
+//                ToastUtils.showShort("登录聊天服务器失败！");
 
                 Logger.d("登录聊天服务器失败:::" + message);
             }

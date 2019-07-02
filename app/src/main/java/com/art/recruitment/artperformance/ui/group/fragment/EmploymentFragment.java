@@ -1,9 +1,12 @@
 package com.art.recruitment.artperformance.ui.group.fragment;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 
 import com.art.recruitment.artperformance.R;
 import com.art.recruitment.artperformance.bean.group.ApplyListBean;
@@ -15,6 +18,8 @@ import com.art.recruitment.artperformance.ui.group.adapter.EmploymentAdapter;
 import com.art.recruitment.artperformance.ui.group.contract.EmploymentContract;
 import com.art.recruitment.artperformance.ui.group.presenter.EmploymentPresenter;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
+import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.common.base.adapter.BaseRecyclerViewAdapter;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragment;
@@ -42,6 +47,8 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
     private String mTitleType;
     private EmploymentAdapter mAdapter;
     private String recruitment_id;
+    private MineRecruitActivity activity;
+    private Dialog retireFullDialog;
 
     public static EmploymentFragment newInstance(Bundle bundle) {
         EmploymentFragment mFragment = new EmploymentFragment();
@@ -101,6 +108,13 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                         break;
                     case R.id.mine_recruit_employment_textview:
                         //录用
+                        //TODO  如果当前录用人员大于等于需要录用的人员 进行提示
+                        if (activity != null && activity.getAlreadyRetireNum() >= activity.getRetireNum()) {
+                            showNoticeAlert(position);
+                            return;
+                        }
+
+
                         mPresenter.hiring(mAdapter.getData().get(position).getRecruitmentId()
                                 , mAdapter.getData().get(position).getId(), true);
                         break;
@@ -133,6 +147,45 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
         return mAdapter;
     }
 
+    /**
+     * @param position
+     */
+    private void showNoticeAlert(final int position) {
+
+        View inflate = View.inflate(getContext(), R.layout.dialog_retirement, null);
+
+        TextView tv_cancle = inflate.findViewById(R.id.tv_cancle);
+        TextView tv_add = inflate.findViewById(R.id.tv_add);
+
+        retireFullDialog = DialogWrapper.
+                customViewDialog().
+                context(getContext()).
+                contentView(inflate).
+                cancelable(true, true).
+                build();
+
+        retireFullDialog.show();
+
+        tv_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (retireFullDialog != null && retireFullDialog.isShowing())
+                    retireFullDialog.dismiss();
+            }
+        });
+
+        tv_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (retireFullDialog != null && retireFullDialog.isShowing())
+                    retireFullDialog.dismiss();
+
+                mPresenter.hiring(mAdapter.getData().get(position).getRecruitmentId()
+                        , mAdapter.getData().get(position).getId(), true);
+            }
+        });
+    }
+
     private void userinfo(int position) {
         EaseUser easeUser = new EaseUser(mAdapter.getData().get(position).getIm().getUsername());
         easeUser.setAvatar(mAdapter.getData().get(position).getApplyUserAvatar());
@@ -153,6 +206,8 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
     @Override
     protected void initView() {
+        activity = (MineRecruitActivity) getActivity();
+
         setEmptyErrorViewData(R.mipmap.img_show_empty, "暂时没有数据");
 
         if (getArguments() == null)
@@ -193,6 +248,27 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
         if (bean == null)
             return;
+
+        switch (mTitleType) {
+
+            case Constant.APPLY_TYPE_ALREADY://已录用
+
+                if (bean.getContent() != null) {
+                    //已经录用的个数
+                    int size = bean.getContent().size();
+
+                    if (activity != null)
+                        activity.setAlreadyRetireNum(size);
+                }
+
+                break;
+
+            case Constant.APPLY_TYPE_WAIT://待录用
+
+                break;
+
+        }
+
         resetStateWhenLoadDataSuccess(bean.getContent());
 
     }
@@ -201,6 +277,9 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
     public void returnHiringBean(HiringBean.DataBean bean) {
 
         ToastUtils.showShort("录用成功");
+
+        if (activity != null)
+            activity.addAlreadyRetireNum();
         mPresenter.applyList(recruitment_id, mTitleType);
 
     }
@@ -210,6 +289,8 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
 
         //取消录用成功
         ToastUtils.showShort("取消成功");
+        if (activity != null)
+            activity.decressAlreadyRetireNum();
         mPresenter.applyList(recruitment_id, mTitleType);
     }
 

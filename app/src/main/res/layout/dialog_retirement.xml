@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:background="@color/transparent"
+    android:layout_gravity="center">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="@dimen/x504"
+        android:layout_height="@dimen/x264"
+        android:background="@drawable/shape_retirement_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <TextView
+            android:id="@+id/t1"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x150"
+            android:gravity="center"
+            android:text="@string/full_retire" />
+
+
+        <TextView
+            android:id="@+id/t2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/x2"
+            android:background="@color/gray_normal"
+            app:layout_constraintTop_toBottomOf="@id/t1" />
+
+
+        <TextView
+            android:id="@+id/tv_cancle"
+            android:layout_width="@dimen/x249"
+            android:layout_height="@dimen/x110"
+            android:gravity="center"
+            android:text="@string/cancle"
+            android:textColor="@color/btn_blue_normal"
+            app:layout_constraintTop_toBottomOf="@id/t2" />
+
+
+        <TextView
+            android:layout_marginTop="@dimen/x5"
+            android:layout_marginBottom="@dimen/x5"
+            android:id="@+id/t3"
+            android:layout_width="@dimen/x2"
+            android:layout_height="@dimen/x88"
+            android:background="@color/gray_normal"
+            app:layout_constraintLeft_toRightOf="@id/tv_cancle"
+            app:layout_constraintTop_toBottomOf="@id/t2" />
+
+
+        <TextView
+            android:id="@+id/tv_add"
+            android:layout_width="@dimen/x249"
+            android:layout_height="@dimen/x110"
+            android:gravity="center"
+            android:text="@string/sure"
+            android:textColor="@color/btn_blue_normal"
+            app:layout_constraintLeft_toRightOf="@id/tv_cancle"
+            app:layout_constraintTop_toBottomOf="@id/t2" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.constraint.ConstraintLayout>

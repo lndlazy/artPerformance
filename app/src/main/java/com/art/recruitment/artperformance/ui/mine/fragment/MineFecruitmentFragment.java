@@ -99,6 +99,7 @@ public class MineFecruitmentFragment extends BaseFragment<MineFecruitmentPresent
                         //人员录用
                         Intent intent = new Intent(getContext(), MineRecruitActivity.class);
                         intent.putExtra("retirementName", commAdapter.getData().get(position).getTitle());
+                        intent.putExtra("retireNum", commAdapter.getData().get(position).getApplyNumber());
                         intent.putExtra("id", commAdapter.getData().get(position).getId());
                         startActivity(intent);
                         break;

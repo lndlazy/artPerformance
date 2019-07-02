@@ -202,5 +202,8 @@
     <string name="input_tel">请输入电话号码</string>
     <string name="apply_input_all">应聘需填写所有内容</string>
     <string name="bind_phone_hint">请输入要绑定的手机号码</string>
+    <string name="cancle">取消</string>
+    <string name="full_retire">人员已满, 是否继续录用？</string>
+    <string name="sure">确定</string>
 
 </resources>

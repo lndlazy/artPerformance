@@ -778,7 +778,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         //设置主图
         if (bean.getPrimaryPhoto() != null && bean.getPrimaryPhoto().size() > 0
-                && !TextUtils.isEmpty(bean.getPrimaryPhotoView().get(0))) {
+                && !TextUtils.isEmpty(bean.getPrimaryPhoto().get(0))) {
 
             coverPic.setImageURI(Uri.parse(bean.getPrimaryPhotoView().get(0)));
 //            headPicUrl = bean.getAvatar();
@@ -958,8 +958,10 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         if (!TextUtils.isEmpty(bean.getName()))
             SPUtils.getInstance().put(BaseConfig.BaseSPKey.USER_NAME, bean.getName());
 
+        if (!TextUtils.isEmpty(bean.getAvatarView()))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.HEAD_PIC_URL, bean.getAvatarView());
+
         finish();
-//        mHeadImageview = null;
     }
 
     @Override

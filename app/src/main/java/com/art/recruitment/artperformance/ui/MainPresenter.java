@@ -66,4 +66,29 @@ public class MainPresenter extends BasePresenter<MainContract> {
                 });
 
     }
+
+//    /**
+//     * 获取分享的url
+//     */
+//    public void getShareUrl() {
+//
+//        Api.
+//                observable(Api.getService(LoginService.class).shareApp()).
+//                presenter(this).
+//                requestMode(RequestMode.SINGLE).
+//                showLoading(true).
+//                doRequest(new RxSubscriber<StatusBean.DataBean, StatusBean>() {
+//                    @Override
+//                    protected void _onSuccess(StatusBean.DataBean bean, String successMessage) {
+//
+//                    }
+//
+//                    @Override
+//                    protected void _onError(ErrorType errorType, int errorCode, String message, StatusBean.DataBean bean) {
+//
+//                    }
+//                });
+//
+//
+//    }
 }

@@ -126,9 +126,9 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
     private int group_id;
     private Dialog shareDialog;
     private String videoPlayUrl;
-//    String shareTitle;
+    //    String shareTitle;
     private String actorName;
-    private String actorHeadImg;
+    private String actorHeadImg = "";
 
     @Override
     protected IToolbar getIToolbar() {
@@ -250,8 +250,12 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
     @Override
     public void returnGroupDetailBean(GroupDetailBean.DataBean bean) {
         beans = bean;
-        actorHeadImg = bean.getPrimaryPhotoView().get(0);
-        Glide.with(mContext).load(bean.getPrimaryPhotoView().get(0)).into(mPhotoImageview);
+
+        if (bean.getPrimaryPhotoView() != null && bean.getPrimaryPhotoView().size() > 0)
+            actorHeadImg = bean.getPrimaryPhotoView().get(0);
+
+        if (bean.getPrimaryPhotoView() != null && bean.getPrimaryPhotoView().size() > 0)
+            Glide.with(mContext).load(bean.getPrimaryPhotoView().get(0)).into(mPhotoImageview);
         mNameTextview.setText(bean.getName());
         actorName = bean.getName();
 //        shareTitle = "艺站-" + bean.getName() + "已就位";

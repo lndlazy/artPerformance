@@ -74,4 +74,11 @@ public interface LoginService {
     Observable<ThirdBindResultEntry> authenticationBind(@Path("socialType") String socialType, @Body RequestBody body);
 
 
+//    /**
+//     * 获取分享的url
+//     */
+//    @GET(ApiUrls.SHARE_APP)
+//    Observable<ImUserBean> shareApp();
+
+
 }

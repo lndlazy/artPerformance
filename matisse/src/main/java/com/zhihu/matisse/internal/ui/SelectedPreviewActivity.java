@@ -39,7 +39,8 @@ public class SelectedPreviewActivity extends BasePreviewActivity {
             mCheckView.setChecked(true);
         }
         mPreviousPos = 0;
-        updateSize(selected.get(0));
+        if (selected != null && selected.size() > 0)
+            updateSize(selected.get(0));
     }
 
 }

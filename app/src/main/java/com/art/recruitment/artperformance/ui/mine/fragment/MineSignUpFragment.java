@@ -172,10 +172,8 @@ public class MineSignUpFragment extends BaseFragment<MineSignUpPresenter, MineSi
 //            }
 //        });
 
-        if (page == 0) {
+        if (page == 0)
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        }
-
 
         publisherAvatar = bean.getPublisherAvatarView();
 
