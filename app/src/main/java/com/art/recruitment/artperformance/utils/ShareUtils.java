@@ -27,7 +27,7 @@ public class ShareUtils {
 
     public static final String ACTOR_SHARE_TITLE = "艺站-演员已就位";
 
-    public static final String APP_SHARE_TITLE= "演艺圈为您提供一站式服务";
+    public static final String APP_SHARE_TITLE= "为您提供演艺圈一站式服务";
 
     /**
      * 分享链接

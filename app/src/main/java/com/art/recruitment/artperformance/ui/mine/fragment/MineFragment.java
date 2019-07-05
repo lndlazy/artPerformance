@@ -107,11 +107,14 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     @BindView(R.id.mine_wechat_service_textview)
     TextView mWechatServiceTextview;
     private Dialog dialog;
+    private String shareUrl;//分享地址
+    private String shareTitle;//分享的标题
+
 
     //普通分享
-    private int SHARE_TYPE_COMMON = 1;
+    private static final int SHARE_TYPE_COMMON = 1;
     //名片分享
-    private int SHARE_TYPE_BUSINESS_CARD = 2;
+    private static final int SHARE_TYPE_BUSINESS_CARD = 2;
 
     @Override
     protected int getLayoutId() {
@@ -211,6 +214,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                     public void accept(Object o) throws Exception {
 
                         //分享名片
+//                        shareDialog(Api.HTTP_URL + "actors/" + (SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.ID)) + "/share");
                         shareDialog(SHARE_TYPE_BUSINESS_CARD);
 
                     }
@@ -286,6 +290,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
                 subscribe(new Consumer<Object>() {
                     @Override
                     public void accept(Object o) throws Exception {
+//                        shareDialog(Api.HTTP_URL + ApiUrls.SHARE_APP);
                         shareDialog(SHARE_TYPE_COMMON);
                     }
                 });
@@ -339,7 +344,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
 
     }
 
-    private void shareDialog(int type) {
+    private void shareDialog(int shareType) {
         View inflate = View.inflate(getContext(), R.layout.dialog_mine_share, null);
         TextView mCleanTextview = inflate.findViewById(R.id.mine_share_clean_textview);
         ConstraintLayout mWechatConstraintLayout = inflate.findViewById(R.id.share_wechat_constraintLayout);
@@ -367,13 +372,25 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
             }
         });
 
-        //TODO 修改url
-        final String shareUrl = Api.HTTP_URL + ApiUrls.SHARE_APP;
+        switch (shareType) {
+
+            case SHARE_TYPE_BUSINESS_CARD://名片分享
+                shareUrl = Api.HTTP_URL + "actors/" + (SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.ID)) + "/share";
+                shareTitle = ShareUtils.ACTOR_SHARE_TITLE;
+                break;
+
+            case SHARE_TYPE_COMMON://普通分享
+                shareUrl = Api.HTTP_URL + ApiUrls.SHARE_APP;
+                shareTitle = ShareUtils.APP_SHARE_TITLE;
+                break;
+
+        }
+
 
         mWechatConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.APP_SHARE_TITLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, shareTitle
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN
                 );
                 hideDialog();
@@ -383,7 +400,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mCircleFriendsConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.APP_SHARE_TITLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, shareTitle
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.WEIXIN_CIRCLE
                 );
                 hideDialog();
@@ -393,7 +410,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mQQZoneConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.APP_SHARE_TITLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, shareTitle
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QZONE
                 );
                 hideDialog();
@@ -403,7 +420,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
         mQQConstraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ShareUtils.shareWeb(getActivity(), shareUrl, ShareUtils.APP_SHARE_TITLE
+                ShareUtils.shareWeb(getActivity(), shareUrl, shareTitle
                         , ShareUtils.SHARE_DESC, Defaultcontent.imageurl, R.mipmap.login_logo, SHARE_MEDIA.QQ
                 );
                 hideDialog();
