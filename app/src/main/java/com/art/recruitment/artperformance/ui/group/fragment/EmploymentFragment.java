@@ -30,6 +30,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.orhanobut.logger.Logger;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import butterknife.BindView;
@@ -108,7 +109,8 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                         break;
                     case R.id.mine_recruit_employment_textview:
                         //录用
-                        //TODO  如果当前录用人员大于等于需要录用的人员 进行提示
+
+                        Logger.d("已录用人数::" + activity.getAlreadyRetireNum() + ",需要录用的人数::" + activity.getRetireNum());
                         if (activity != null && activity.getAlreadyRetireNum() >= activity.getRetireNum()) {
                             showNoticeAlert(position);
                             return;
@@ -257,6 +259,7 @@ public class EmploymentFragment extends BaseFragment<EmploymentPresenter, ApplyL
                     //已经录用的个数
                     int size = bean.getContent().size();
 
+                    Logger.d("已录用的人数::" + size);
                     if (activity != null)
                         activity.setAlreadyRetireNum(size);
                 }
