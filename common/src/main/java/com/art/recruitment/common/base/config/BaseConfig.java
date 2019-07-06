@@ -40,6 +40,8 @@ public class BaseConfig {
      */
     public static class BaseSPKey {
 
+        public static final String HX_USERNAME = "HX_USERNAME";//环信用户名
+
         //LOGO url
         public static final String LOGO_URL = "LOGO_URL";
 

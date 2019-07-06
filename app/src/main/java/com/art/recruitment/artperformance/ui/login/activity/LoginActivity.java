@@ -278,6 +278,11 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 
     @Override
     public void returnImUserBean(ImUserBean.DataBean bean) {
+
+        String hxusername = bean.getUsername();
+        if (!TextUtils.isEmpty(hxusername))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.HX_USERNAME, hxusername);
+
         EMClient.getInstance().login(bean.getUsername(), bean.getPassword(), new EMCallBack() {//回调
             @Override
             public void onSuccess() {
@@ -287,7 +292,6 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
 //                EMClient.getInstance().
                 startActivity(MainActivity.class);
 //                ToastUtils.showShort("登录聊天服务器成功！");
-
 
 
                 finish();

@@ -148,7 +148,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     private Handler typingHandler = null;
     // "正在输入"功能的开关，打开后本设备发送消息将持续发送cmd类型消息通知对方"正在输入"
     private boolean turnOnTyping;
-//    private String toChatUserId;
+    private String groupName;
+    //    private String toChatUserId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -175,6 +176,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 //        toChatUserId = fragmentArgs.getString(EaseConstant.EXTRA_USER_NAME);
 
         this.turnOnTyping = turnOnTyping();
+
+
 
         super.onActivityCreated(savedInstanceState);
     }
@@ -331,8 +334,8 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
 
                     EaseUser easeUser = EaseUserUtils.contactList.get(toChatUsername);
                     if (easeUser != null) {
-                        String nickname = easeUser.getNickname();
-                        titleBar.setTitle(nickname);
+                        groupName = easeUser.getNickname();
+                        titleBar.setTitle(groupName);
                     }
 
                 }
@@ -1186,56 +1189,60 @@ public class EaseChatFragment extends EaseBaseFragment implements EMMessageListe
     protected void toGroupDetails() {
         if (chatType == EaseConstant.CHATTYPE_GROUP) {
 
+            Intent m = new Intent("com.art.recruitment.artperformance.ACTION_CHAT_GROUP");
+            m.addCategory("android.intent.category.DEFAULT");
+            m.putExtra("groupName", groupName);
+            m.putExtra("groupId", toChatUsername);
+            startActivity(m);
 
-
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    List<String> memberList = new ArrayList<>();
-                    EMCursorResult<String> result = null;
-                    final int pageSize = 20;
-                    try {
-                        do {
-                            result = EMClient.getInstance().groupManager().fetchGroupMembers(toChatUsername,
-                                    result != null ? result.getCursor() : "", pageSize);
-                            memberList.addAll(result.getData());
-                        }
-                        while (!TextUtils.isEmpty(result.getCursor()) && result.getData().size() == pageSize);
-
-
-                        Log.e("TAG", "toChatUsername:: " + toChatUsername);
-                        for (int i = 0; i < result.getData().size(); i++) {
-                            Log.e("TAG", "群成员:::" + result.getData().get(i));
-                        }
-
-//                        Log.e("TAG", "");
-
-                    } catch (HyphenateException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }).start();
-
-
-            EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
-
-//            EMCursorResult<String> result = null;
-
-//            try {
-////                result = EMClient.getInstance().groupManager().fetchGroupMembers(toChatUsername, result == null ? "" : result.getCursor(), 20);
-//            } catch (HyphenateException e) {
-//                e.printStackTrace();
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    List<String> memberList = new ArrayList<>();
+//                    EMCursorResult<String> result = null;
+//                    final int pageSize = 20;
+//                    try {
+//                        do {
+//                            result = EMClient.getInstance().groupManager().fetchGroupMembers(toChatUsername,
+//                                    result != null ? result.getCursor() : "", pageSize);
+//                            memberList.addAll(result.getData());
+//                        }
+//                        while (!TextUtils.isEmpty(result.getCursor()) && result.getData().size() == pageSize);
+//
+//
+//                        Log.e("TAG", "toChatUsername:: " + toChatUsername);
+//                        for (int i = 0; i < result.getData().size(); i++) {
+//                            Log.e("TAG", "群成员:::" + result.getData().get(i));
+//                        }
+//
+////                        Log.e("TAG", "");
+//
+//                    } catch (HyphenateException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            }).start();
+//
+//
+//            EMGroup group = EMClient.getInstance().groupManager().getGroup(toChatUsername);
+//
+////            EMCursorResult<String> result = null;
+//
+////            try {
+//////                result = EMClient.getInstance().groupManager().fetchGroupMembers(toChatUsername, result == null ? "" : result.getCursor(), 20);
+////            } catch (HyphenateException e) {
+////                e.printStackTrace();
+////            }
+//            if (group == null) {
+//                Toast.makeText(getActivity(), R.string.gorup_not_found, Toast.LENGTH_SHORT).show();
+//                return;
 //            }
-            if (group == null) {
-                Toast.makeText(getActivity(), R.string.gorup_not_found, Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-
-            if (chatFragmentHelper != null) {
-                chatFragmentHelper.onEnterToChatDetails();
-            }
+//
+//
+//            if (chatFragmentHelper != null) {
+//                chatFragmentHelper.onEnterToChatDetails();
+//            }
         } else if (chatType == EaseConstant.CHATTYPE_CHATROOM) {
             if (chatFragmentHelper != null) {
                 chatFragmentHelper.onEnterToChatDetails();

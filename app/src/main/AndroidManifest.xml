@@ -290,6 +290,18 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
 
+        <activity
+            android:name=".ui.mine.activity.ChatGroupSettingActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize">
+            <intent-filter>
+                <action android:name="com.art.recruitment.artperformance.ACTION_CHAT_GROUP" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+            </intent-filter>
+
+        </activity>
+
 
     </application>
 

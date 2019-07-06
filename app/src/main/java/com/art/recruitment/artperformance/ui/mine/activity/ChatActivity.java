@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.art.recruitment.artperformance.R;
+import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.EventBusConstant;
 import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseFragmentActivity;
 import com.blankj.utilcode.util.SPUtils;
+import com.bumptech.glide.request.RequestOptions;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.ui.EaseChatFragment;
@@ -14,6 +17,10 @@ import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.utils.SpKey;
 import com.hyphenate.easeui.widget.chatrow.EaseCustomChatRowProvider;
 import com.orhanobut.logger.Logger;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class ChatActivity extends BaseFragmentActivity {
 
@@ -96,7 +103,25 @@ public class ChatActivity extends BaseFragmentActivity {
         });
         getSupportFragmentManager().beginTransaction().add(R.id.layout_chat, easeChatFragment).commit();
 
+
+        EventBus.getDefault().register(this);
+
     }
 
+    //退出群聊
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void messageEventBus(String event) {
 
+        if (EventBusConstant.ACTION_EXIT_GROUP.equals(event)) {
+            finish();
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus.getDefault().unregister(this);
+    }
 }

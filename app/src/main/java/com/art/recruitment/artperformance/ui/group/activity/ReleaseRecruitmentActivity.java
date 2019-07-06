@@ -34,14 +34,16 @@ import com.art.recruitment.artperformance.view.CustomDatePicker;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.Flowlayout;
 import com.art.recruitment.common.base.callback.IToolbar;
+import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.hyphenate.easeui.utils.SpKey;
 import com.jakewharton.rxbinding2.view.RxView;
-import com.orhanobut.logger.Logger;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -130,7 +132,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
     private int release_id;
     private int pos;
     private MineFecruitmentBean.ContentBean data;
-    private long startTime;//集合时间
+    private long mettingTime;//集合时间
     private long workEndTime;//报名截止时间
 
     @Override
@@ -159,8 +161,11 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         release_id = getIntent().getIntExtra("release_id", 0);
         pos = getIntent().getIntExtra("pos", 0);
         data = getIntent().getParcelableExtra("id_id");
-        String group_head = getIntent().getStringExtra("group_head");
-        Glide.with(this).load(group_head).into(mHeadPortraitImageview);
+//        String group_head = getIntent().getStringExtra("group_head");
+
+        String headPic = SPUtils.getInstance().getString(BaseConfig.BaseSPKey.HEAD_PIC_URL);
+        if (!TextUtils.isEmpty(headPic))
+            Glide.with(this).load(headPic).into(mHeadPortraitImageview);
 
         //如果是编辑信息，先获取之前发布的招募信息
         if (release_id == 1)
@@ -322,12 +327,12 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         String mSelectionTime = mSelectionTimeTextview.getText().toString().trim();
 
         //集合时间
-        if (startTime <= System.currentTimeMillis()) {
+        if (mettingTime <= System.currentTimeMillis()) {
             ToastUtils.showShort("集合时间不能早于当前时间");
             return;
         }
 
-//        if (workEndTime <= startTime) {
+//        if (workEndTime <= mettingTime) {
 //            ToastUtils.showShort("报名截止时间需大于集合时间");
 //            return;
 //        }
@@ -338,6 +343,12 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         //报名截止时间
         if (workEndTime <= System.currentTimeMillis()) {
             ToastUtils.showShort("截止时间不能早于当前时间");
+            return;
+        }
+
+        //截止时间不能超过集合时间
+        if (mettingTime < workEndTime) {
+            ToastUtils.showShort("集合时间不能早于截止时间");
             return;
         }
 
@@ -654,7 +665,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
             @Override
             public void onTimeSelected(long timestamp) {
                 if (count == 1) {
-                    startTime = timestamp;
+                    mettingTime = timestamp;
                     mSelectionTimeTextview.setText(DateFormatUtils.long2Str(timestamp, true));
 
                 } else if (count == 2) {
@@ -706,7 +717,7 @@ public class ReleaseRecruitmentActivity extends BaseActivity<ReleaseRecruitmentP
         }
 
         String gatheringTime = bean.getGatheringTime();
-        startTime = DateFormatUtils.parseServerTime(gatheringTime, DateFormatUtils.DATE_FORMAT_PATTERN_YMD_HM);
+        mettingTime = DateFormatUtils.parseServerTime(gatheringTime, DateFormatUtils.DATE_FORMAT_PATTERN_YMD_HM);
 
         mWorkTimeEdittext.setText(bean.getWorkingHours() + "");
         mSelectionTimeTextview.setText(bean.getGatheringTime());//集合时间

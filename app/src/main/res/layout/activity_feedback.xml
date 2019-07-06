@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/nav_arrow"
-            android:layout_marginLeft="@dimen/x34"
+            android:padding="@dimen/x15"
+            android:layout_marginLeft="@dimen/x20"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"/>

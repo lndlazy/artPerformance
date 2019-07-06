@@ -352,6 +352,11 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
 
     @Override
     public void returnImUserBean(ImUserBean.DataBean bean) {
+
+        String hxusername = bean.getUsername();
+        if (!TextUtils.isEmpty(hxusername))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.HX_USERNAME, hxusername);
+
         EMClient.getInstance().login(bean.getUsername(), bean.getPassword(), new EMCallBack() {//回调
             @Override
             public void onSuccess() {
@@ -371,7 +376,7 @@ public class RegisterActivity extends BaseActivity<RegisterPresenter> implements
             public void onError(int code, String message) {
                 startActivity(MainActivity.class);
                 finish();
-                ToastUtils.showShort("登录聊天服务器失败！");
+//                ToastUtils.showShort("登录聊天服务器失败！");
             }
         });
     }

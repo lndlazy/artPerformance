@@ -85,4 +85,6 @@ public interface Constant {
     String THIRD_LOGIN_WX = "weChat";//微信第三方登录
     String THIRD_LOGIN_QQ = "qq";//qq第三方登录
 
+
+
 }

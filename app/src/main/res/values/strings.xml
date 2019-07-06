@@ -205,5 +205,7 @@
     <string name="cancle">取消</string>
     <string name="full_retire">人员已满, 是否继续录用？</string>
     <string name="sure">确定</string>
+    <string name="groupset">群设置</string>
+    <string name="groupname">群昵称</string>
 
 </resources>

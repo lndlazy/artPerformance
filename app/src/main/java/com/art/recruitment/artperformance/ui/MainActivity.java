@@ -97,7 +97,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     private MineFragment mMineFragment;
     private List<BaseFragment> mFragmentList = new ArrayList<>(4);
     private ArrayList<CustomTabEntity> mTabEntities = new ArrayList<>();
-    private String head;
+//    private String head;
 
     @Override
     protected IToolbar getIToolbar() {
@@ -144,9 +144,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void messageEventBus(String event) {
-        RequestOptions options = new RequestOptions();
-        options.placeholder(R.mipmap.login_logo);
-        head = event;
+//        RequestOptions options = new RequestOptions();
+//        options.placeholder(R.mipmap.login_logo);
+//        head = event;
     }
 
     //发布招募
@@ -235,8 +235,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                     && ((SPUtils.getInstance().getInt(BaseConfig.BaseSPKey.SEX)) != -1)) {
                 Intent intent = new Intent(MainActivity.this, ReleaseRecruitmentActivity.class);
                 intent.putExtra("release_id", 0);
-                Logger.d("head-===>" + head);
-                intent.putExtra("group_head", head);
+//                Logger.d("head-===>" + head);
+//                intent.putExtra("group_head", head);
                 startActivity(intent);
             } else {
                 perfectInformation();
@@ -248,6 +248,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     //登录聊天服务器成功
     @Override
     public void returnImUserBean(ImUserBean.DataBean tokenBean) {
+
+        String hxusername = tokenBean.getUsername();
+        if (!TextUtils.isEmpty(hxusername))
+            SPUtils.getInstance().put(BaseConfig.BaseSPKey.HX_USERNAME, hxusername);
+
 
         EMClient.getInstance().groupManager().loadAllGroups();
         EMClient.getInstance().chatManager().loadAllConversations();

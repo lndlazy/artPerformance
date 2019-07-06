@@ -59,7 +59,6 @@ public interface LoginService {
     @GET(ApiUrls.IM_USER)
     Observable<ImUserBean> imUser();
 
-
     /**
      * 第三方登录
      */
