@@ -39,6 +39,8 @@ import com.jakewharton.rxbinding2.view.RxView;
 import com.luck.picture.lib.decoration.GridSpacingItemDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +54,8 @@ import me.yokeyword.indexablerv.IndexableLayout;
  */
 public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupListBean.ContentBean> implements GroupFragmentContract {
 
+    private static final String SORT_1 = "likes,desc";
+    private static final String SORT_2 = "id,desc";
     @BindView(R.id.group_search_imageview)
     ImageView mSearchImageview;
     @BindView(R.id.group_city_textview)
@@ -189,7 +193,16 @@ public class GroupFragment extends BaseFragment<GroupFragmentPresenter, GroupLis
         String minAge = TextUtils.isEmpty(mLowAgeEdittext.getText().toString().trim()) ? "-1"
                 : mLowAgeEdittext.getText().toString().trim();
 
-        mPresenter.actorsList(maxAge, minAge, cityId, gender, page, BaseConfig.DEFAULT_PAGE_SIZE, Constant.SORT_DESC);
+
+        mPresenter.actorsList(maxAge, minAge, cityId, gender, page, BaseConfig.DEFAULT_PAGE_SIZE,  SORT_1, SORT_2);
+
+
+//        try {
+//            String decode = URLDecoder.decode(SORT_DESC, "utf-8");
+//
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void initButtonClick() {

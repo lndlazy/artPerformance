@@ -104,8 +104,8 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     ImageView mFeedbackImageview;
     @BindView(R.id.mine_wechat_service_imageview)
     ImageView mWechatServiceImageview;
-    @BindView(R.id.mine_wechat_service_textview)
-    TextView mWechatServiceTextview;
+//    @BindView(R.id.mine_wechat_service_textview)
+//    TextView mWechatServiceTextview;
     private Dialog dialog;
     private String shareUrl;//分享地址
     private String shareTitle;//分享的标题
@@ -442,7 +442,7 @@ public class MineFragment extends BaseFragment<MinePresenter, MultiItemEntity> i
     public void returnMineDataBean(MineBean.DataBean bean) {
 
         mNameTextview.setText(bean.getName());
-        mWechatServiceTextview.setText(bean.getWechat());
+//        mWechatServiceTextview.setText(bean.getWechat());
         RequestOptions options = new RequestOptions();
         options.placeholder(R.mipmap.login_logo);
         Glide.with(mContext).load(bean.getAvatarView()).apply(options).into(mHeadPortraitImageview);

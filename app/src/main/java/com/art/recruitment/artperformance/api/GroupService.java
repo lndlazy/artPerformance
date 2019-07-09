@@ -61,16 +61,17 @@ public interface GroupService {
                                          @Query("gender") int gender,
                                          @Query("page") int page,
                                          @Query("size") int size,
-                                         @Query("sort") String sort);
+                                         @Query("sort") String sort,
+                                         @Query("sort") String sort2);
 
     /**
      * 获取群演列表
      */
     @GET(ApiUrls.ACTORS)
     Observable<GroupListBean> actorsSearchList(@Query("actorName") String actorName,
-                                                 @Query("page") int page,
-                                                 @Query("size") int size,
-                                                 @Query("sort") String sort);
+                                               @Query("page") int page,
+                                               @Query("size") int size,
+                                               @Query("sort") String sort);
 
     /**
      * 获取群演详情

@@ -331,6 +331,7 @@
 
         <TextView
             android:id="@+id/mine_wechat_service_textview"
+            android:text="15510439871"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
