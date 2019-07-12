@@ -123,7 +123,6 @@ public class EaseConversationListFragment extends EaseBaseFragment {
 //                    startActivity(chat);
 //                    Log.e("TAG", "id:" + id + ",type:" + conversation.getType());
 
-
                     listItemClickListener.onListItemClicked(conversation);
                 }
             });

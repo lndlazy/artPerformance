@@ -268,8 +268,8 @@ public class EaseConversationAdapter extends ArrayAdapter<EMConversation> {
                     } else {
                         EaseUser user = EaseUserUtils.getUserInfo(username);
                         // TODO: not support Nick anymore
-//                        if(user != null && user.getNick() != null)
-//                            username = user.getNick();
+                        if(user != null && user.getNickname() != null)
+                            username = user.getNickname();
                     }
 
                     // First match against the whole ,non-splitted value
