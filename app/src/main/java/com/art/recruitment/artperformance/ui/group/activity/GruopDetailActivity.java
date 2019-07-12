@@ -3,11 +3,14 @@ package com.art.recruitment.artperformance.ui.group.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -20,25 +23,25 @@ import com.art.recruitment.artperformance.ui.dynamic.activity.PlusImageActivity;
 import com.art.recruitment.artperformance.ui.dynamic.contract.MainConstant;
 import com.art.recruitment.artperformance.ui.group.contract.GroupDetailContract;
 import com.art.recruitment.artperformance.ui.group.presenter.GroupDetailPresenter;
-import com.art.recruitment.artperformance.ui.login.activity.UserAgreementActivity;
 import com.art.recruitment.artperformance.ui.mine.activity.ChatActivity;
 import com.art.recruitment.artperformance.utils.Defaultcontent;
 import com.art.recruitment.artperformance.utils.ShareUtils;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.common.base.callback.IToolbar;
-import com.art.recruitment.common.base.config.BaseConfig;
 import com.art.recruitment.common.base.ui.BaseActivity;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.art.recruitment.common.utils.UIUtils;
-import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
-import com.hyphenate.chat.EMMessage;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.target.Target;
+import com.bumptech.glide.request.transition.Transition;
 import com.hyphenate.easeui.EaseConstant;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseUserUtils;
+import com.hyphenate.util.DensityUtil;
 import com.jakewharton.rxbinding2.view.RxView;
 import com.luck.picture.lib.PictureSelector;
 import com.orhanobut.logger.Logger;
@@ -46,12 +49,10 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.Transformer;
-import com.youth.banner.listener.OnBannerClickListener;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import io.reactivex.functions.Consumer;
@@ -248,14 +249,33 @@ public class GruopDetailActivity extends BaseActivity<GroupDetailPresenter> impl
 
 
     @Override
-    public void returnGroupDetailBean(GroupDetailBean.DataBean bean) {
+    public void returnGroupDetailBean(final GroupDetailBean.DataBean bean) {
         beans = bean;
 
         if (bean.getPrimaryPhotoView() != null && bean.getPrimaryPhotoView().size() > 0)
             actorHeadImg = bean.getPrimaryPhotoView().get(0);
 
+        //根据图片大小自适应控件大小
         if (bean.getPrimaryPhotoView() != null && bean.getPrimaryPhotoView().size() > 0)
-            Glide.with(mContext).load(bean.getPrimaryPhotoView().get(0)).into(mPhotoImageview);
+            Glide.with(mContext).load(bean.getPrimaryPhotoView().get(0)).into(new SimpleTarget<Drawable>() {
+                @Override
+                public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
+
+                    int imageWidth = resource.getIntrinsicWidth();
+                    int imageHeight = resource.getIntrinsicHeight();
+                    ViewGroup.LayoutParams para = mPhotoImageview.getLayoutParams();
+
+                    int maxHeight = DensityUtil.dip2px(mContext, 400);
+                    int height = (int) ((float) mPhotoImageview.getWidth() / imageWidth * imageHeight);
+                    if (height > maxHeight) height = maxHeight;
+                    para.height = height;
+                    mPhotoImageview.setLayoutParams(para);
+                    Glide.with(mContext).load(bean.getPrimaryPhotoView().get(0)).into(mPhotoImageview);
+                }
+            });
+//        }
+
+
         mNameTextview.setText(bean.getName());
         actorName = bean.getName();
 //        shareTitle = "艺站-" + bean.getName() + "已就位";

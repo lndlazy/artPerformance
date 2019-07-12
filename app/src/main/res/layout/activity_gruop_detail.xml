@@ -21,7 +21,8 @@
             <ImageView
                 android:id="@+id/group_detail_photo_imageview"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y418"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:background="@color/color_33353a"
                 android:scaleType="centerCrop" />
 

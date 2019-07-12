@@ -15,7 +15,7 @@
         android:layout_width="@dimen/x372"
         fresco:failureImage="@mipmap/ic_male_error"
         fresco:placeholderImage="@mipmap/ic_male_error"
-        android:layout_height="@dimen/y208"/>
+        android:layout_height="@dimen/y440"/>
     <!--<ImageView-->
         <!--android:id="@+id/group_photo_imageview"-->
         <!--android:layout_width="@dimen/x372"-->

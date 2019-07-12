@@ -953,193 +953,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         bucket = bean.getBucket();
         endpoint = bean.getEndpoint();
 
-//        if (mHeadImageview != null) {
-//            // 构造上传请求
-//            if (!avater.contains("minedata/")) {
-//                try {
-//                    mAvaterList = null;
-//                    File file = new File(avater);
-//                    InputStream inputStream = new FileInputStream(file);
-//                    String digest = FileMd5Util.digest(inputStream);
-//                    putHead = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", avater);
-//                    mAvaterList = "minedata/" + digest + ".jpg";
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//
-//            } else {
-//                putHead = new PutObjectRequest(bean.getBucket(), mAvaterList, avater);
-//            }
-//
-//        }
-//
-//        for (int i = 0; i < mPrimaryPhoto.size(); i++) {
-//            // 构造上传请求
-//            if (!mPrimaryPhoto.get(i).contains("minedata/")) {
-//                try {
-//                    mPrimaryPhotoList.remove(mPrimaryPhotoList.get(i));
-//                    File file = new File(mPrimaryPhoto.get(i));
-//                    InputStream inputStream = new FileInputStream(file);
-//                    String digest = FileMd5Util.digest(inputStream);
-//                    putPrimaryPhoto = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", mPrimaryPhoto.get(i));
-//                    mPrimaryPhotoList.add("minedata/" + digest + ".jpg");
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                putPrimaryPhoto = new PutObjectRequest(bean.getBucket(), mPrimaryPhotoList.get(i), mPrimaryPhoto.get(i));
-//            }
-//
-//        }
-//
-//        for (int i = 0; i < mPhoto.size(); i++) {
-//            // 构造上传请求
-//            if (!mPhoto.get(i).contains("minedata/")) {
-//                try {
-//                    mPhotoList.remove(mPhotoList.get(i));
-//                    File file = new File(mPhoto.get(i));
-//                    InputStream inputStream = new FileInputStream(file);
-//                    String digest = FileMd5Util.digest(inputStream);
-//                    putPhoto = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".jpg", mPhoto.get(i));
-//                    mPhotoList.add("minedata/" + digest + ".jpg");
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                putPhoto = new PutObjectRequest(bean.getBucket(), mPhotoList.get(i), mPhoto.get(i));
-//            }
-//
-//        }
-//
-//        if (personalIntroductionVideo.length() > 0) {
-//            // 构造上传请求
-//            if (!personalIntroductionVideo.contains("minedata/")) {
-//                try {
-//                    personalIntroductionVideoList = null;
-//                    File file = new File(personalIntroductionVideo);
-//                    InputStream inputStream = new FileInputStream(file);
-//                    String digest = FileMd5Util.digest(inputStream);
-//                    putVideo = new PutObjectRequest(bean.getBucket(), "minedata/" + digest + ".mp4", personalIntroductionVideo);
-//                    personalIntroductionVideoList = "minedata/" + digest + ".mp4";
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            } else {
-//                putVideo = new PutObjectRequest(bean.getBucket(), personalIntroductionVideoList, personalIntroductionVideo);
-//            }
-//        }
-//
-//        // 异步上传时可以设置进度回调
-//        /*put.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
-//            @Override
-//            public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-//                Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
-//            }
-//        });*/
-//
-//        oss.asyncPutObject(putHead, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-//            @Override
-//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-//                // 请求异常
-//                if (clientExcepion != null) {
-//                    // 本地异常如网络异常等
-//                    clientExcepion.printStackTrace();
-//                }
-//                if (serviceException != null) {
-//                    // 服务异常
-//                    Log.e("ErrorCode", serviceException.getErrorCode());
-//                }
-//            }
-//        });
-//
-//        oss.asyncPutObject(putPrimaryPhoto, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-//            @Override
-//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-//                // 请求异常
-//                if (clientExcepion != null) {
-//                    // 本地异常如网络异常等
-//                    clientExcepion.printStackTrace();
-//                }
-//                if (serviceException != null) {
-//                    // 服务异常
-//                    Log.e("ErrorCode", serviceException.getErrorCode());
-//                }
-//            }
-//        });
-//
-//        oss.asyncPutObject(putPhoto, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-//            @Override
-//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-//                // 请求异常
-//                if (clientExcepion != null) {
-//                    // 本地异常如网络异常等
-//                    clientExcepion.printStackTrace();
-//                }
-//                if (serviceException != null) {
-//                    // 服务异常
-//                    Log.e("ErrorCode", serviceException.getErrorCode());
-//                }
-//            }
-//        });
-//
-//        oss.asyncPutObject(putVideo, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-//            @Override
-//            public void onSuccess(PutObjectRequest request, PutObjectResult result) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-//                // 请求异常
-//                if (clientExcepion != null) {
-//                    // 本地异常如网络异常等
-//                    clientExcepion.printStackTrace();
-//                }
-//                if (serviceException != null) {
-//                    // 服务异常
-//                    Log.e("ErrorCode", serviceException.getErrorCode());
-//                }
-//            }
-//        });
-//
-//        ConsummateInfoRequest request = new ConsummateInfoRequest();
-//        request.setAge(Integer.parseInt(mAge));
-//        request.setAvatar(mAvaterList);
-//        request.setBodyWeight(Integer.parseInt(mWeight));
-//        request.setBust(Integer.parseInt(mBust));
-//        request.setCityId(cityCode);
-//        request.setGender(gender);
-//        request.setHeight(Integer.parseInt(mHeight));
-//        request.setHips(Integer.parseInt(mHips));
-//        request.setName(mName);
-//        request.setPersonalExperience(mOther);
-//        request.setPersonalIntroductionVideo(personalIntroductionVideoList);
-//        request.setPhoto(mPhotoList);
-//        request.setPrimaryPhoto(mPrimaryPhotoList);
-//        request.setTelephone(mTelePhone);
-//        request.setTelephoneHiddenFlag(telePhoneSwitchButton);
-//        request.setWaist(Integer.parseInt(mWaist));
-//        request.setWechat(mWeChat);
-//        request.setWechatHiddenFlag(wxChatSwitchButton);
-//
-//        Gson gson = new Gson();
-//        String codeStr = gson.toJson(request);
-//        mPresenter.consummateInfo(codeStr);
     }
 
     @Override
@@ -1198,22 +1011,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     if (data != null)
                         videoBack(data);
 
-//                    if (data != null) {
-//
-//                        List<LocalMedia> localMedias = PictureSelector.obtainMultipleResult(data);
-//
-//                        if (localMedias != null && localMedias.size() > 0) {
-//
-//                            LocalMedia localMedia = localMedias.get(0);
-//
-//                            String compressPath = localMedia.getCompressPath();
-//
-//                            String path = localMedia.getPath();
-//
-//                        }
-//
-//                    }
-
                     break;
 
                 case 100:
@@ -1253,102 +1050,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             }
 
         }
-
-//        if (requestCode == 10 && resultCode == AppCompatActivity.RESULT_OK) {
-//            //选择 照片集返回的数据
-//            photoListBack(data);
-//
-//        } else if (requestCode == 300 && resultCode == AppCompatActivity.RESULT_OK && data != null) {
-//
-//            videoBack(data);
-//
-////            personalIntroductionVideo = null;
-////            List<Uri> mSelectedImages = Matisse.obtainResult(data);
-////            if (mSelectedImages != null && mSelectedImages.size() > 0) {
-////                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
-////                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
-////                    List<ImageModel> mTempImageList = new ArrayList<>();
-////                    for (String path : mSelectedImagesPath) {
-////                        ImageModel imageModel = new ImageModel();
-////                        imageModel.setUris(path);
-////                        mTempImageList.add(imageModel);
-////                    }
-////                    mImageLists.remove(mClickedItemPosition);
-////                    mImageLists.addAll(mTempImageList);
-////                    if (mImageLists.size() < 1) {
-////                        mImageLists.add(mAddImageModel);
-////                    }
-////                    personalIntroductionVideo = mImageLists.get(0).getUris();
-////                    mVideoAdapter.setNewData(mImageLists);
-////                    mVideoAdapter.notifyDataSetChanged();
-////                }
-////            }
-//
-//        } else if (requestCode == 100 && resultCode == AppCompatActivity.RESULT_OK) {
-//            //选择城市
-//            if (data != null && data.getExtras() != null) {
-//                String city = data.getExtras().getString("city");
-//                cityCode = data.getExtras().getInt("code");
-//                mCitiyEdittext.setText(city);
-//            }
-//
-//        } else if (requestCode == CODE_GALLERY_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
-//
-//            // 头像  ==>  相册选择后 开始裁剪
-//            outFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
-////            Logger.d("outFile地址::" + outFile.getPath() + "====>" + outFile.getAbsolutePath());
-//            cropRawPhoto(checkSelectPhoto(data));//裁剪
-//
-////            cropRawPhoto(data.getData());
-////            Uri data1 = data.getData();
-////            String mSelectedImagesPath = UriUtil.getRealFilePath(this, data1);
-////            ImageModel imageModel = new ImageModel();
-////            imageModel.setUris(mSelectedImagesPath);
-////
-////            Logger.d("头像地址::" + imageModel.getUris());
-////            avater = imageModel.getUris();
-//
-//        } else if (requestCode == CODE_COVER_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
-//
-//            //裁剪封面
-//            coverOutFile = new File(photoFile.getPath(), UUID.randomUUID().toString() + ".jpg");
-//            cropCover(checkSelectPhoto(data));
-//
-////            mPrimaryPhoto.removeAll(mPrimaryPhoto);
-////            List<Uri> mSelectedImages = Matisse.obtainResult(data);
-////            if (mSelectedImages != null && mSelectedImages.size() > 0) {
-////                List<String> mSelectedImagesPath = UriUtil.getImagePathes(this, mSelectedImages);
-////                if (mSelectedImagesPath != null && mSelectedImagesPath.size() > 0) {
-////                    List<ImageModel> mTempImageList = new ArrayList<>();
-////                    for (String path : mSelectedImagesPath) {
-////                        ImageModel imageModel = new ImageModel();
-////                        imageModel.setUris(path);
-////                        mTempImageList.add(imageModel);
-////                    }
-////                    mImageListt.remove(mClickedItemPosition);
-////                    mImageListt.addAll(mTempImageList);
-////                    if (mImageListt.size() < 1) {
-////                        mImageListt.add(mAddImageModel);
-////                    }
-////
-////                    mPrimaryPhoto.add(mImageListt.get(0).getUris());
-////
-////                    mMasterAdapter.setNewData(mImageListt);
-////                    mMasterAdapter.notifyDataSetChanged();
-////                }
-////            }
-//        } else if (requestCode == CODE_RESULT_COVER_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
-//
-//            //选择封面
-//            coverBack(data);
-//
-//        } else if (requestCode == CODE_RESULT_REQUEST && resultCode == AppCompatActivity.RESULT_OK) {
-//            // 头像==>裁剪后返回的数据
-//            if (data != null) {
-//                //加载,上传 头像
-//                setImageToHeadView(data);
-//            }
-//        }
 
     }
 
@@ -1533,46 +1234,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                 }
             }).start();
 
-//            putVideo.setProgressCallback(new OSSProgressCallback<PutObjectRequest>() {
-//                @Override
-//                public void onProgress(PutObjectRequest request, long currentSize, long totalSize) {
-////                    Log.d("PutObject", "currentSize: " + currentSize + " totalSize: " + totalSize);
-//                }
-//            });
-//
-//            oss.asyncPutObject(putVideo, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-//                @Override
-//                public void onSuccess(PutObjectRequest request, final PutObjectResult result) {
-//
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            //转换成url
-//                            mPresenter.pathUrl(videoObjectKey, FileType.PIC_TYPE_VIDEO);
-//                        }
-//                    });
-//
-//                }
-//
-//                @Override
-//                public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-//                    // 请求异常。
-//                    if (clientExcepion != null) {
-//                        // 本地异常，如网络异常等。
-//                        clientExcepion.printStackTrace();
-//                    }
-//                    if (serviceException != null) {
-//                        // 服务异常。
-//                        Log.e("ErrorCode", serviceException.getErrorCode());
-////                        Log.e("RequestId", serviceException.getRequestId());
-////                        Log.e("HostId", serviceException.getHostId());
-////                        Log.e("RawMessage", serviceException.getRawMessage());
-//                    }
-//                }
-//            });
 
-        } else {
-            //TODO 统一操作
         }
     }
 
@@ -1619,30 +1281,11 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //                        putPhotoList.setxOssProcess("image/resize,m_fixed,w_100,h_100");
                         PutObjectResult putResult = oss.putObject(putPhotoList);
 
-//                        runOnUiThread(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mPresenter.pathUrl(photoObjectKey, FileType.PIC_TYPE_PHOTOS);
-//                            }
-//                        });
-
-//                        Log.d("PutObject", "UploadSuccess");
                         if (i == photoList.size() - 1) {
                             stopShow();
                         }
                     }
 
-//                    for (int i = 0; i < photoObjectKeyList.size(); i++) {
-
-//                        try {
-
-//                        } catch (ClientException e) {
-//                            e.printStackTrace();
-//                            stopShow(i);
-//                        } catch (ServiceException e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     stopShow();
@@ -1650,42 +1293,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
             }
         }).start();
-
-//        for (int i = 0; i < photoObjectKeyList.size(); i++) {
-//
-////            String s = photoObjectKeyList.get(i);
-////            Uri uri = photoList.get(i);
-//            putPhotoList = new PutObjectRequest(bucket, photoObjectKeyList.get(i), UriUtil.getRealFilePath(this, photoList.get(i)));
-//
-//            oss.asyncPutObject(putPhotoList, new OSSCompletedCallback<PutObjectRequest, PutObjectResult>() {
-//                @Override
-//                public void onSuccess(PutObjectRequest request, final PutObjectResult result) {
-//
-//                    runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//
-//                        }
-//                    });
-////                    Logger.d("body：：：" + result.getServerCallbackReturnBody());
-//
-//                }
-//
-//                @Override
-//                public void onFailure(PutObjectRequest request, ClientException clientExcepion, ServiceException serviceException) {
-//                    // 请求异常。
-//                    if (clientExcepion != null) {
-//                        // 本地异常，如网络异常等。
-//                        clientExcepion.printStackTrace();
-//                    }
-//                    if (serviceException != null) {
-//                        // 服务异常。
-//                        Log.e("ErrorCode", serviceException.getErrorCode());
-//                    }
-//                }
-//            });
-//
-//        }
 
     }
 
@@ -1889,22 +1496,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         mPhotoRecyclerView.setAdapter(mPhotoAdapter);
 
-//        mImageListt = new ArrayList<>();
-//        mAddImageModel = new ImageModel();
-//        mAddImageModel.setUris(ImageModel.ADD_IMAGE_URI);
-//        mImageListt.add(mAddImageModel);
-//        mMasterGraphRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//        mMasterAdapter = new MineMasterAdapter(this, mImageListt);
-//        mMasterGraphRecyclerView.setAdapter(mMasterAdapter);
-
-//        mImageLists = new ArrayList<>();
-//        mAddImageModel = new ImageModel();
-//        mAddImageModel.setUris(ImageModel.ADD_IMAGE_URI);
-//        mImageLists.add(mAddImageModel);
-//        mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-//        mVideoAdapter = new MineVideoAdapter(this, mImageLists);
-//        mVideoRecyclerView.setAdapter(mVideoAdapter);
-
         mPhotoAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
@@ -1956,88 +1547,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
             }
         });
-
-//        coverPic.
-//        mMasterAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-//            @Override
-//            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-//                mClickedItemPosition = position;
-//                returnImageview = 2;
-//                switch (adapter.getItemViewType(position)) {
-//                    case ImageModel.TYPE_IMAGE_ADD:
-//                        isAddItemClicked = true;
-//                        int imageCountsCanSelect = MASTER_MAX_LIMIT_COUNT - position;
-//                        boolean isMultiMode = imageCountsCanSelect > 1;
-//                        resetMasterImagePicker(imageCountsCanSelect);
-//
-//                        requestPermissionAndSelectImage();
-//                        break;
-//
-//                    case ImageModel.TYPE_IMAGE_SELECTED:
-//
-//                        switch (view.getId()) {
-//                            case R.id.item_appeal_evidence_list_evidence_image:
-////                                注释代码是点击替换图片的功能代码
-//                                isAddItemClicked = false;
-//                                resetMasterImagePicker(1);
-//                                requestPermissionAndSelectImage();
-//                                break;
-//
-//                            case R.id.item_appeal_evidence_list_delete_image:  //删除图片
-//                                adapter.getData().remove(position);
-//                                if (!adapter.getData().contains(mAddImageModel)) {
-//                                    adapter.getData().add(mAddImageModel);
-//                                }
-//                                adapter.notifyDataSetChanged();
-//                                break;
-//                        }
-//
-//                        break;
-//                }
-//
-//            }
-//        });
-
-//        mVideoAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-//            @Override
-//            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-//                mClickedItemPosition = position;
-//                returnImageview = 3;
-//
-//                switch (adapter.getItemViewType(position)) {
-//                    case ImageModel.TYPE_IMAGE_ADD:
-//                        isAddItemClicked = true;
-//                        int imageCountsCanSelect = VIDEO_MAX_LIMIT_COUNT - position;
-//                        boolean isMultiMode = imageCountsCanSelect > 1;
-//                        resetVideoImagePicker(imageCountsCanSelect);
-//
-//                        requestPermissionAndSelectImage();
-//                        break;
-//
-//                    case ImageModel.TYPE_IMAGE_SELECTED:
-//
-//                        switch (view.getId()) {
-//                            case R.id.item_appeal_evidence_list_evidence_image:
-////                                注释代码是点击替换图片的功能代码
-//                                isAddItemClicked = false;
-//                                resetVideoImagePicker(1);
-//                                requestPermissionAndSelectImage();
-//                                break;
-//
-//                            case R.id.item_appeal_evidence_list_delete_image:  //删除图片
-//                                adapter.getData().remove(position);
-//                                if (!adapter.getData().contains(mAddImageModel)) {
-//                                    adapter.getData().add(mAddImageModel);
-//                                }
-//                                adapter.notifyDataSetChanged();
-//                                break;
-//                        }
-//
-//                        break;
-//                }
-//
-//            }
-//        });
     }
 
     /**
@@ -2097,12 +1606,7 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     public void onAction(List<String> permissions) {
 //                        if (returnImageview == 1) {
                         mMatisseBuilder.forResult(10);
-//                        }
-//                        else if (returnImageview == 2) {
-//                            mMatisseBuilder.forResult(200);
-//                        } else if (returnImageview == 3) {
-//                            mMatisseBuilder.forResult(300);
-//                        }
+
 
                     }
                 }).start();
@@ -2114,25 +1618,8 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
      */
     private void choiceVideo() {
 
-
         PictureSelectorConfig.initMultiConfig(MineDataActivity.this, 1, Constant.CHOOSE_TYPE_VIDEO);
 
-
-//        m
-
-//        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-//        Intent intent = new Intent();
-//
-//        if("Meizu".equalsIgnoreCase(android.os.Build.MANUFACTURER)){  // 判断用户手机是否是“魅族”。忽略大小写的比较
-//            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
-//            intent.addCategory(Intent.CATEGORY_OPENABLE);
-//            intent.setType("video/*");
-//        }else {
-//            intent.setAction(Intent.ACTION_PICK);
-//            intent.setData(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-//        }
-//
-//        startActivityForResult(intent, 300);
     }
 
     // 从本地相册选取图片作为头像
@@ -2148,11 +1635,6 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             startActivityForResult(mIntent, CODE_GALLERY_REQUEST);
         }
 
-//        Intent intentFromGallery = new Intent();
-//        // 设置文件类型
-//        intentFromGallery.setType("image/*");
-//        intentFromGallery.setAction(Intent.ACTION_GET_CONTENT);
-//        startActivityForResult(intentFromGallery, CODE_GALLERY_REQUEST);
     }
 
     /**
@@ -2216,13 +1698,13 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //        intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.parse(outFile.getPath()));
         intent.putExtra("crop", "true");
         // aspectX aspectY 是宽高的比例
-        intent.putExtra("aspectX", 750);
-        intent.putExtra("aspectY", 418);
+        intent.putExtra("aspectX", 372);
+        intent.putExtra("aspectY", 440);
         // 取消人脸识别
         intent.putExtra("noFaceDetection", true);
         // outputX outputY 是裁剪图片宽高
-        intent.putExtra("outputX", 750);
-        intent.putExtra("outputY", 418);
+        intent.putExtra("outputX", 372);
+        intent.putExtra("outputY", 440);
 
 //        Intent intent = new Intent("com.android.camera.action.CROP");
 //        intent.setDataAndType(uri, "image/*");
