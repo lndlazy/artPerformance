@@ -45,6 +45,9 @@ import com.art.recruitment.artperformance.bean.mine.ConsummateInfoRequest;
 import com.art.recruitment.artperformance.bean.mine.MineBean;
 import com.art.recruitment.artperformance.bean.mine.OssBean;
 import com.art.recruitment.artperformance.bean.mine.SignaTureBean;
+import com.art.recruitment.artperformance.ui.MainActivity;
+import com.art.recruitment.artperformance.ui.dynamic.activity.PictureSelectorConfig;
+import com.art.recruitment.artperformance.ui.dynamic.activity.ReleaseDynamicActivity;
 import com.art.recruitment.artperformance.ui.home.activity.CityActivity;
 import com.art.recruitment.artperformance.ui.mine.FileType;
 import com.art.recruitment.artperformance.ui.mine.ImageModel;
@@ -68,11 +71,16 @@ import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.jakewharton.rxbinding2.view.RxView;
+import com.luck.picture.lib.PictureSelector;
+import com.luck.picture.lib.entity.LocalMedia;
+import com.luck.picture.lib.tools.PictureFileUtils;
 import com.orhanobut.logger.Logger;
 import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
@@ -875,53 +883,15 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
         if (!TextUtils.isEmpty(bean.getPersonalIntroductionVideo())) {
 
-//            List<ImageModel> mTempImageList2 = new ArrayList<>();
-//            ImageModel model2 = new ImageModel();
-//            model2.setUris(dataBean.getPersonalIntroductionVideo());
-//            mTempImageList2.add(model2);
-//            mImageLists.remove(mClickedItemPosition);
-//            mImageLists.addAll(mTempImageList2);
-//            if (mImageLists.size() < 1) {
-//                mImageLists.add(mAddImageModel);
-//            }
-//            personalIntroductionVideo = mImageLists.get(0).getUris();
-//            String urisVideo = mImageList.get(0).getUris();
-//
-//            Log.e("TAG", "urisVideo======》》》》》》" + urisVideo);
-//
-//            try {
-//
-//                String subVideo = urisVideo.substring(urisVideo.indexOf("minedata/"), urisVideo.indexOf("?"));
-//                personalIntroductionVideoList = subVideo;
-//                mVideoAdapter.setNewData(mImageLists);
-//                mVideoAdapter.notifyDataSetChanged();
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-
-
             videoObjectKey = bean.getPersonalIntroductionVideo();
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                    final Bitmap videoBitmapFromNet = ImageUtils.getVideoBitmapFromNet(bean.getPersonalIntroductionVideoView());
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (videoPicView != null)
-                                videoPicView.setImageBitmap(videoBitmapFromNet);
-                            if (videoDeleteView != null)
-                                videoDeleteView.setVisibility(View.VISIBLE);
-                        }
-                    });
-
-
-                }
-            }).start();
+            if (videoPicView != null) {
+//                RequestOptions options = new RequestOptions();
+//                options.placeholder(R.mipmap.icon_my_add);
+                Glide.with(mContext).load(bean.getPersonalIntroductionVideoPreviewView()).into(videoPicView);
+            }
+            if (videoDeleteView != null)
+                videoDeleteView.setVisibility(View.VISIBLE);
 
         }
 
@@ -1224,9 +1194,26 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
                     photoListBack(data);
                     break;
 
-                case 300:
+                case 0x22:
                     if (data != null)
                         videoBack(data);
+
+//                    if (data != null) {
+//
+//                        List<LocalMedia> localMedias = PictureSelector.obtainMultipleResult(data);
+//
+//                        if (localMedias != null && localMedias.size() > 0) {
+//
+//                            LocalMedia localMedia = localMedias.get(0);
+//
+//                            String compressPath = localMedia.getCompressPath();
+//
+//                            String path = localMedia.getPath();
+//
+//                        }
+//
+//                    }
+
                     break;
 
                 case 100:
@@ -1447,29 +1434,36 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 
     private void videoBack(Intent data) {
 
-        Uri selectedVideo = data.getData();
+//        Uri selectedVideo = data.getData();
+//
+//        if (selectedVideo == null) {
+//            ToastUtils.showShort("视频不存在");
+//            return;
+//        }
+//
+//        String[] filePathColumn = {MediaStore.Video.Media.DATA};
+//
+//        Cursor cursor = getContentResolver().query(selectedVideo,
+//                filePathColumn, null, null, null);
+//
+//        if (cursor == null) {
+//            ToastUtils.showShort("视频不存在");
+//            return;
+//        }
+//
+//        cursor.moveToFirst();
+//
+//        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//        String videoPath = cursor.getString(columnIndex);
+//
+//        cursor.close();
+        String videoPath = "";
+        List<LocalMedia> localMedias = PictureSelector.obtainMultipleResult(data);
 
-        if (selectedVideo == null) {
-            ToastUtils.showShort("视频不存在");
-            return;
+        if (localMedias != null && localMedias.size() > 0) {
+            LocalMedia localMedia = localMedias.get(0);
+            videoPath = localMedia.getPath();
         }
-
-        String[] filePathColumn = {MediaStore.Video.Media.DATA};
-
-        Cursor cursor = getContentResolver().query(selectedVideo,
-                filePathColumn, null, null, null);
-
-        if (cursor == null) {
-            ToastUtils.showShort("视频不存在");
-            return;
-        }
-
-        cursor.moveToFirst();
-
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        String videoPath = cursor.getString(columnIndex);
-
-        cursor.close();
 
         Logger.d("videoPath::" + videoPath);
 
@@ -1480,7 +1474,9 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
         videoPicView.setImageBitmap(waterMaskCenter);
 
         try {
-            startUploadVideo(selectedVideo, videoPath);
+            Uri uri = Uri.fromFile(new File(videoPath));
+//            UriUtil.getImageContentUri(this, new File(videoPath));
+            startUploadVideo(uri, videoPath);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             ToastUtils.showShort("文件不存在");
@@ -1494,11 +1490,15 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
             videoObjectKey = Constant.DIR_VIDEO + StringsUtils.getMd5Name(videoUri, this) + Constant.VIDEO_DIR;
 //            videoObjectPathKey = Constant.DIR_VIDEO_COVER + StringsUtils.getMd5Name(videoUri, this) + Constant.PIC_DIR;
 //            String videoMd5 = FileMd5Util.digest(inputStream);
-
 //            Bitmap waterMaskCenter = ImageUtils.createWaterMaskCenter(videoThumbnail, this);
 
             //获取缩略图路径
             videoPreviewPath = ImageUtils.saveBitmap(waterMaskCenter, Constant.DIR_VIDEO_COVER + StringsUtils.getMd5Name(videoUri, this) + ".jpg");
+
+            if (videoPreviewPath == null) {
+                ToastUtils.showShort("文件未找到");
+                return;
+            }
 
             //视频缩略图objectkey
             File videoPreviewFile = new File(videoPreviewPath);
@@ -2113,8 +2113,26 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
      * 从相册中选择视频
      */
     private void choiceVideo() {
-        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(i, 300);
+
+
+        PictureSelectorConfig.initMultiConfig(MineDataActivity.this, 1, Constant.CHOOSE_TYPE_VIDEO);
+
+
+//        m
+
+//        Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+//        Intent intent = new Intent();
+//
+//        if("Meizu".equalsIgnoreCase(android.os.Build.MANUFACTURER)){  // 判断用户手机是否是“魅族”。忽略大小写的比较
+//            intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+//            intent.addCategory(Intent.CATEGORY_OPENABLE);
+//            intent.setType("video/*");
+//        }else {
+//            intent.setAction(Intent.ACTION_PICK);
+//            intent.setData(android.provider.MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+//        }
+//
+//        startActivityForResult(intent, 300);
     }
 
     // 从本地相册选取图片作为头像
@@ -2245,4 +2263,12 @@ public class MineDataActivity extends BaseActivity<MineDataPresenter> implements
 //        }
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        PictureFileUtils.deleteCacheDirFile(MineDataActivity.this);
+
+    }
 }

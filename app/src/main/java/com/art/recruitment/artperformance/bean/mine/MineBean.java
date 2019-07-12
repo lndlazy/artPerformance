@@ -89,7 +89,15 @@ public class MineBean extends BaseBean<MineBean.DataBean> {
         private List<String> photoView;
         private List<String> primaryPhoto;
         private List<String> primaryPhotoView;
+        private String personalIntroductionVideoPreviewView;
 
+        public String getPersonalIntroductionVideoPreviewView() {
+            return personalIntroductionVideoPreviewView;
+        }
+
+        public void setPersonalIntroductionVideoPreviewView(String personalIntroductionVideoPreviewView) {
+            this.personalIntroductionVideoPreviewView = personalIntroductionVideoPreviewView;
+        }
 
         public String getPersonalIntroductionVideoView() {
             return personalIntroductionVideoView;

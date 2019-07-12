@@ -20,12 +20,8 @@ import java.util.HashMap;
 
 public class ImageUtils {
 
-
-    //缩略图
-    public static final String IMAGE_SMART = "?x-oss-process=image/resize,w_200";
-
-
-
+//    //缩略图
+//    public static final String IMAGE_SMART = "?x-oss-process=image/resize,w_200";
 
     public static int[] getImageWidthHeight(String path) {
         BitmapFactory.Options options = new BitmapFactory.Options();
@@ -63,23 +59,26 @@ public class ImageUtils {
     }
 
 
-    public static Bitmap getVideoBitmapFromNet(String videoUrl) {
-
-        Bitmap bitmap = null;
-
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        try {
-            //根据url获取缩略图
-            retriever.setDataSource(videoUrl, new HashMap());
-            //获得第一帧图片
-            bitmap = retriever.getFrameAtTime();
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-        } finally {
-            retriever.release();
-        }
-        return bitmap;
-    }
+    /*
+     * 获取视频的第一帧
+     */
+//    public static Bitmap getVideoBitmapFromNet(String videoUrl) {
+//
+//        Bitmap bitmap = null;
+//
+//        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+//        try {
+//            //根据url获取缩略图
+//            retriever.setDataSource(videoUrl, new HashMap());
+//            //获得第一帧图片
+//            bitmap = retriever.getFrameAtTime();
+//        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//        } finally {
+//            retriever.release();
+//        }
+//        return bitmap;
+//    }
 
     /**
      * 保存方法
@@ -115,7 +114,6 @@ public class ImageUtils {
     }
 
 //    public static Bitmap getVideoThumb(String path) {
-//
 //
 //        MediaMetadataRetriever media = new MediaMetadataRetriever();
 //
