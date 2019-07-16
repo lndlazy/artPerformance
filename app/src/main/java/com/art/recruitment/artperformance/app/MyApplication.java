@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Environment;
+import android.os.Process;
 import android.support.multidex.MultiDex;
 
 import com.alibaba.sdk.android.oss.common.OSSLog;
@@ -23,6 +24,11 @@ import com.hyphenate.easeui.EaseUI;
 import com.hyphenate.easeui.domain.EaseUser;
 import com.hyphenate.easeui.utils.EaseUserUtils;
 import com.hyphenate.easeui.utils.SpKey;
+import com.hyphenate.push.EMPushConfig;
+import com.hyphenate.push.EMPushHelper;
+import com.hyphenate.push.EMPushType;
+import com.hyphenate.push.PushListener;
+import com.hyphenate.util.EMLog;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
@@ -30,6 +36,8 @@ import com.orhanobut.logger.PrettyFormatStrategy;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
+import com.xiaomi.channel.commonutils.logger.LoggerInterface;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -91,6 +99,35 @@ public class MyApplication extends BaseApplication {
         initEaseMob();
 
 //        Logger.d("SHA1值:::" + sHA1(this));
+        xiaomiPush();
+    }
+
+    private void xiaomiPush() {
+
+
+        //初始化push推送服务
+//        if(shouldInit()) {
+            MiPushClient.registerPush(this, "2882303761518061472", "5741806120472");
+//        }
+        //打开Log
+        LoggerInterface newLogger = new LoggerInterface() {
+            @Override
+            public void setTag(String tag) {
+                // ignore
+                Logger.d("setTag::" + tag);
+            }
+            @Override
+            public void log(String content, Throwable t) {
+                Logger.d("loglog====::" + content, t);
+            }
+            @Override
+            public void log(String content) {
+                Logger.d("=====log::::" +  content);
+            }
+        };
+        com.xiaomi.mipush.sdk.Logger.setLogger(this, newLogger);
+
+
     }
 
     public String sHA1(Context context) {
@@ -141,10 +178,38 @@ public class MyApplication extends BaseApplication {
         EMOptions options = new EMOptions();
 //        // 默认添加好友时，是不需要验证的，改成需要验证
 //        options.setAcceptInvitationAlways(false);
+
+        EMPushConfig.Builder builder = new EMPushConfig.Builder(this);
+        builder.enableVivoPush() // 推送证书相关信息配置在AndroidManifest.xml中
+//                .enableMeiZuPush(String appId, String appKey)
+                .enableMiPush("2882303761518061472", "5741806120472")
+//                .enableOppoPush(String appKey, String appSecret)
+                .enableHWPush(); //开发者需要调用该方法来开启华为推送
+//                .enableFCM(String senderId); //开发者需要调用该方法来开启FCM推送
+
+        options.setPushConfig(builder.build());
         EaseUI.getInstance().init(this, options);
         // 设置开启debug模式
         EMClient.getInstance().setDebugMode(true);
 
+
+
+        EMPushHelper.getInstance().setPushListener(new PushListener() {
+            @Override
+            public void onError(EMPushType pushType, long errorCode) {
+                EMLog.e("PushClient", "Push client occur a error: " + pushType + " - " + errorCode);
+                Logger.d("====onError===");
+
+// TODO: 开发者会在这个回调中收到使用推送的相关错误信息，各推送类型的error code开发者可以自己去各推送平台官网查询错误原因。
+            }
+
+            @Override
+            public boolean isSupportPush(EMPushType pushType, EMPushConfig pushConfig) {
+                Logger.d("====isSupportPush===");
+                return super.isSupportPush(pushType, pushConfig);
+// TODO：开发者可以复写该方法控制设备是否支持某推送的判断。
+            }
+        });
 
         Gson gson = new Gson();
         java.lang.reflect.Type type = new TypeToken<HashMap<String, EaseUser>>() {
@@ -152,6 +217,12 @@ public class MyApplication extends BaseApplication {
         Map<String, EaseUser> objectMap = gson.fromJson(SPUtils.getInstance().getString(SpKey.CONTACT_LIST), type);
         if (objectMap != null && objectMap.size() > 0)
             EaseUserUtils.contactList.putAll(objectMap);
+
+
+
+//        com.xiaomi.channel.commonutils.logger.Logger.setLogger(this, newLogger);
+
+
 
 //        int pid = android.os.Process.myPid();
 //        String processAppName = getAppName(pid);
@@ -318,4 +389,19 @@ public class MyApplication extends BaseApplication {
     }
 
 
+
+    private boolean shouldInit() {
+        ActivityManager am = ((ActivityManager) getSystemService(Context.ACTIVITY_SERVICE));
+        List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+//        getApplicationInfo().processName;
+        String mainProcessName = getApplicationInfo().processName;
+//        Process.myPid()
+        int myPid = Process.myPid();
+        for (ActivityManager.RunningAppProcessInfo info : processInfos) {
+            if (info.pid == myPid && mainProcessName.equals(info.processName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
