@@ -23,7 +23,7 @@ public class HUAWEIPushRevicer extends PushReceiver {
     public void onEvent(Context context, Event event, Bundle bundle) {
         super.onEvent(context, event, bundle);
 
-        Logger.d("======onEvent======");
+//        Logger.d("======onEvent======");
 
     }
 
@@ -31,8 +31,8 @@ public class HUAWEIPushRevicer extends PushReceiver {
     public void onToken(Context context, String token, Bundle bundle) {
         super.onToken(context, token, bundle);
         String belongId = bundle.getString("belongId");
-        String pushToken = token;
-        Logger.d("======onToken====== belongId:" + belongId + ",pushToken:" + pushToken);
+        ////开发者自行实现token保存逻辑
+        Logger.d("======onToken====== belongId:" + belongId + ",pushToken:" + token);
 
     }
 

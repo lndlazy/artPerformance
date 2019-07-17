@@ -18,6 +18,7 @@ import com.blankj.utilcode.util.SPUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.huawei.android.hms.agent.HMSAgent;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
 import com.hyphenate.easeui.EaseUI;
@@ -29,6 +30,8 @@ import com.hyphenate.push.EMPushHelper;
 import com.hyphenate.push.EMPushType;
 import com.hyphenate.push.PushListener;
 import com.hyphenate.util.EMLog;
+import com.meizu.cloud.pushsdk.PushManager;
+import com.meizu.cloud.pushsdk.util.MzSystemUtils;
 import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
@@ -99,7 +102,14 @@ public class MyApplication extends BaseApplication {
         initEaseMob();
 
 //        Logger.d("SHA1值:::" + sHA1(this));
+        //小米
         xiaomiPush();
+        //华为
+        HMSAgent.init(this);
+        //魅族
+        if(MzSystemUtils.isBrandMeizu()){
+            PushManager.register(this, "122193", "3f69382260bf46fbb9c59f0696278caf");
+        }
     }
 
     private void xiaomiPush() {

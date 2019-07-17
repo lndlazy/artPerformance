@@ -56,15 +56,12 @@ public class BaseConfig {
         //定位的城市编码
         public static final String LOCATION_CITY_CODE = "LOCATION_CITY_CODE";
 
-
         public static String CONFIG = "art_performance";//sp配置文件名称
-
 
         /**
          * 用户token
          */
         public static final String TOKEN = "token";
-
 
 
         /**

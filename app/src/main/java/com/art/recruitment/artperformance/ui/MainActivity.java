@@ -42,6 +42,10 @@ import com.bumptech.glide.request.RequestOptions;
 import com.flyco.tablayout.CommonTabLayout;
 import com.flyco.tablayout.listener.CustomTabEntity;
 import com.flyco.tablayout.listener.OnTabSelectListener;
+import com.huawei.android.hms.agent.HMSAgent;
+import com.huawei.android.hms.agent.common.handler.ConnectHandler;
+import com.huawei.android.hms.agent.push.handler.GetTokenHandler;
+import com.huawei.hms.support.api.push.TokenResult;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMError;
@@ -130,9 +134,40 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
         mPresenter.loginToHx();
 
+        connectHuawei();
     }
 
+    /**
+     * SDK连接HMS
+     */
+    private void connectHuawei() {
+        HMSAgent.connect(this, new ConnectHandler() {
+            @Override
+            public void onConnect(int rst) {
+                Logger.d("**** HMS connect end:" + rst);
+                getToken();
+            }
+        });
+    }
 
+    /**
+     * 获取token
+     */
+
+    private void getToken() {
+        Logger.d("get token: begin");
+        HMSAgent.Push.getToken(new GetTokenHandler() {
+            @Override
+            public void onResult(int rst) {
+                Logger.d("get token: end :: " + rst);
+            }
+
+//            @Override
+//            public void onResult(int rtnCode, TokenResult tokenResult) {
+//                showLog("get token: end" + rtnCode);
+//            }
+        });
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();
