@@ -26,6 +26,7 @@ import com.art.recruitment.artperformance.ui.home.fragment.HomeFragment;
 import com.art.recruitment.artperformance.ui.mine.activity.MineDataActivity;
 import com.art.recruitment.artperformance.ui.mine.fragment.MineFragment;
 import com.art.recruitment.artperformance.utils.Constant;
+import com.art.recruitment.artperformance.utils.StringsUtils;
 import com.art.recruitment.artperformance.view.CustomViewPager;
 import com.art.recruitment.artperformance.view.DialogWrapper;
 import com.art.recruitment.artperformance.view.TabEntity;
@@ -37,6 +38,7 @@ import com.art.recruitment.common.base.ui.BaseFragment;
 import com.art.recruitment.common.baserx.RxClickTransformer;
 import com.art.recruitment.common.http.error.ErrorType;
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.request.RequestOptions;
 import com.flyco.tablayout.CommonTabLayout;
@@ -134,7 +136,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
         mPresenter.loginToHx();
 
-        connectHuawei();
+
+        if (StringsUtils.isHuawei(this))
+            connectHuawei();
     }
 
     /**
@@ -168,6 +172,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 //            }
         });
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

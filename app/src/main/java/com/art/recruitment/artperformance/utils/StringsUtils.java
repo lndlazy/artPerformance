@@ -1,6 +1,8 @@
 package com.art.recruitment.artperformance.utils;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 
 import com.blankj.utilcode.util.StringUtils;
@@ -13,7 +15,6 @@ import java.io.InputStream;
 import java.math.BigDecimal;
 
 public class StringsUtils {
-
 
 
 //    public static  final int PAGE_COUNT = 20;
@@ -70,4 +71,32 @@ public class StringsUtils {
             return false;
         }
     }
+
+
+    /**
+     * 判断是否是华为手机
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isHuawei(Context context) {
+
+        PackageInfo pi = null;
+        PackageManager pm = context.getPackageManager();
+        int hwid = 0;
+        try {
+            pi = pm.getPackageInfo("com.huawei.hwid", 0);
+            if (pi != null) {
+                int result = pi.versionCode;
+                Logger.d("hwid::" + result);
+            } else
+                return false;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
 }

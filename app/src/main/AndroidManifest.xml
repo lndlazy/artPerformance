@@ -538,17 +538,19 @@
         <!--</intent-filter>-->
         <!--</receiver>-->
 
-        <!--接入HMSSDK PUSH模块需要注册该service，不需要开发者处理-->
-        <service
-            android:name="com.huawei.hms.support.api.push.service.HmsMsgService"
-            android:enabled="true"
-            android:exported="true"
-            android:process=":pushservice">
-            <intent-filter>
-                <action android:name="com.huawei.push.msg.NOTIFY_MSG" />
-                <action android:name="com.huawei.push.msg.PASSBY_MSG" />
-            </intent-filter>
-        </service>
+
+        <!--（可选）如果应用需要在非华为设备上使用PUSH，需要声明HmsMsgService-->
+        <!--&lt;!&ndash;接入HMSSDK PUSH模块需要注册该service，不需要开发者处理&ndash;&gt;-->
+        <!--<service-->
+            <!--android:name="com.huawei.hms.support.api.push.service.HmsMsgService"-->
+            <!--android:enabled="true"-->
+            <!--android:exported="true"-->
+            <!--android:process=":pushservice">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.huawei.push.msg.NOTIFY_MSG" />-->
+                <!--<action android:name="com.huawei.push.msg.PASSBY_MSG" />-->
+            <!--</intent-filter>-->
+        <!--</service>-->
 
 
         <!-- 接入HMSSDK 需要注册的应用下载服务 | Access HMSSDK need to register app download service-->

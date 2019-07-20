@@ -10,6 +10,7 @@ import android.support.multidex.MultiDex;
 
 import com.alibaba.sdk.android.oss.common.OSSLog;
 import com.art.recruitment.artperformance.utils.ResourceUtils;
+import com.art.recruitment.artperformance.utils.StringsUtils;
 import com.art.recruitment.common.base.BaseApplication;
 import com.art.recruitment.common.http.Api;
 import com.art.recruitment.common.http.config.ApiConfig;
@@ -91,8 +92,8 @@ public class MyApplication extends BaseApplication {
 
         ResourceUtils.init(this);
 
-        initLogger(TAG, true);
-        OSSLog.enableLog();//开启阿里云存储log
+        initLogger(TAG, false);
+//        OSSLog.enableLog();//开启阿里云存储log
         initUM();
 
         initApiConfig();
@@ -105,19 +106,22 @@ public class MyApplication extends BaseApplication {
         //小米
         xiaomiPush();
         //华为
-        HMSAgent.init(this);
+        if (StringsUtils.isHuawei(this))
+            HMSAgent.init(this);
+
         //魅族
-        if(MzSystemUtils.isBrandMeizu()){
+        if (MzSystemUtils.isBrandMeizu()) {
             PushManager.register(this, "122193", "3f69382260bf46fbb9c59f0696278caf");
         }
+
+
     }
 
     private void xiaomiPush() {
 
-
         //初始化push推送服务
 //        if(shouldInit()) {
-            MiPushClient.registerPush(this, "2882303761518061472", "5741806120472");
+        MiPushClient.registerPush(this, "2882303761518061472", "5741806120472");
 //        }
         //打开Log
         LoggerInterface newLogger = new LoggerInterface() {
@@ -126,13 +130,15 @@ public class MyApplication extends BaseApplication {
                 // ignore
                 Logger.d("setTag::" + tag);
             }
+
             @Override
             public void log(String content, Throwable t) {
                 Logger.d("loglog====::" + content, t);
             }
+
             @Override
             public void log(String content) {
-                Logger.d("=====log::::" +  content);
+                Logger.d("=====log::::" + content);
             }
         };
         com.xiaomi.mipush.sdk.Logger.setLogger(this, newLogger);
@@ -167,7 +173,7 @@ public class MyApplication extends BaseApplication {
     private void initUM() {
         UMShareAPI.get(this);//初始化sdk
         //开启debug模式，方便定位错误，具体错误检查方式可以查看http://dev.umeng.com/social/android/quick-integration的报错必看，正式发布，请关闭该模式
-        Config.DEBUG = true;
+        Config.DEBUG = false;
     }
 
     //各个平台的配置
@@ -191,7 +197,7 @@ public class MyApplication extends BaseApplication {
 
         EMPushConfig.Builder builder = new EMPushConfig.Builder(this);
         builder.enableVivoPush() // 推送证书相关信息配置在AndroidManifest.xml中
-//                .enableMeiZuPush(String appId, String appKey)
+                .enableMeiZuPush("122193", "3f69382260bf46fbb9c59f0696278caf")
                 .enableMiPush("2882303761518061472", "5741806120472")
 //                .enableOppoPush(String appKey, String appSecret)
                 .enableHWPush(); //开发者需要调用该方法来开启华为推送
@@ -200,9 +206,7 @@ public class MyApplication extends BaseApplication {
         options.setPushConfig(builder.build());
         EaseUI.getInstance().init(this, options);
         // 设置开启debug模式
-        EMClient.getInstance().setDebugMode(true);
-
-
+        EMClient.getInstance().setDebugMode(false);
 
         EMPushHelper.getInstance().setPushListener(new PushListener() {
             @Override
@@ -227,12 +231,6 @@ public class MyApplication extends BaseApplication {
         Map<String, EaseUser> objectMap = gson.fromJson(SPUtils.getInstance().getString(SpKey.CONTACT_LIST), type);
         if (objectMap != null && objectMap.size() > 0)
             EaseUserUtils.contactList.putAll(objectMap);
-
-
-
-//        com.xiaomi.channel.commonutils.logger.Logger.setLogger(this, newLogger);
-
-
 
 //        int pid = android.os.Process.myPid();
 //        String processAppName = getAppName(pid);
@@ -397,7 +395,6 @@ public class MyApplication extends BaseApplication {
 //        Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
 //        Logger.addLogAdapter(new DiskLogAdapter());
     }
-
 
 
     private boolean shouldInit() {
