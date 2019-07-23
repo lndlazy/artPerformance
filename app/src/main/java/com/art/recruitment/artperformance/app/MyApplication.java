@@ -59,6 +59,8 @@ import java.util.Map;
  */
 public class MyApplication extends BaseApplication {
 
+    static final boolean isDebug = true;
+
     //文件夹目录
     private static final String PATH = Environment.getExternalStorageDirectory().getPath() + "/art-debug/crash_log/";
     //文件名
@@ -92,7 +94,7 @@ public class MyApplication extends BaseApplication {
 
         ResourceUtils.init(this);
 
-        initLogger(TAG, false);
+        initLogger(TAG, isDebug);
 //        OSSLog.enableLog();//开启阿里云存储log
         initUM();
 
@@ -173,7 +175,7 @@ public class MyApplication extends BaseApplication {
     private void initUM() {
         UMShareAPI.get(this);//初始化sdk
         //开启debug模式，方便定位错误，具体错误检查方式可以查看http://dev.umeng.com/social/android/quick-integration的报错必看，正式发布，请关闭该模式
-        Config.DEBUG = false;
+        Config.DEBUG = isDebug;
     }
 
     //各个平台的配置
@@ -196,7 +198,8 @@ public class MyApplication extends BaseApplication {
 //        options.setAcceptInvitationAlways(false);
 
         EMPushConfig.Builder builder = new EMPushConfig.Builder(this);
-        builder.enableVivoPush() // 推送证书相关信息配置在AndroidManifest.xml中
+        builder
+//                .enableVivoPush() // 推送证书相关信息配置在AndroidManifest.xml中
                 .enableMeiZuPush("122193", "3f69382260bf46fbb9c59f0696278caf")
                 .enableMiPush("2882303761518061472", "5741806120472")
 //                .enableOppoPush(String appKey, String appSecret)
@@ -206,7 +209,7 @@ public class MyApplication extends BaseApplication {
         options.setPushConfig(builder.build());
         EaseUI.getInstance().init(this, options);
         // 设置开启debug模式
-        EMClient.getInstance().setDebugMode(false);
+//        EMClient.getInstance().setDebugMode(isDebug);
 
         EMPushHelper.getInstance().setPushListener(new PushListener() {
             @Override

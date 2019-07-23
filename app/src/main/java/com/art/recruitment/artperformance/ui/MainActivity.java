@@ -136,7 +136,6 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
         mPresenter.loginToHx();
 
-
         if (StringsUtils.isHuawei(this))
             connectHuawei();
     }

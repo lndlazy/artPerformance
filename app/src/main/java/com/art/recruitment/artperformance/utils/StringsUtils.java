@@ -83,6 +83,9 @@ public class StringsUtils {
 
         PackageInfo pi = null;
         PackageManager pm = context.getPackageManager();
+
+        if (pm == null)
+            return false;
         int hwid = 0;
         try {
             pi = pm.getPackageInfo("com.huawei.hwid", 0);
